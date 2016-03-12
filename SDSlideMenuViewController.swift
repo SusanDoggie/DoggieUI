@@ -178,7 +178,7 @@ extension UIViewController {
     
     @IBAction public func menuToggle(sender: AnyObject?) {
         
-        self.slideMenuViewController._menuToggle(sender)
+        self.slideMenuViewController?._menuToggle(sender)
     }
 }
 
@@ -324,21 +324,9 @@ extension SDSlideMenuViewController: UIGestureRecognizerDelegate {
 
 extension UIViewController {
     
-    public var slideMenuViewController: SDSlideMenuViewController! {
-        var current = self
+    public var slideMenuViewController: SDSlideMenuViewController? {
         
-        if current is SDSlideMenuViewController {
-            return current as! SDSlideMenuViewController
-        }
-        
-        while current.parentViewController != nil {
-            
-            if current.parentViewController is SDSlideMenuViewController {
-                return current.parentViewController as! SDSlideMenuViewController
-            }
-            current = current.parentViewController!
-        }
-        return nil
+        return self as? SDSlideMenuViewController ?? self.parentViewController?.slideMenuViewController
     }
     
     private func equalTo(otherViewController: UIViewController) -> Bool {
@@ -359,24 +347,14 @@ public class SDMenuRootViewControllerSegue: UIStoryboardSegue {
     
     public override func perform() {
         
-        let source = sourceViewController as! SDSlideMenuViewController
-        let destination = destinationViewController as UIViewController
-        
-        source.addMenuRootViewController(destination)
-        
+        sourceViewController.slideMenuViewController?.addMenuRootViewController(destinationViewController)
     }
-    
 }
 
 public class SDContentViewControllerSegue: UIStoryboardSegue {
     
     public override func perform() {
         
-        let source = (sourceViewController as UIViewController).slideMenuViewController
-        let destination = destinationViewController as UIViewController
-        
-        source.addContentViewController(destination)
-        
+        sourceViewController.slideMenuViewController?.addContentViewController(destinationViewController)
     }
-    
 }
