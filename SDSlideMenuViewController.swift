@@ -90,14 +90,12 @@ public class SDSlideMenuViewController: UIViewController {
         tapRecongnizer.delegate = self
         view.addGestureRecognizer(panRecongnizer)
         view.addGestureRecognizer(tapRecongnizer)
-        
     }
     
     public override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-    
 }
 
 extension SDSlideMenuViewController {
@@ -117,7 +115,6 @@ extension SDSlideMenuViewController {
         view.sendSubviewToBack(MenuRootViewController.view)
         
         MenuRootViewController.view.hidden = hidden
-        
     }
     
     private func _addContentViewController(contentViewController: UIViewController) {
@@ -142,7 +139,6 @@ extension SDSlideMenuViewController {
             ContentViewController.view.layer.shadowRadius = self.shadowRadius
             ContentViewController.view.layer.shadowOffset = CGSize(width: -self.shadowWidth, height: 0)
             ContentViewController.view.layer.shadowColor = self.shadowColor.CGColor
-            
         }
     }
     
@@ -171,7 +167,6 @@ extension SDSlideMenuViewController {
             _addContentViewController(contentViewController)
         }
     }
-    
 }
 
 extension UIViewController {
@@ -187,7 +182,6 @@ extension SDSlideMenuViewController {
     private func _menuToggle(sender: AnyObject?) {
         
         switch toggleState {
-            
         case 0:
             slideDampingAnimation(self.transformTrailing)
             toggleState = 1
@@ -200,7 +194,6 @@ extension SDSlideMenuViewController {
             slideDampingAnimation(0)
             toggleState = 0
         }
-        
     }
     
     private func slideDampingAnimation(position: CGFloat) {
@@ -223,9 +216,7 @@ extension SDSlideMenuViewController {
                     self.MenuRootViewController.view.hidden = true
                 }
         })
-        
     }
-    
 }
 
 extension SDSlideMenuViewController: UIGestureRecognizerDelegate {
@@ -233,7 +224,7 @@ extension SDSlideMenuViewController: UIGestureRecognizerDelegate {
     public func gestureRecognizer(gestureRecognizer: UIGestureRecognizer, shouldReceiveTouch touch: UITouch) -> Bool {
         
         if panRecongnizer === gestureRecognizer {
-            return CGRectContainsPoint(ContentViewController.view.frame, touch.locationInView(view))
+            return true
         }
         
         if tapRecongnizer === gestureRecognizer {
@@ -244,7 +235,6 @@ extension SDSlideMenuViewController: UIGestureRecognizerDelegate {
         }
         
         return true
-        
     }
     
     public func gestureRecognizerShouldBegin(gestureRecognizer: UIGestureRecognizer) -> Bool {
@@ -307,7 +297,6 @@ extension SDSlideMenuViewController: UIGestureRecognizerDelegate {
         default:
             break
         }
-        
     }
     func handleTap(sender: UITapGestureRecognizer) {
         
@@ -317,9 +306,7 @@ extension SDSlideMenuViewController: UIGestureRecognizerDelegate {
             slideDampingAnimation(0)
             toggleState = 0
         }
-        
     }
-    
 }
 
 extension UIViewController {
@@ -340,7 +327,6 @@ extension UIViewController {
         
         return selfTag != 0 && selfTag == otherTag
     }
-    
 }
 
 public class SDMenuRootViewControllerSegue: UIStoryboardSegue {
