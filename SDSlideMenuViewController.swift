@@ -230,8 +230,9 @@ extension SDSlideMenuViewController {
             options: UIViewAnimationOptions.CurveLinear,
             animations: {
                 self.MenuRootViewController.view.transform.tx = 0
-                self.ContentViewController.view.transform.tx = position
+                self.shadowLayer.transform.tx = 0
                 self.shadowLayer.alpha = position == 0 ? CGFloat(self.shadowLayerOpacity) : 0
+                self.ContentViewController.view.transform.tx = position
             },
             completion: { finished in
                 if position == 0 {
