@@ -127,7 +127,7 @@ import QuartzCore
         constraints.append(NSLayoutConstraint(item: pageControl, attribute: .CenterX, relatedBy: .Equal, toItem: self, attribute: .CenterX, multiplier: 1, constant: 0))
         self.addConstraints(constraints)
         
-        pan = UIPanGestureRecognizer(target: self, action: "handlePan:")
+        pan = UIPanGestureRecognizer(target: self, action: #selector(SDItemSelector.handlePan(_:)))
         pan.delegate = self
         self.addGestureRecognizer(pan)
     }
@@ -148,7 +148,7 @@ import QuartzCore
         constraints.append(NSLayoutConstraint(item: pageControl, attribute: .CenterX, relatedBy: .Equal, toItem: self, attribute: .CenterX, multiplier: 1, constant: 0))
         self.addConstraints(constraints)
         
-        pan = UIPanGestureRecognizer(target: self, action: "handlePan:")
+        pan = UIPanGestureRecognizer(target: self, action: #selector(SDItemSelector.handlePan(_:)))
         pan.maximumNumberOfTouches = 1
         pan.delegate = self
         self.addGestureRecognizer(pan)
