@@ -151,12 +151,14 @@ extension SDSwappageController {
         self.addChildViewController(viewController)
         if currentViewController != nil {
             self.push(currentViewController!, toViewController: viewController, animated: animated)
+            viewController.didMoveToParentViewController(self)
         }
     }
     
     public func popViewControllerAnimated(animated: Bool) -> UIViewController? {
         
         if self.childViewControllers.count > 1, let viewControllerToPop = self.childViewControllers.last {
+            viewControllerToPop.willMoveToParentViewController(nil)
             self.pop(viewControllerToPop, toViewController: self.childViewControllers[self.childViewControllers.endIndex - 2], animated: animated)
             viewControllerToPop.removeFromParentViewController()
             return viewControllerToPop
@@ -167,10 +169,13 @@ extension SDSwappageController {
     public func popToViewController(viewController: UIViewController, animated: Bool) -> [UIViewController]? {
         
         if let idx = self.childViewControllers.indexOf(viewController) where idx + 1 != self.childViewControllers.endIndex {
-            self.pop(self.childViewControllers.last!, toViewController: viewController, animated: animated)
             let viewControllersToPop = Array(self.childViewControllers.dropFirst(idx + 1))
             for item in viewControllersToPop {
-                item .removeFromParentViewController()
+                item.willMoveToParentViewController(nil)
+            }
+            self.pop(self.childViewControllers.last!, toViewController: viewController, animated: animated)
+            for item in viewControllersToPop {
+                item.removeFromParentViewController()
             }
             return viewControllersToPop
         }
@@ -180,8 +185,11 @@ extension SDSwappageController {
     public func popToRootViewControllerAnimated(animated: Bool) -> [UIViewController]? {
         
         if self.childViewControllers.endIndex != 1 {
-            self.pop(self.childViewControllers.last!, toViewController: self.childViewControllers.first!, animated: animated)
             let viewControllersToPop = Array(self.childViewControllers.dropFirst(1))
+            for item in viewControllersToPop {
+                item.willMoveToParentViewController(nil)
+            }
+            self.pop(self.childViewControllers.last!, toViewController: self.childViewControllers.first!, animated: animated)
             for item in viewControllersToPop {
                 item .removeFromParentViewController()
             }

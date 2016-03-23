@@ -122,6 +122,7 @@ extension SDSlideMenuViewController {
         var hidden = true
         if let MenuRootViewController = MenuRootViewController {
             hidden = MenuRootViewController.view.hidden
+            MenuRootViewController.willMoveToParentViewController(nil)
             MenuRootViewController.removeFromParentViewController()
             MenuRootViewController.view.removeFromSuperview()
         }
@@ -131,6 +132,8 @@ extension SDSlideMenuViewController {
         
         MenuRootViewController = rootViewController
         addChildViewController(MenuRootViewController)
+        MenuRootViewController.didMoveToParentViewController(self)
+        
         view.addSubview(MenuRootViewController.view)
         view.sendSubviewToBack(MenuRootViewController.view)
         
@@ -142,12 +145,15 @@ extension SDSlideMenuViewController {
         let position = ContentViewController?.view.transform.tx ?? 0
         
         if let ContentViewController = ContentViewController {
+            ContentViewController.willMoveToParentViewController(nil)
             ContentViewController.removeFromParentViewController()
             ContentViewController.view.removeFromSuperview()
         }
         
         ContentViewController = contentViewController
         addChildViewController(ContentViewController)
+        ContentViewController.didMoveToParentViewController(self)
+        
         view.addSubview(ContentViewController.view)
         view.bringSubviewToFront(ContentViewController.view)
         
