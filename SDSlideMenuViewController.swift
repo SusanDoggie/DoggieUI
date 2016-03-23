@@ -41,7 +41,7 @@ public class SDSlideMenuViewController: UIViewController {
     @IBInspectable public var shadowWidth: CGFloat = 3
     @IBInspectable public var shadowRadius: CGFloat = 3
     @IBInspectable public var shadowOpacity: Float = 0.25
-    @IBInspectable public var shadowLayerOpacity: Float = 0.6
+    @IBInspectable public var shadowLayerOpacity: Float = 0.4
     @IBInspectable public var shadowColor: UIColor = UIColor.blackColor()
     
     @IBInspectable public var scrollsToTop: Bool = true
@@ -75,6 +75,19 @@ public class SDSlideMenuViewController: UIViewController {
     public override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
+        
+        shadowLayer = UIView(frame: view.frame)
+        shadowLayer.backgroundColor = shadowColor
+        shadowLayer.alpha = CGFloat(shadowLayerOpacity)
+        shadowLayer.userInteractionEnabled = false
+        view.addSubview(shadowLayer)
+        
+        shadowLayer.translatesAutoresizingMaskIntoConstraints = false
+        
+        var constraints: [NSLayoutConstraint] = []
+        constraints.appendContentsOf(NSLayoutConstraint.constraintsWithVisualFormat("V:|[shadow]|", options: NSLayoutFormatOptions(rawValue: 0), metrics: nil, views: ["shadow": shadowLayer]))
+        constraints.appendContentsOf(NSLayoutConstraint.constraintsWithVisualFormat("H:|[shadow]|", options: NSLayoutFormatOptions(rawValue: 0), metrics: nil, views: ["shadow": shadowLayer]))
+        self.view.addConstraints(constraints)
         
         performSegueWithIdentifier("MenuRoot", sender: nil)
         performSegueWithIdentifier("MainContent", sender: nil)
@@ -111,22 +124,10 @@ extension SDSlideMenuViewController {
             hidden = MenuRootViewController.view.hidden
             MenuRootViewController.removeFromParentViewController()
             MenuRootViewController.view.removeFromSuperview()
-            shadowLayer.removeFromSuperview()
         }
         
-        shadowLayer = UIView(frame: view.frame)
-        shadowLayer.backgroundColor = shadowColor
         shadowLayer.alpha = hidden ? CGFloat(shadowLayerOpacity) : 0
-        shadowLayer.userInteractionEnabled = false
-        view.addSubview(shadowLayer)
         view.sendSubviewToBack(shadowLayer)
-        
-        shadowLayer.translatesAutoresizingMaskIntoConstraints = false
-        
-        var constraints: [NSLayoutConstraint] = []
-        constraints.appendContentsOf(NSLayoutConstraint.constraintsWithVisualFormat("V:|[shadow]|", options: NSLayoutFormatOptions(rawValue: 0), metrics: nil, views: ["shadow": shadowLayer]))
-        constraints.appendContentsOf(NSLayoutConstraint.constraintsWithVisualFormat("H:|[shadow]|", options: NSLayoutFormatOptions(rawValue: 0), metrics: nil, views: ["shadow": shadowLayer]))
-        self.view.addConstraints(constraints)
         
         MenuRootViewController = rootViewController
         addChildViewController(MenuRootViewController)

@@ -27,7 +27,10 @@ import UIKit
 
 public class SDSwappageController: UIViewController {
     
-    public var transitionAnimateDuration: Double = 0.3
+    @IBInspectable public var springDampingTransformDuration: Double = 0.4
+    @IBInspectable public var springDampingTransformDelay: Double = 0.0
+    @IBInspectable public var springDampingRatio: CGFloat = 1.0
+    @IBInspectable public var springDampingVelocity: CGFloat = 1.0
     
     public var transitionAnimateOptions: UIViewAnimationOptions = []
     
@@ -61,7 +64,7 @@ extension SDSwappageController {
         toView.alpha = 1
     }
     
-    public func pushViewCompletion() {
+    public func pushViewCompletion(fromView: UIView, toView: UIView) {
         
     }
     
@@ -77,7 +80,7 @@ extension SDSwappageController {
         toView.alpha = 1
     }
     
-    public func popViewCompletion() {
+    public func popViewCompletion(fromView: UIView, toView: UIView) {
         
     }
 }
@@ -96,9 +99,25 @@ extension SDSwappageController {
         
         if animated {
             self.pushViewAnimateBegin(fromViewController.view, toView: toViewController.view)
-            self.transitionFromViewController(fromViewController, toViewController: toViewController, duration: transitionAnimateDuration, options: transitionAnimateOptions, animations: { self.pushViewAnimate(fromViewController.view, toView: toViewController.view) }, completion: { _ in self.pushViewCompletion() })
+            self.view.addSubview(toViewController.view)
+            UIView.animateWithDuration(
+                springDampingTransformDuration,
+                delay: springDampingTransformDelay,
+                usingSpringWithDamping: springDampingRatio,
+                initialSpringVelocity: springDampingVelocity,
+                options: transitionAnimateOptions,
+                animations: {
+                    self.pushViewAnimate(fromViewController.view, toView: toViewController.view)
+                },
+                completion: { _ in
+                    self.view.addSubview(toViewController.view)
+                    fromViewController.view.removeFromSuperview()
+                    self.pushViewCompletion(fromViewController.view, toView: toViewController.view)
+            })
         } else {
-            self.transitionFromViewController(fromViewController, toViewController: toViewController, duration: 0, options: [], animations: nil, completion: { _ in self.pushViewCompletion() })
+            self.view.addSubview(toViewController.view)
+            fromViewController.view.removeFromSuperview()
+            self.pushViewCompletion(fromViewController.view, toView: toViewController.view)
         }
     }
     
@@ -106,9 +125,25 @@ extension SDSwappageController {
         
         if animated {
             self.popViewAnimateBegin(fromViewController.view, toView: toViewController.view)
-            self.transitionFromViewController(fromViewController, toViewController: toViewController, duration: transitionAnimateDuration, options: transitionAnimateOptions, animations: { self.popViewAnimate(fromViewController.view, toView: toViewController.view) }, completion: { _ in self.popViewCompletion() })
+            self.view.addSubview(toViewController.view)
+            UIView.animateWithDuration(
+                springDampingTransformDuration,
+                delay: springDampingTransformDelay,
+                usingSpringWithDamping: springDampingRatio,
+                initialSpringVelocity: springDampingVelocity,
+                options: transitionAnimateOptions,
+                animations: {
+                    self.popViewAnimate(fromViewController.view, toView: toViewController.view)
+                },
+                completion: { _ in
+                    self.view.addSubview(toViewController.view)
+                    fromViewController.view.removeFromSuperview()
+                    self.popViewCompletion(fromViewController.view, toView: toViewController.view)
+            })
         } else {
-            self.transitionFromViewController(fromViewController, toViewController: toViewController, duration: 0, options: [], animations: nil, completion: { _ in self.popViewCompletion() })
+            self.view.addSubview(toViewController.view)
+            fromViewController.view.removeFromSuperview()
+            self.popViewCompletion(fromViewController.view, toView: toViewController.view)
         }
     }
     
