@@ -223,27 +223,16 @@ extension SDSwappageController {
 
 extension UIViewController {
     
-    public var swappageController: SDSwappageController! {
-        var current = self
+    public var swappageController: SDSwappageController? {
         
-        if current is SDSwappageController {
-            return current as! SDSwappageController
-        }
-        
-        while current.parentViewController != nil {
-            
-            if current.parentViewController is SDSwappageController {
-                return current.parentViewController as! SDSwappageController
-            }
-            current = current.parentViewController!
-        }
-        return nil
+        return self as? SDSwappageController ?? self.parentViewController?.swappageController
     }
 }
 
 public class SDSwappageSegue: UIStoryboardSegue {
     
     public override func perform() {
+        
         sourceViewController.swappageController.pushViewController(destinationViewController, animated: true)
     }
 }
