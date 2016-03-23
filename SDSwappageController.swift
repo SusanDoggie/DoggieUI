@@ -110,7 +110,6 @@ extension SDSwappageController {
                     self.pushViewAnimate(fromViewController.view, toView: toViewController.view)
                 },
                 completion: { _ in
-                    self.view.addSubview(toViewController.view)
                     fromViewController.view.removeFromSuperview()
                     self.pushViewCompletion(fromViewController.view, toView: toViewController.view)
             })
@@ -136,7 +135,6 @@ extension SDSwappageController {
                     self.popViewAnimate(fromViewController.view, toView: toViewController.view)
                 },
                 completion: { _ in
-                    self.view.addSubview(toViewController.view)
                     fromViewController.view.removeFromSuperview()
                     self.popViewCompletion(fromViewController.view, toView: toViewController.view)
             })
