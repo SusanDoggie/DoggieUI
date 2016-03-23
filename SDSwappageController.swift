@@ -233,6 +233,6 @@ public class SDSwappageSegue: UIStoryboardSegue {
     
     public override func perform() {
         
-        sourceViewController.swappageController.pushViewController(destinationViewController, animated: true)
+        sourceViewController.swappageController?.pushViewController(destinationViewController, animated: true)
     }
 }
