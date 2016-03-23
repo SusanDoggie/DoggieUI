@@ -151,8 +151,8 @@ extension SDSwappageController {
         self.addChildViewController(viewController)
         if currentViewController != nil {
             self.push(currentViewController!, toViewController: viewController, animated: animated)
-            viewController.didMoveToParentViewController(self)
         }
+        viewController.didMoveToParentViewController(self)
     }
     
     public func popViewControllerAnimated(animated: Bool) -> UIViewController? {
