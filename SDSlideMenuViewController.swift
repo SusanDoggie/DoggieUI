@@ -243,6 +243,7 @@ extension SDSlideMenuViewController {
         if position != 0 {
             MenuRootViewController.view.hidden = false
             shadowLayer.hidden = false
+            contentMaskView.userInteractionEnabled = false
         }
         UIView.animateWithDuration(
             self.springDampingTransformDuration,
@@ -260,6 +261,7 @@ extension SDSlideMenuViewController {
                 if position == 0 {
                     self.MenuRootViewController.view.hidden = true
                     self.shadowLayer.hidden = true
+                    self.contentMaskView.userInteractionEnabled = true
                 }
         })
     }
@@ -303,6 +305,7 @@ extension SDSlideMenuViewController: UIGestureRecognizerDelegate {
             
             MenuRootViewController.view.hidden = false
             shadowLayer.hidden = false
+            contentMaskView.userInteractionEnabled = false
             sender.setTranslation(CGPointMake(contentContainerView.transform.tx, 0), inView: view)
         case UIGestureRecognizerState.Changed:
             
