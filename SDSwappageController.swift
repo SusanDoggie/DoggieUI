@@ -42,6 +42,10 @@ public class SDSwappageController: UIViewController {
         
         self.performSegueWithIdentifier(SDSwappageController.rootViewControllerIdentifier, sender: self)
         self.view.addSubview(self.rootView)
+        
+        self.rootView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activateConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|[content]|", options: NSLayoutFormatOptions(rawValue: 0), metrics: nil, views: ["content": self.rootView]))
+        NSLayoutConstraint.activateConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|[content]|", options: NSLayoutFormatOptions(rawValue: 0), metrics: nil, views: ["content": self.rootView]))
     }
     
     public override func didReceiveMemoryWarning() {
@@ -97,9 +101,14 @@ extension SDSwappageController {
     
     private func push(fromViewController: UIViewController, toViewController: UIViewController, animated: Bool) {
         
+        self.view.addSubview(toViewController.view)
+        toViewController.view.frame = self.view.frame
+        toViewController.view.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activateConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|[content]|", options: NSLayoutFormatOptions(rawValue: 0), metrics: nil, views: ["content": toViewController.view]))
+        NSLayoutConstraint.activateConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|[content]|", options: NSLayoutFormatOptions(rawValue: 0), metrics: nil, views: ["content": toViewController.view]))
+        
         if animated {
             self.pushViewAnimateBegin(fromViewController.view, toView: toViewController.view)
-            self.view.addSubview(toViewController.view)
             UIView.animateWithDuration(
                 springDampingTransformDuration,
                 delay: springDampingTransformDelay,
@@ -114,7 +123,6 @@ extension SDSwappageController {
                     self.pushViewCompletion(fromViewController.view, toView: toViewController.view)
             })
         } else {
-            self.view.addSubview(toViewController.view)
             fromViewController.view.removeFromSuperview()
             self.pushViewCompletion(fromViewController.view, toView: toViewController.view)
         }
@@ -122,9 +130,14 @@ extension SDSwappageController {
     
     private func pop(fromViewController: UIViewController, toViewController: UIViewController, animated: Bool) {
         
+        self.view.addSubview(toViewController.view)
+        toViewController.view.frame = self.view.frame
+        toViewController.view.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activateConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|[content]|", options: NSLayoutFormatOptions(rawValue: 0), metrics: nil, views: ["content": toViewController.view]))
+        NSLayoutConstraint.activateConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|[content]|", options: NSLayoutFormatOptions(rawValue: 0), metrics: nil, views: ["content": toViewController.view]))
+        
         if animated {
             self.popViewAnimateBegin(fromViewController.view, toView: toViewController.view)
-            self.view.addSubview(toViewController.view)
             UIView.animateWithDuration(
                 springDampingTransformDuration,
                 delay: springDampingTransformDelay,
@@ -139,7 +152,6 @@ extension SDSwappageController {
                     self.popViewCompletion(fromViewController.view, toView: toViewController.view)
             })
         } else {
-            self.view.addSubview(toViewController.view)
             fromViewController.view.removeFromSuperview()
             self.popViewCompletion(fromViewController.view, toView: toViewController.view)
         }

@@ -121,11 +121,9 @@ import QuartzCore
         pageControl.translatesAutoresizingMaskIntoConstraints = false
         contentView.translatesAutoresizingMaskIntoConstraints = false
         
-        var constraints: [NSLayoutConstraint] = []
-        constraints.appendContentsOf(NSLayoutConstraint.constraintsWithVisualFormat("V:|[content][page]|", options: NSLayoutFormatOptions(rawValue: 0), metrics: nil, views: ["content": contentView, "page": pageControl]))
-        constraints.appendContentsOf(NSLayoutConstraint.constraintsWithVisualFormat("H:|[content]|", options: NSLayoutFormatOptions(rawValue: 0), metrics: nil, views: ["content": contentView]))
-        constraints.append(NSLayoutConstraint(item: pageControl, attribute: .CenterX, relatedBy: .Equal, toItem: self, attribute: .CenterX, multiplier: 1, constant: 0))
-        self.addConstraints(constraints)
+        NSLayoutConstraint.activateConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|[content][page]|", options: NSLayoutFormatOptions(rawValue: 0), metrics: nil, views: ["content": contentView, "page": pageControl]))
+        NSLayoutConstraint.activateConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|[content]|", options: NSLayoutFormatOptions(rawValue: 0), metrics: nil, views: ["content": contentView]))
+        NSLayoutConstraint.activateConstraints([NSLayoutConstraint(item: pageControl, attribute: .CenterX, relatedBy: .Equal, toItem: self, attribute: .CenterX, multiplier: 1, constant: 0)])
         
         pan = UIPanGestureRecognizer(target: self, action: #selector(SDItemSelector.handlePan(_:)))
         pan.delegate = self
@@ -142,11 +140,9 @@ import QuartzCore
         pageControl.translatesAutoresizingMaskIntoConstraints = false
         contentView.translatesAutoresizingMaskIntoConstraints = false
         
-        var constraints: [NSLayoutConstraint] = []
-        constraints.appendContentsOf(NSLayoutConstraint.constraintsWithVisualFormat("V:|[content][page]|", options: NSLayoutFormatOptions(rawValue: 0), metrics: nil, views: ["content": contentView, "page": pageControl]))
-        constraints.appendContentsOf(NSLayoutConstraint.constraintsWithVisualFormat("H:|[content]|", options: NSLayoutFormatOptions(rawValue: 0), metrics: nil, views: ["content": contentView]))
-        constraints.append(NSLayoutConstraint(item: pageControl, attribute: .CenterX, relatedBy: .Equal, toItem: self, attribute: .CenterX, multiplier: 1, constant: 0))
-        self.addConstraints(constraints)
+        NSLayoutConstraint.activateConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|[content][page]|", options: NSLayoutFormatOptions(rawValue: 0), metrics: nil, views: ["content": contentView, "page": pageControl]))
+        NSLayoutConstraint.activateConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|[content]|", options: NSLayoutFormatOptions(rawValue: 0), metrics: nil, views: ["content": contentView]))
+        NSLayoutConstraint.activateConstraints([NSLayoutConstraint(item: pageControl, attribute: .CenterX, relatedBy: .Equal, toItem: self, attribute: .CenterX, multiplier: 1, constant: 0)])
         
         pan = UIPanGestureRecognizer(target: self, action: #selector(SDItemSelector.handlePan(_:)))
         pan.maximumNumberOfTouches = 1

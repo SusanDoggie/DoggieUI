@@ -49,6 +49,8 @@ public class SDSlideMenuViewController: UIViewController {
     public var MenuRootViewController: UIViewController!
     public var ContentViewController: UIViewController!
     
+    private var contentContainerView: UIView!
+    private var contentMaskView: UIView!
     private var shadowLayer: UIView!
     
     public var menuRootView: UIView! {
@@ -76,18 +78,35 @@ public class SDSlideMenuViewController: UIViewController {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         
+        contentContainerView = UIView(frame: view.frame)
+        if self.shadowWidth > 0 {
+            contentContainerView.layer.masksToBounds = false
+            contentContainerView.layer.shadowOpacity = self.shadowOpacity
+            contentContainerView.layer.shadowRadius = self.shadowRadius
+            contentContainerView.layer.shadowOffset = CGSize(width: -self.shadowWidth, height: 0)
+            contentContainerView.layer.shadowColor = self.shadowColor.CGColor
+        }
+        view.addSubview(contentContainerView)
+        
         shadowLayer = UIView(frame: view.frame)
         shadowLayer.backgroundColor = shadowColor
         shadowLayer.alpha = CGFloat(shadowLayerOpacity)
         shadowLayer.userInteractionEnabled = false
         view.addSubview(shadowLayer)
         
-        shadowLayer.translatesAutoresizingMaskIntoConstraints = false
+        contentMaskView = UIView(frame: view.frame)
+        contentMaskView.layer.masksToBounds = true
+        contentContainerView.addSubview(contentMaskView)
         
-        var constraints: [NSLayoutConstraint] = []
-        constraints.appendContentsOf(NSLayoutConstraint.constraintsWithVisualFormat("V:|[shadow]|", options: NSLayoutFormatOptions(rawValue: 0), metrics: nil, views: ["shadow": shadowLayer]))
-        constraints.appendContentsOf(NSLayoutConstraint.constraintsWithVisualFormat("H:|[shadow]|", options: NSLayoutFormatOptions(rawValue: 0), metrics: nil, views: ["shadow": shadowLayer]))
-        self.view.addConstraints(constraints)
+        contentContainerView.translatesAutoresizingMaskIntoConstraints = false
+        shadowLayer.translatesAutoresizingMaskIntoConstraints = false
+        contentMaskView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activateConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|[content]|", options: NSLayoutFormatOptions(rawValue: 0), metrics: nil, views: ["content": contentContainerView]))
+        NSLayoutConstraint.activateConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|[content]|", options: NSLayoutFormatOptions(rawValue: 0), metrics: nil, views: ["content": contentContainerView]))
+        NSLayoutConstraint.activateConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|[shadow]|", options: NSLayoutFormatOptions(rawValue: 0), metrics: nil, views: ["shadow": shadowLayer]))
+        NSLayoutConstraint.activateConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|[shadow]|", options: NSLayoutFormatOptions(rawValue: 0), metrics: nil, views: ["shadow": shadowLayer]))
+        NSLayoutConstraint.activateConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|[mask]|", options: NSLayoutFormatOptions(rawValue: 0), metrics: nil, views: ["mask": contentMaskView]))
+        NSLayoutConstraint.activateConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|[mask]|", options: NSLayoutFormatOptions(rawValue: 0), metrics: nil, views: ["mask": contentMaskView]))
         
         performSegueWithIdentifier("MenuRoot", sender: nil)
         performSegueWithIdentifier("MainContent", sender: nil)
@@ -137,12 +156,15 @@ extension SDSlideMenuViewController {
         view.addSubview(MenuRootViewController.view)
         view.sendSubviewToBack(MenuRootViewController.view)
         
+        MenuRootViewController.view.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activateConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|[menu]|", options: NSLayoutFormatOptions(rawValue: 0), metrics: nil, views: ["menu": MenuRootViewController.view]))
+        NSLayoutConstraint.activateConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|[menu]|", options: NSLayoutFormatOptions(rawValue: 0), metrics: nil, views: ["menu": MenuRootViewController.view]))
+        
         MenuRootViewController.view.hidden = hidden
         shadowLayer.hidden = hidden
     }
     
     private func _addContentViewController(contentViewController: UIViewController) {
-        let position = ContentViewController?.view.transform.tx ?? 0
         
         if let ContentViewController = ContentViewController {
             ContentViewController.willMoveToParentViewController(nil)
@@ -154,19 +176,12 @@ extension SDSlideMenuViewController {
         addChildViewController(ContentViewController)
         ContentViewController.didMoveToParentViewController(self)
         
-        view.addSubview(ContentViewController.view)
-        view.bringSubviewToFront(ContentViewController.view)
+        contentMaskView.addSubview(ContentViewController.view)
+        view.bringSubviewToFront(contentContainerView)
         
-        ContentViewController.view.transform.tx = position
-        
-        if self.shadowWidth > 0 {
-            
-            ContentViewController.view.layer.masksToBounds = false
-            ContentViewController.view.layer.shadowOpacity = self.shadowOpacity
-            ContentViewController.view.layer.shadowRadius = self.shadowRadius
-            ContentViewController.view.layer.shadowOffset = CGSize(width: -self.shadowWidth, height: 0)
-            ContentViewController.view.layer.shadowColor = self.shadowColor.CGColor
-        }
+        ContentViewController.view.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activateConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|[content]|", options: NSLayoutFormatOptions(rawValue: 0), metrics: nil, views: ["content": ContentViewController.view]))
+        NSLayoutConstraint.activateConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|[content]|", options: NSLayoutFormatOptions(rawValue: 0), metrics: nil, views: ["content": ContentViewController.view]))
     }
     
     private func addContentViewController(contentViewController: UIViewController) {
@@ -182,7 +197,7 @@ extension SDSlideMenuViewController {
                     delay: self.linearTransformDelay,
                     options: UIViewAnimationOptions.CurveLinear,
                     animations: {
-                        self.ContentViewController.view.transform.tx = rightPosition
+                        self.contentContainerView.transform.tx = rightPosition
                     },
                     completion: { finished in
                         self._addContentViewController(contentViewController)
@@ -239,7 +254,7 @@ extension SDSlideMenuViewController {
                 self.MenuRootViewController.view.transform.tx = 0
                 self.shadowLayer.transform.tx = 0
                 self.shadowLayer.alpha = position == 0 ? CGFloat(self.shadowLayerOpacity) : 0
-                self.ContentViewController.view.transform.tx = position
+                self.contentContainerView.transform.tx = position
             },
             completion: { finished in
                 if position == 0 {
@@ -262,7 +277,7 @@ extension SDSlideMenuViewController: UIGestureRecognizerDelegate {
             if toggleState != 1 {
                 return false
             }
-            return CGRectContainsPoint(ContentViewController.view.frame, touch.locationInView(view))
+            return CGRectContainsPoint(contentContainerView.frame, touch.locationInView(view))
         }
         
         return true
@@ -288,7 +303,7 @@ extension SDSlideMenuViewController: UIGestureRecognizerDelegate {
             
             MenuRootViewController.view.hidden = false
             shadowLayer.hidden = false
-            sender.setTranslation(CGPointMake(ContentViewController.view.transform.tx, 0), inView: view)
+            sender.setTranslation(CGPointMake(contentContainerView.transform.tx, 0), inView: view)
         case UIGestureRecognizerState.Changed:
             
             var position = translation.x
@@ -298,18 +313,18 @@ extension SDSlideMenuViewController: UIGestureRecognizerDelegate {
                 MenuRootViewController.view.transform.tx = position
                 shadowLayer.transform.tx = position
                 shadowLayer.alpha = CGFloat(self.shadowLayerOpacity)
-                ContentViewController.view.transform.tx = position
+                contentContainerView.transform.tx = position
             } else if position > self.transformTrailing {
                 position = sqrt((position - self.transformTrailing) * 16) + self.transformTrailing
                 MenuRootViewController.view.transform.tx = 0
                 shadowLayer.transform.tx = 0
                 shadowLayer.alpha = 0
-                ContentViewController.view.transform.tx = position
+                contentContainerView.transform.tx = position
             } else {
                 MenuRootViewController.view.transform.tx = 0
                 shadowLayer.transform.tx = 0
                 shadowLayer.alpha = max(0, min(1, CGFloat(self.shadowLayerOpacity) * (self.transformTrailing - position) / self.transformTrailing))
-                ContentViewController.view.transform.tx = position
+                contentContainerView.transform.tx = position
             }
             
         case UIGestureRecognizerState.Ended:
