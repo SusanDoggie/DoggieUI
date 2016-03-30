@@ -216,7 +216,7 @@ extension SDSwappageController {
     
     public override func canPerformUnwindSegueAction(action: Selector, fromViewController: UIViewController, withSender sender: AnyObject) -> Bool {
         
-        return self.rootViewController != fromViewController
+        return self.childViewControllers.dropFirst().contains(fromViewController)
     }
     
     @available(iOS 9.0, *)
@@ -229,7 +229,9 @@ extension SDSwappageController {
     }
     @IBAction public override func unwindForSegue(unwindSegue: UIStoryboardSegue, towardsViewController subsequentVC: UIViewController) {
         
-        self.popToViewController(subsequentVC, animated: true)
+        if self.childViewControllers.contains(subsequentVC) {
+            self.popToViewController(subsequentVC, animated: true)
+        }
     }
 }
 
