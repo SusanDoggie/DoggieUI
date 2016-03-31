@@ -185,28 +185,89 @@ extension SDSlideMenuViewController {
     }
     
     private func addContentViewController(contentViewController: UIViewController) {
-        let rightPosition = view.frame.width + self.shadowWidth
         
-        if toggleState == 1 && ContentViewController != nil {
-            if ContentViewController.equalTo(contentViewController) {
-                self.slideDampingAnimation(0)
-                self.toggleState = 0
-            } else {
+        if ContentViewController == nil {
+            _addContentViewController(contentViewController)
+        } else {
+            let rightPosition = view.frame.width + self.shadowWidth
+            
+            if toggleState == 1 {
+                if ContentViewController.equalTo(contentViewController) {
+                    self.slideDampingAnimation(0)
+                    self.toggleState = 0
+                } else {
+                    UIView.animateWithDuration(
+                        self.linearTransformDuration,
+                        delay: self.linearTransformDelay,
+                        options: UIViewAnimationOptions.CurveLinear,
+                        animations: {
+                            self.contentContainerView.transform.tx = rightPosition
+                        },
+                        completion: { finished in
+                            self._addContentViewController(contentViewController)
+                            self.slideDampingAnimation(0)
+                            self.toggleState = 0
+                    })
+                }
+            } else if !ContentViewController.equalTo(contentViewController) {
+                
+                let _shadowLayer = UIView(frame: view.frame)
+                _shadowLayer.backgroundColor = self.shadowColor
+                _shadowLayer.alpha = 0
+                _shadowLayer.userInteractionEnabled = false
+                view.addSubview(_shadowLayer)
+                view.bringSubviewToFront(_shadowLayer)
+                
+                view.addSubview(contentViewController.view)
+                view.bringSubviewToFront(contentViewController.view)
+                contentViewController.view.transform.tx = rightPosition
+                
+                let translatesAutoresizingMaskIntoConstraints = contentViewController.view.translatesAutoresizingMaskIntoConstraints
+                
+                _shadowLayer.translatesAutoresizingMaskIntoConstraints = false
+                contentViewController.view.translatesAutoresizingMaskIntoConstraints = false
+                NSLayoutConstraint.activateConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|[shadow]|", options: NSLayoutFormatOptions(rawValue: 0), metrics: nil, views: ["shadow": shadowLayer]))
+                NSLayoutConstraint.activateConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|[shadow]|", options: NSLayoutFormatOptions(rawValue: 0), metrics: nil, views: ["shadow": shadowLayer]))
+                NSLayoutConstraint.activateConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|[content]|", options: NSLayoutFormatOptions(rawValue: 0), metrics: nil, views: ["content": contentViewController.view]))
+                NSLayoutConstraint.activateConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|[content]|", options: NSLayoutFormatOptions(rawValue: 0), metrics: nil, views: ["content": contentViewController.view]))
+                
+                let masksToBounds = contentViewController.view.layer.masksToBounds
+                let shadowOpacity = contentViewController.view.layer.shadowOpacity
+                let shadowRadius = contentViewController.view.layer.shadowRadius
+                let shadowOffset = contentViewController.view.layer.shadowOffset
+                let shadowColor = contentViewController.view.layer.shadowColor
+                if self.shadowWidth > 0 {
+                    contentViewController.view.layer.masksToBounds = false
+                    contentViewController.view.layer.shadowOpacity = self.shadowOpacity
+                    contentViewController.view.layer.shadowRadius = self.shadowRadius
+                    contentViewController.view.layer.shadowOffset = CGSize(width: -self.shadowWidth, height: 0)
+                    contentViewController.view.layer.shadowColor = self.shadowColor.CGColor
+                }
+                
                 UIView.animateWithDuration(
-                    self.linearTransformDuration,
-                    delay: self.linearTransformDelay,
+                    self.springDampingTransformDuration,
+                    delay: self.springDampingTransformDelay,
+                    usingSpringWithDamping: self.springDampingRatio,
+                    initialSpringVelocity: self.springDampingVelocity,
                     options: UIViewAnimationOptions.CurveLinear,
                     animations: {
-                        self.contentContainerView.transform.tx = rightPosition
+                        _shadowLayer.alpha = CGFloat(self.shadowLayerOpacity)
+                        contentViewController.view.transform.tx = 0
                     },
                     completion: { finished in
+                        _shadowLayer.removeFromSuperview()
+                        contentViewController.view.translatesAutoresizingMaskIntoConstraints = translatesAutoresizingMaskIntoConstraints
+                        if self.shadowWidth > 0 {
+                            contentViewController.view.layer.masksToBounds = masksToBounds
+                            contentViewController.view.layer.shadowOpacity = shadowOpacity
+                            contentViewController.view.layer.shadowRadius = shadowRadius
+                            contentViewController.view.layer.shadowOffset = shadowOffset
+                            contentViewController.view.layer.shadowColor = shadowColor
+                        }
+                        contentViewController.view.removeFromSuperview()
                         self._addContentViewController(contentViewController)
-                        self.slideDampingAnimation(0)
-                        self.toggleState = 0
                 })
             }
-        } else {
-            _addContentViewController(contentViewController)
         }
     }
 }
