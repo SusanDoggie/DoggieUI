@@ -46,6 +46,15 @@ public class SDSlideMenuViewController: UIViewController {
     
     @IBInspectable public var scrollsToTop: Bool = true
     
+    @IBInspectable public var disableMenu: Bool = false {
+        didSet {
+            if disableMenu && toggleState == 1 {
+                slideDampingAnimation(0)
+                toggleState = 0
+            }
+        }
+    }
+    
     public var MenuRootViewController: UIViewController!
     public var ContentViewController: UIViewController!
     
@@ -333,17 +342,17 @@ extension SDSlideMenuViewController: UIGestureRecognizerDelegate {
     public func gestureRecognizer(gestureRecognizer: UIGestureRecognizer, shouldReceiveTouch touch: UITouch) -> Bool {
         
         if panRecongnizer === gestureRecognizer {
-            return true
+            return !disableMenu
         }
         
         if tapRecongnizer === gestureRecognizer {
             if toggleState != 1 {
                 return false
             }
-            return CGRectContainsPoint(contentContainerView.frame, touch.locationInView(view))
+            return CGRectContainsPoint(contentContainerView.frame, touch.locationInView(view)) && !disableMenu
         }
         
-        return true
+        return !disableMenu
     }
     
     public func gestureRecognizerShouldBegin(gestureRecognizer: UIGestureRecognizer) -> Bool {

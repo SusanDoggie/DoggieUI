@@ -203,7 +203,7 @@ extension SDSwappageController {
             }
             self.pop(self.childViewControllers.last!, toViewController: self.childViewControllers.first!, animated: animated)
             for item in viewControllersToPop {
-                item .removeFromParentViewController()
+                item.removeFromParentViewController()
             }
             return viewControllersToPop
         }
