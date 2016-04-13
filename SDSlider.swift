@@ -40,7 +40,7 @@ import QuartzCore
     }
     @IBInspectable public var value: Double = 0.5 {
         didSet {
-            value = value.clamp(minValue...maxValue)
+            value = max(minValue, min(maxValue, value))
             updateThumbViewPosition()
         }
     }
