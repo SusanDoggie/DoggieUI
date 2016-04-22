@@ -227,9 +227,9 @@ extension SDSlider {
         }
         trackView.frame.size = CGSize(width: trackWidth, height: trackHeight)
         if trackImage == nil && minImage == nil && maxImage == nil {
-            trackView.layer.cornerRadius = trackCornerRadius
+            trackView.cornerRadius = trackCornerRadius
         } else {
-            trackView.layer.cornerRadius = 0
+            trackView.cornerRadius = 0
         }
     }
     private func updateThumbView() {
@@ -237,10 +237,10 @@ extension SDSlider {
         thumbView.highlightedImage = thumbHighlightedImage
         if thumbImage != nil {
             thumbView.backgroundColor = UIColor.clearColor()
-            thumbView.layer.cornerRadius = 0.0
+            thumbView.cornerRadius = 0.0
         } else {
             thumbView.backgroundColor = thumbTintColor
-            thumbView.layer.cornerRadius = thumbCornerRadius
+            thumbView.cornerRadius = thumbCornerRadius
         }
         updateThumbViewPosition()
         thumbView.frame.size = CGSize(width: thumbWidth, height: thumbHeight)
