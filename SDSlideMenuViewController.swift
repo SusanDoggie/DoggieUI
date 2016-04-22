@@ -90,10 +90,10 @@ public class SDSlideMenuViewController: UIViewController {
         contentContainerView = UIView(frame: view.frame)
         if self.shadowWidth > 0 {
             contentContainerView.layer.masksToBounds = false
-            contentContainerView.layer.shadowOpacity = self.shadowOpacity
-            contentContainerView.layer.shadowRadius = self.shadowRadius
-            contentContainerView.layer.shadowOffset = CGSize(width: -self.shadowWidth, height: 0)
-            contentContainerView.layer.shadowColor = self.shadowColor.CGColor
+            contentContainerView.shadowOpacity = self.shadowOpacity
+            contentContainerView.shadowRadius = self.shadowRadius
+            contentContainerView.shadowOffset = CGSize(width: -self.shadowWidth, height: 0)
+            contentContainerView.shadowColor = self.shadowColor
         }
         view.addSubview(contentContainerView)
         
@@ -241,16 +241,16 @@ extension SDSlideMenuViewController {
                 NSLayoutConstraint.activateConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|[content]|", options: NSLayoutFormatOptions(rawValue: 0), metrics: nil, views: ["content": contentViewController.view]))
                 
                 let masksToBounds = contentViewController.view.layer.masksToBounds
-                let shadowOpacity = contentViewController.view.layer.shadowOpacity
-                let shadowRadius = contentViewController.view.layer.shadowRadius
-                let shadowOffset = contentViewController.view.layer.shadowOffset
-                let shadowColor = contentViewController.view.layer.shadowColor
+                let shadowOpacity = contentViewController.view.shadowOpacity
+                let shadowRadius = contentViewController.view.shadowRadius
+                let shadowOffset = contentViewController.view.shadowOffset
+                let shadowColor = contentViewController.view.shadowColor
                 if self.shadowWidth > 0 {
                     contentViewController.view.layer.masksToBounds = false
-                    contentViewController.view.layer.shadowOpacity = self.shadowOpacity
-                    contentViewController.view.layer.shadowRadius = self.shadowRadius
-                    contentViewController.view.layer.shadowOffset = CGSize(width: -self.shadowWidth, height: 0)
-                    contentViewController.view.layer.shadowColor = self.shadowColor.CGColor
+                    contentViewController.view.shadowOpacity = self.shadowOpacity
+                    contentViewController.view.shadowRadius = self.shadowRadius
+                    contentViewController.view.shadowOffset = CGSize(width: -self.shadowWidth, height: 0)
+                    contentViewController.view.shadowColor = self.shadowColor
                 }
                 
                 UIView.animateWithDuration(
@@ -268,10 +268,10 @@ extension SDSlideMenuViewController {
                         contentViewController.view.translatesAutoresizingMaskIntoConstraints = translatesAutoresizingMaskIntoConstraints
                         if self.shadowWidth > 0 {
                             contentViewController.view.layer.masksToBounds = masksToBounds
-                            contentViewController.view.layer.shadowOpacity = shadowOpacity
-                            contentViewController.view.layer.shadowRadius = shadowRadius
-                            contentViewController.view.layer.shadowOffset = shadowOffset
-                            contentViewController.view.layer.shadowColor = shadowColor
+                            contentViewController.view.shadowOpacity = shadowOpacity
+                            contentViewController.view.shadowRadius = shadowRadius
+                            contentViewController.view.shadowOffset = shadowOffset
+                            contentViewController.view.shadowColor = shadowColor
                         }
                         contentViewController.view.removeFromSuperview()
                         self._addContentViewController(contentViewController)
