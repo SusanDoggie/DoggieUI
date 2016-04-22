@@ -39,6 +39,9 @@ public extension UIView {
             layer.cornerRadius = newValue
         }
     }
+}
+
+public extension UIView {
     
     /* The width of the layer's border, inset from the layer bounds. The
      * border is composited above the layer's content and sublayers and
@@ -65,6 +68,9 @@ public extension UIView {
             layer.borderColor = newValue?.CGColor
         }
     }
+}
+
+public extension UIView {
     
     /* The color of the shadow. Defaults to opaque black. Colors created
      * from patterns are currently NOT supported. Animatable. */
@@ -110,6 +116,24 @@ public extension UIView {
         }
         set {
             layer.shadowRadius = newValue
+        }
+    }
+}
+
+public extension UIView {
+    
+    /* Whether or not the geometry of the layer (and its sublayers) is
+     * flipped vertically. Defaults to NO. Note that even when geometry is
+     * flipped, image orientation remains the same (i.e. a CGImageRef
+     * stored in the `contents' property will display the same with both
+     * flipped=NO and flipped=YES, assuming no transform on the layer). */
+    
+    @IBInspectable var geometryFlipped: Bool {
+        get {
+            return layer.geometryFlipped
+        }
+        set {
+            layer.geometryFlipped = newValue
         }
     }
 }
