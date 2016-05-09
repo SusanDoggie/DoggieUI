@@ -110,12 +110,12 @@ public class SDSlideMenuViewController: UIViewController {
         contentContainerView.translatesAutoresizingMaskIntoConstraints = false
         shadowLayer.translatesAutoresizingMaskIntoConstraints = false
         contentMaskView.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activateConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|[content]|", options: NSLayoutFormatOptions(rawValue: 0), metrics: nil, views: ["content": contentContainerView]))
-        NSLayoutConstraint.activateConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|[content]|", options: NSLayoutFormatOptions(rawValue: 0), metrics: nil, views: ["content": contentContainerView]))
-        NSLayoutConstraint.activateConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|[shadow]|", options: NSLayoutFormatOptions(rawValue: 0), metrics: nil, views: ["shadow": shadowLayer]))
-        NSLayoutConstraint.activateConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|[shadow]|", options: NSLayoutFormatOptions(rawValue: 0), metrics: nil, views: ["shadow": shadowLayer]))
-        NSLayoutConstraint.activateConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|[mask]|", options: NSLayoutFormatOptions(rawValue: 0), metrics: nil, views: ["mask": contentMaskView]))
-        NSLayoutConstraint.activateConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|[mask]|", options: NSLayoutFormatOptions(rawValue: 0), metrics: nil, views: ["mask": contentMaskView]))
+        NSLayoutConstraint.activateConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|[content]|", options: [], metrics: nil, views: ["content": contentContainerView]))
+        NSLayoutConstraint.activateConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|[content]|", options: [], metrics: nil, views: ["content": contentContainerView]))
+        NSLayoutConstraint.activateConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|[shadow]|", options: [], metrics: nil, views: ["shadow": shadowLayer]))
+        NSLayoutConstraint.activateConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|[shadow]|", options: [], metrics: nil, views: ["shadow": shadowLayer]))
+        NSLayoutConstraint.activateConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|[mask]|", options: [], metrics: nil, views: ["mask": contentMaskView]))
+        NSLayoutConstraint.activateConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|[mask]|", options: [], metrics: nil, views: ["mask": contentMaskView]))
         
         performSegueWithIdentifier("MenuRoot", sender: nil)
         performSegueWithIdentifier("MainContent", sender: nil)
@@ -166,8 +166,8 @@ extension SDSlideMenuViewController {
         view.sendSubviewToBack(MenuRootViewController.view)
         
         MenuRootViewController.view.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activateConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|[menu]|", options: NSLayoutFormatOptions(rawValue: 0), metrics: nil, views: ["menu": MenuRootViewController.view]))
-        NSLayoutConstraint.activateConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|[menu]|", options: NSLayoutFormatOptions(rawValue: 0), metrics: nil, views: ["menu": MenuRootViewController.view]))
+        NSLayoutConstraint.activateConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|[menu]|", options: [], metrics: nil, views: ["menu": MenuRootViewController.view]))
+        NSLayoutConstraint.activateConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|[menu]|", options: [], metrics: nil, views: ["menu": MenuRootViewController.view]))
         
         MenuRootViewController.view.hidden = hidden
         shadowLayer.hidden = hidden
@@ -189,8 +189,8 @@ extension SDSlideMenuViewController {
         view.bringSubviewToFront(contentContainerView)
         
         ContentViewController.view.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activateConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|[content]|", options: NSLayoutFormatOptions(rawValue: 0), metrics: nil, views: ["content": ContentViewController.view]))
-        NSLayoutConstraint.activateConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|[content]|", options: NSLayoutFormatOptions(rawValue: 0), metrics: nil, views: ["content": ContentViewController.view]))
+        NSLayoutConstraint.activateConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|[content]|", options: [], metrics: nil, views: ["content": ContentViewController.view]))
+        NSLayoutConstraint.activateConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|[content]|", options: [], metrics: nil, views: ["content": ContentViewController.view]))
     }
     
     private func addContentViewController(contentViewController: UIViewController) {
@@ -235,10 +235,10 @@ extension SDSlideMenuViewController {
                 
                 _shadowLayer.translatesAutoresizingMaskIntoConstraints = false
                 contentViewController.view.translatesAutoresizingMaskIntoConstraints = false
-                NSLayoutConstraint.activateConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|[shadow]|", options: NSLayoutFormatOptions(rawValue: 0), metrics: nil, views: ["shadow": shadowLayer]))
-                NSLayoutConstraint.activateConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|[shadow]|", options: NSLayoutFormatOptions(rawValue: 0), metrics: nil, views: ["shadow": shadowLayer]))
-                NSLayoutConstraint.activateConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|[content]|", options: NSLayoutFormatOptions(rawValue: 0), metrics: nil, views: ["content": contentViewController.view]))
-                NSLayoutConstraint.activateConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|[content]|", options: NSLayoutFormatOptions(rawValue: 0), metrics: nil, views: ["content": contentViewController.view]))
+                NSLayoutConstraint.activateConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|[shadow]|", options: [], metrics: nil, views: ["shadow": shadowLayer]))
+                NSLayoutConstraint.activateConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|[shadow]|", options: [], metrics: nil, views: ["shadow": shadowLayer]))
+                NSLayoutConstraint.activateConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|[content]|", options: [], metrics: nil, views: ["content": contentViewController.view]))
+                NSLayoutConstraint.activateConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|[content]|", options: [], metrics: nil, views: ["content": contentViewController.view]))
                 
                 let masksToBounds = contentViewController.view.layer.masksToBounds
                 let shadowOpacity = contentViewController.view.shadowOpacity

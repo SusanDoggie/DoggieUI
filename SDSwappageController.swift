@@ -44,8 +44,8 @@ public class SDSwappageController: UIViewController {
         self.view.addSubview(self.rootView)
         
         self.rootView.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activateConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|[content]|", options: NSLayoutFormatOptions(rawValue: 0), metrics: nil, views: ["content": self.rootView]))
-        NSLayoutConstraint.activateConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|[content]|", options: NSLayoutFormatOptions(rawValue: 0), metrics: nil, views: ["content": self.rootView]))
+        NSLayoutConstraint.activateConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|[content]|", options: [], metrics: nil, views: ["content": self.rootView]))
+        NSLayoutConstraint.activateConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|[content]|", options: [], metrics: nil, views: ["content": self.rootView]))
     }
     
     public override func didReceiveMemoryWarning() {
@@ -104,8 +104,8 @@ extension SDSwappageController {
         self.view.addSubview(toViewController.view)
         toViewController.view.frame = self.view.frame
         toViewController.view.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activateConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|[content]|", options: NSLayoutFormatOptions(rawValue: 0), metrics: nil, views: ["content": toViewController.view]))
-        NSLayoutConstraint.activateConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|[content]|", options: NSLayoutFormatOptions(rawValue: 0), metrics: nil, views: ["content": toViewController.view]))
+        NSLayoutConstraint.activateConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|[content]|", options: [], metrics: nil, views: ["content": toViewController.view]))
+        NSLayoutConstraint.activateConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|[content]|", options: [], metrics: nil, views: ["content": toViewController.view]))
         
         if animated {
             self.pushViewAnimateBegin(fromViewController.view, toView: toViewController.view)
@@ -133,8 +133,8 @@ extension SDSwappageController {
         self.view.addSubview(toViewController.view)
         toViewController.view.frame = self.view.frame
         toViewController.view.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activateConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|[content]|", options: NSLayoutFormatOptions(rawValue: 0), metrics: nil, views: ["content": toViewController.view]))
-        NSLayoutConstraint.activateConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|[content]|", options: NSLayoutFormatOptions(rawValue: 0), metrics: nil, views: ["content": toViewController.view]))
+        NSLayoutConstraint.activateConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|[content]|", options: [], metrics: nil, views: ["content": toViewController.view]))
+        NSLayoutConstraint.activateConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|[content]|", options: [], metrics: nil, views: ["content": toViewController.view]))
         
         if animated {
             self.popViewAnimateBegin(fromViewController.view, toView: toViewController.view)

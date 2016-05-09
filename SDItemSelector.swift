@@ -147,14 +147,14 @@ import QuartzCore
         contentView.translatesAutoresizingMaskIntoConstraints = false
         
         if pageControlInside {
-            inside_constraints = NSLayoutConstraint.constraintsWithVisualFormat("V:|[content]|", options: NSLayoutFormatOptions(rawValue: 0), metrics: nil, views: ["content": contentView])
+            inside_constraints = NSLayoutConstraint.constraintsWithVisualFormat("V:|[content]|", options: [], metrics: nil, views: ["content": contentView])
             inside_constraints.append(NSLayoutConstraint(item: pageControl, attribute: .Bottom, relatedBy: .Equal, toItem: contentView, attribute: .Bottom, multiplier: 1, constant: 0))
             NSLayoutConstraint.activateConstraints(inside_constraints)
         } else {
-            outside_constraints = NSLayoutConstraint.constraintsWithVisualFormat("V:|[content][page]|", options: NSLayoutFormatOptions(rawValue: 0), metrics: nil, views: ["content": contentView, "page": pageControl])
+            outside_constraints = NSLayoutConstraint.constraintsWithVisualFormat("V:|[content][page]|", options: [], metrics: nil, views: ["content": contentView, "page": pageControl])
             NSLayoutConstraint.activateConstraints(outside_constraints)
         }
-        NSLayoutConstraint.activateConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|[content]|", options: NSLayoutFormatOptions(rawValue: 0), metrics: nil, views: ["content": contentView]))
+        NSLayoutConstraint.activateConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|[content]|", options: [], metrics: nil, views: ["content": contentView]))
         NSLayoutConstraint.activateConstraints([NSLayoutConstraint(item: pageControl, attribute: .CenterX, relatedBy: .Equal, toItem: self, attribute: .CenterX, multiplier: 1, constant: 0)])
         
         pan = UIPanGestureRecognizer(target: self, action: #selector(SDItemSelector.handlePan(_:)))
