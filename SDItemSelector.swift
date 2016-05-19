@@ -102,9 +102,11 @@ import QuartzCore
         self.cleanCache()
         if self.numberOfPages != 0 {
             let current = self.itemForIndex(self.currentPage)
-            current.frame = self.contentView.frame
             if current.superview == nil {
                 self.contentView.addSubview(current)
+                current.translatesAutoresizingMaskIntoConstraints = false
+                NSLayoutConstraint.activateConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|[current]|", options: [], metrics: nil, views: ["current": current]))
+                NSLayoutConstraint.activateConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|[current]|", options: [], metrics: nil, views: ["current": current]))
             }
             current.hidden = false
             delegate?.itemSelector(self, didDisplayingView: current, forIndex: self.currentPage)
