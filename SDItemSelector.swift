@@ -128,6 +128,8 @@ import QuartzCore
         self.addSubview(contentView)
         self.addSubview(pageControl)
         
+        contentView.clipsToBounds = true
+        
         pageControl.translatesAutoresizingMaskIntoConstraints = false
         contentView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activateConstraints([
@@ -148,9 +150,11 @@ import QuartzCore
         
         if self.numberOfPages != 0 {
             let current = self.itemForIndex(self.currentPage)
-            current.frame = self.contentView.frame
             if current.superview == nil {
                 self.contentView.addSubview(current)
+                current.translatesAutoresizingMaskIntoConstraints = false
+                NSLayoutConstraint.activateConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|[current]|", options: [], metrics: nil, views: ["current": current]))
+                NSLayoutConstraint.activateConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|[current]|", options: [], metrics: nil, views: ["current": current]))
             }
             current.hidden = false
             delegate?.itemSelector(self, didDisplayingView: current, forIndex: self.currentPage)
@@ -182,9 +186,9 @@ extension SDItemSelector : UIGestureRecognizerDelegate {
     private func cancelAnimate() {
         self.layer.removeAllAnimations()
         let current = self.itemForIndex(self.currentPage)
-        if current.frame.origin.x == -self.contentView.frame.width {
+        if current.transform.tx == -self.contentView.frame.width {
             self.currentPage = (self.currentPage + 1) % self.numberOfPages
-        } else if current.frame.origin.x == self.contentView.frame.width {
+        } else if current.transform.tx == self.contentView.frame.width {
             self.currentPage = (self.currentPage + self.numberOfPages - 1) % self.numberOfPages
         }
     }
@@ -201,7 +205,7 @@ extension SDItemSelector : UIGestureRecognizerDelegate {
         
         if sender.state == .Began {
             self.cancelAnimate()
-            sender.setTranslation(CGPoint(x: self.itemForIndex(self.currentPage).frame.origin.x, y: sender.translationInView(self).y), inView: self)
+            sender.setTranslation(CGPoint(x: self.itemForIndex(self.currentPage).transform.tx, y: sender.translationInView(self).y), inView: self)
         }
         
         let translation = sender.translationInView(self)
@@ -214,18 +218,20 @@ extension SDItemSelector : UIGestureRecognizerDelegate {
         }
         
         let next = self.itemForIndex(nextIndex)
-        next.frame = self.contentView.frame
         if next.superview == nil {
             self.contentView.addSubview(next)
+            next.translatesAutoresizingMaskIntoConstraints = false
+            NSLayoutConstraint.activateConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|[next]|", options: [], metrics: nil, views: ["next": next]))
+            NSLayoutConstraint.activateConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|[next]|", options: [], metrics: nil, views: ["next": next]))
         }
         
         let current = self.itemForIndex(self.currentPage)
         
-        current.frame.origin.x = translation.x
+        current.transform.tx = translation.x
         if translation.x < 0 {
-            next.frame.origin.x = translation.x + self.contentView.frame.width
+            next.transform.tx = translation.x + self.contentView.frame.width
         } else {
-            next.frame.origin.x = translation.x - self.contentView.frame.width
+            next.transform.tx = translation.x - self.contentView.frame.width
         }
         
         if sender.state == .Ended {
@@ -238,8 +244,8 @@ extension SDItemSelector : UIGestureRecognizerDelegate {
                         
                         UIView.animateWithDuration(0.3, animations: {
                             
-                            next.frame.origin.x = 0
-                            current.frame.origin.x = -self.contentView.frame.width
+                            next.transform.tx = 0
+                            current.transform.tx = -self.contentView.frame.width
                             }, completion: { _ in
                                 self.currentPage = nextIndex
                         })
@@ -247,8 +253,8 @@ extension SDItemSelector : UIGestureRecognizerDelegate {
                         
                         UIView.animateWithDuration(0.3, animations: {
                             
-                            next.frame.origin.x = self.contentView.frame.width
-                            current.frame.origin.x = 0
+                            next.transform.tx = self.contentView.frame.width
+                            current.transform.tx = 0
                             }, completion: nil)
                     }
                     
@@ -256,8 +262,8 @@ extension SDItemSelector : UIGestureRecognizerDelegate {
                     
                     UIView.animateWithDuration(0.3, animations: {
                         
-                        next.frame.origin.x = 0
-                        current.frame.origin.x = -self.contentView.frame.width
+                        next.transform.tx = 0
+                        current.transform.tx = -self.contentView.frame.width
                         }, completion: { _ in
                             self.currentPage = nextIndex
                     })
@@ -265,8 +271,8 @@ extension SDItemSelector : UIGestureRecognizerDelegate {
                     
                     UIView.animateWithDuration(0.3, animations: {
                         
-                        next.frame.origin.x = self.contentView.frame.width
-                        current.frame.origin.x = 0
+                        next.transform.tx = self.contentView.frame.width
+                        current.transform.tx = 0
                         }, completion: nil)
                 }
             } else {
@@ -278,8 +284,8 @@ extension SDItemSelector : UIGestureRecognizerDelegate {
                         
                         UIView.animateWithDuration(0.3, animations: {
                             
-                            next.frame.origin.x = 0
-                            current.frame.origin.x = self.contentView.frame.width
+                            next.transform.tx = 0
+                            current.transform.tx = self.contentView.frame.width
                             }, completion: { _ in
                                 self.currentPage = nextIndex
                         })
@@ -287,8 +293,8 @@ extension SDItemSelector : UIGestureRecognizerDelegate {
                         
                         UIView.animateWithDuration(0.3, animations: {
                             
-                            next.frame.origin.x = -self.contentView.frame.width
-                            current.frame.origin.x = 0
+                            next.transform.tx = -self.contentView.frame.width
+                            current.transform.tx = 0
                             }, completion: nil)
                     }
                     
@@ -296,8 +302,8 @@ extension SDItemSelector : UIGestureRecognizerDelegate {
                     
                     UIView.animateWithDuration(0.3, animations: {
                         
-                        next.frame.origin.x = 0
-                        current.frame.origin.x = self.contentView.frame.width
+                        next.transform.tx = 0
+                        current.transform.tx = self.contentView.frame.width
                         }, completion: { _ in
                             self.currentPage = nextIndex
                     })
@@ -305,8 +311,8 @@ extension SDItemSelector : UIGestureRecognizerDelegate {
                     
                     UIView.animateWithDuration(0.3, animations: {
                         
-                        next.frame.origin.x = -self.contentView.frame.width
-                        current.frame.origin.x = 0
+                        next.transform.tx = -self.contentView.frame.width
+                        current.transform.tx = 0
                         }, completion: nil)
                 }
             }
