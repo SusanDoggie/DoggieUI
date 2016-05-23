@@ -129,8 +129,8 @@ public class SDSlideMenuViewController: UIViewController {
             scrollView.scrollsToTop = true
         }
         
-        panRecongnizer = UIPanGestureRecognizer(target: self, action: #selector(SDSlideMenuViewController.handlePan(_:)))
-        tapRecongnizer = UITapGestureRecognizer(target: self, action: #selector(SDSlideMenuViewController.handleTap(_:)))
+        panRecongnizer = UIPanGestureRecognizer(target: self, action: #selector(handlePan))
+        tapRecongnizer = UITapGestureRecognizer(target: self, action: #selector(handleTap))
         panRecongnizer.delegate = self
         tapRecongnizer.delegate = self
         view.addGestureRecognizer(panRecongnizer)

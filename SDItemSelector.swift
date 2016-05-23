@@ -140,7 +140,7 @@ import QuartzCore
         NSLayoutConstraint.activateConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|[content]|", options: [], metrics: nil, views: ["content": contentView]))
         NSLayoutConstraint.activateConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|[content]|", options: [], metrics: nil, views: ["content": contentView]))
         
-        pan = UIPanGestureRecognizer(target: self, action: #selector(SDItemSelector.handlePan(_:)))
+        pan = UIPanGestureRecognizer(target: self, action: #selector(handlePan))
         pan.maximumNumberOfTouches = 1
         pan.delegate = self
         self.addGestureRecognizer(pan)
