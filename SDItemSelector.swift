@@ -26,11 +26,9 @@
 import UIKit
 import QuartzCore
 
-@IBDesignable public class SDItemSelector : UIControl {
+@IBDesignable public class SDItemSelector : UIView {
     
-    private var pan: UIPanGestureRecognizer!
-    
-    private var contentView: UIView
+    private var swappageView: SDSwappageView
     private var pageControl = UIPageControl()
     
     public weak var delegate: SDItemSelectorDelegate?
@@ -56,10 +54,12 @@ import QuartzCore
     
     public private(set) var currentPage: Int {
         get {
-            return pageControl.currentPage
+            return swappageView.index
         }
         set {
+            swappageView.index = newValue
             pageControl.currentPage = newValue
+            swappageView.reload()
             delegate?.itemSelector(self, didDisplayingView: self.itemForIndex(newValue), forIndex: newValue)
         }
     }
@@ -77,10 +77,10 @@ import QuartzCore
         }
         set {
             if pageControl.numberOfPages != newValue {
-                if pageControl.currentPage >= newValue {
-                    pageControl.currentPage = newValue - 1
-                }
                 pageControl.numberOfPages = newValue
+                if pageControl.currentPage >= newValue {
+                    currentPage = newValue - 1
+                }
                 self.cleanCache()
             }
         }
@@ -100,224 +100,55 @@ import QuartzCore
     public func reloadData() {
         numberOfPages = delegate?.numberOfPagesInItemSelector(self) ?? 0
         self.cleanCache()
-        if self.numberOfPages != 0 {
-            let current = self.itemForIndex(self.currentPage)
-            if current.superview == nil {
-                self.contentView.addSubview(current)
-                current.translatesAutoresizingMaskIntoConstraints = false
-                NSLayoutConstraint.activateConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|[current]|", options: [], metrics: nil, views: ["current": current]))
-                NSLayoutConstraint.activateConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|[current]|", options: [], metrics: nil, views: ["current": current]))
-            }
-            current.hidden = false
-            delegate?.itemSelector(self, didDisplayingView: current, forIndex: self.currentPage)
-        }
+        swappageView.reload()
     }
     
     public override init(frame: CGRect) {
-        contentView = UIView()
+        swappageView = SDSwappageView()
         super.init(frame: frame)
         self.constructView()
     }
     
     public required init?(coder aDecoder: NSCoder) {
-        contentView = UIView()
+        swappageView = SDSwappageView()
         super.init(coder: aDecoder)
         self.constructView()
     }
     
     private func constructView() {
         
-        self.addSubview(contentView)
+        swappageView.delegate = self
+        
+        self.addSubview(swappageView)
         self.addSubview(pageControl)
         
-        contentView.clipsToBounds = true
-        
+        swappageView.translatesAutoresizingMaskIntoConstraints = false
         pageControl.translatesAutoresizingMaskIntoConstraints = false
-        contentView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activateConstraints([
-            NSLayoutConstraint(item: pageControl, attribute: .Bottom, relatedBy: .Equal, toItem: contentView, attribute: .Bottom, multiplier: 1, constant: 0),
+            NSLayoutConstraint(item: pageControl, attribute: .Bottom, relatedBy: .Equal, toItem: swappageView, attribute: .Bottom, multiplier: 1, constant: 0),
             NSLayoutConstraint(item: pageControl, attribute: .CenterX, relatedBy: .Equal, toItem: self, attribute: .CenterX, multiplier: 1, constant: 0)])
-        NSLayoutConstraint.activateConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|[content]|", options: [], metrics: nil, views: ["content": contentView]))
-        NSLayoutConstraint.activateConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|[content]|", options: [], metrics: nil, views: ["content": contentView]))
-        
-        pan = UIPanGestureRecognizer(target: self, action: #selector(handlePan))
-        pan.maximumNumberOfTouches = 1
-        pan.delegate = self
-        self.addGestureRecognizer(pan)
-    }
-    
-    public override func layoutSubviews() {
-        self.numberOfPages = delegate?.numberOfPagesInItemSelector(self) ?? 0
-        super.layoutSubviews()
-        
-        if self.numberOfPages != 0 {
-            let current = self.itemForIndex(self.currentPage)
-            if current.superview == nil {
-                self.contentView.addSubview(current)
-                current.translatesAutoresizingMaskIntoConstraints = false
-                NSLayoutConstraint.activateConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|[current]|", options: [], metrics: nil, views: ["current": current]))
-                NSLayoutConstraint.activateConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|[current]|", options: [], metrics: nil, views: ["current": current]))
-            }
-            current.hidden = false
-            delegate?.itemSelector(self, didDisplayingView: current, forIndex: self.currentPage)
-        }
+        NSLayoutConstraint.activateConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|[content]|", options: [], metrics: nil, views: ["content": swappageView]))
+        NSLayoutConstraint.activateConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|[content]|", options: [], metrics: nil, views: ["content": swappageView]))
     }
 }
 
-extension SDItemSelector : UIGestureRecognizerDelegate {
+extension SDItemSelector : SDSwappageViewDelegate {
     
-    public func gestureRecognizer(gestureRecognizer: UIGestureRecognizer, shouldReceiveTouch touch: UITouch) -> Bool {
+    public func swappageView(swappageView: SDSwappageView, viewForItemInIndex index: Int) -> UIView? {
         
-        if pan === gestureRecognizer {
-            if self.numberOfPages < 2 {
-                return false
+        if swappageView === self.swappageView {
+            if (0..<numberOfPages).contains(index) {
+                return viewForIndex(index) ?? UIView()
             }
-            return CGRectContainsPoint(contentView.frame, touch.locationInView(self))
         }
-        return true
+        return nil
     }
     
-    public override func gestureRecognizerShouldBegin(gestureRecognizer: UIGestureRecognizer) -> Bool {
-        if pan === gestureRecognizer {
-            let velocity = pan.velocityInView(self)
-            return abs(velocity.x) > abs(velocity.y)
-        }
-        return true
-    }
-    
-    private func cancelAnimate() {
-        self.layer.removeAllAnimations()
-        let current = self.itemForIndex(self.currentPage)
-        if current.transform.tx == -self.contentView.frame.width {
-            self.currentPage = (self.currentPage + 1) % self.numberOfPages
-        } else if current.transform.tx == self.contentView.frame.width {
-            self.currentPage = (self.currentPage + self.numberOfPages - 1) % self.numberOfPages
-        }
-    }
-    
-    private func nextViewIndex(sender: UIPanGestureRecognizer) -> Int {
-        if sender.translationInView(self).x < 0 {
-            return (self.currentPage + 1) % self.numberOfPages
-        } else {
-            return (self.currentPage + self.numberOfPages - 1) % self.numberOfPages
-        }
-    }
-    
-    func handlePan(sender: UIPanGestureRecognizer) {
+    public func swappageView(swappageView: SDSwappageView, didDisplayingView view: UIView) {
         
-        if sender.state == .Began {
-            self.cancelAnimate()
-            sender.setTranslation(CGPoint(x: self.itemForIndex(self.currentPage).transform.tx, y: sender.translationInView(self).y), inView: self)
-        }
-        
-        let translation = sender.translationInView(self)
-        let velocity = sender.velocityInView(self)
-        
-        let nextIndex = self.nextViewIndex(sender)
-        
-        for idx in 0..<self.numberOfPages {
-            self._cache[idx]?.hidden = idx != nextIndex && idx != self.currentPage
-        }
-        
-        let next = self.itemForIndex(nextIndex)
-        if next.superview == nil {
-            self.contentView.addSubview(next)
-            next.translatesAutoresizingMaskIntoConstraints = false
-            NSLayoutConstraint.activateConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|[next]|", options: [], metrics: nil, views: ["next": next]))
-            NSLayoutConstraint.activateConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|[next]|", options: [], metrics: nil, views: ["next": next]))
-        }
-        
-        let current = self.itemForIndex(self.currentPage)
-        
-        current.transform.tx = translation.x
-        if translation.x < 0 {
-            next.transform.tx = translation.x + self.contentView.frame.width
-        } else {
-            next.transform.tx = translation.x - self.contentView.frame.width
-        }
-        
-        if sender.state == .Ended {
-            
-            if translation.x < 0 {
-                
-                if abs(velocity.x) < 20 {
-                    
-                    if abs(translation.x) > self.contentView.frame.width / 2 {
-                        
-                        UIView.animateWithDuration(0.3, animations: {
-                            
-                            next.transform.tx = 0
-                            current.transform.tx = -self.contentView.frame.width
-                            }, completion: { _ in
-                                self.currentPage = nextIndex
-                        })
-                    } else {
-                        
-                        UIView.animateWithDuration(0.3, animations: {
-                            
-                            next.transform.tx = self.contentView.frame.width
-                            current.transform.tx = 0
-                            }, completion: nil)
-                    }
-                    
-                } else if velocity.x < 0 {
-                    
-                    UIView.animateWithDuration(0.3, animations: {
-                        
-                        next.transform.tx = 0
-                        current.transform.tx = -self.contentView.frame.width
-                        }, completion: { _ in
-                            self.currentPage = nextIndex
-                    })
-                } else {
-                    
-                    UIView.animateWithDuration(0.3, animations: {
-                        
-                        next.transform.tx = self.contentView.frame.width
-                        current.transform.tx = 0
-                        }, completion: nil)
-                }
-            } else {
-                
-                
-                if abs(velocity.x) < 20 {
-                    
-                    if abs(translation.x) > self.contentView.frame.width / 2 {
-                        
-                        UIView.animateWithDuration(0.3, animations: {
-                            
-                            next.transform.tx = 0
-                            current.transform.tx = self.contentView.frame.width
-                            }, completion: { _ in
-                                self.currentPage = nextIndex
-                        })
-                    } else {
-                        
-                        UIView.animateWithDuration(0.3, animations: {
-                            
-                            next.transform.tx = -self.contentView.frame.width
-                            current.transform.tx = 0
-                            }, completion: nil)
-                    }
-                    
-                } else if velocity.x > 0 {
-                    
-                    UIView.animateWithDuration(0.3, animations: {
-                        
-                        next.transform.tx = 0
-                        current.transform.tx = self.contentView.frame.width
-                        }, completion: { _ in
-                            self.currentPage = nextIndex
-                    })
-                } else {
-                    
-                    UIView.animateWithDuration(0.3, animations: {
-                        
-                        next.transform.tx = -self.contentView.frame.width
-                        current.transform.tx = 0
-                        }, completion: nil)
-                }
-            }
+        if swappageView === self.swappageView {
+            pageControl.currentPage = swappageView.index
+            delegate?.itemSelector(self, didDisplayingView: view, forIndex: swappageView.index)
         }
     }
 }
