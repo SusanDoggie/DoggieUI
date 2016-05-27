@@ -134,9 +134,102 @@ public extension UIView {
             layer.shadowRadius = newValue
         }
     }
+    
+    /// The shape of the layer’s shadow. Animatable.
+    ///
+    /// The default value of this property is `nil`, which causes the layer to use a standard shadow shape.
+    /// If you specify a value for this property, the layer creates its shadow using the specified path instead
+    /// of the layer’s composited alpha channel. The path you provide defines the outline of the shadow. It is
+    /// filled using the non-zero winding rule and the current shadow color, opacity, and blur radius.
+    ///
+    /// Unlike most animatable properties, this property (as with all `CGPathRef` animatable properties) does not
+    /// support implicit animation. However, the path object may be animated using any of the concrete subclasses
+    /// of `CAPropertyAnimation`. Paths will interpolate as a linear blend of the "on-line" points; "off-line" points
+    /// may be interpolated non-linearly (to preserve continuity of the curve's derivative). If the two paths have
+    /// a different number of control points or segments, the results are undefined. If the path extends outside
+    /// the layer bounds it will not automatically be clipped to the layer, only if the normal layer masking rules
+    /// cause that.
+    ///
+    /// Specifying an explicit path usually improves rendering performance.
+    ///
+    /// The value of this property is retained using the Core Foundation retain/release semantics. This behavior
+    /// occurs despite the fact that the property declaration appears to use the default assign semantics for
+    /// object retention.
+    var shadowPath: CGPath? {
+        get {
+            return layer.shadowPath
+        }
+        set {
+            layer.shadowPath = newValue
+        }
+    }
 }
 
 public extension UIView {
+    
+    /// The layer’s position on the z axis. Animatable.
+    ///
+    /// The default value of this property is `0`. Changing the value of this property changes the the front-to-back
+    /// ordering of layers onscreen. Higher values place this layer visually closer to the viewer than layers with
+    /// lower values. This can affect the visibility of layers whose frame rectangles overlap.
+    ///
+    /// The value of this property is measured in points.
+    @IBInspectable var zPosition: CGFloat {
+        get {
+            return layer.zPosition
+        }
+        set {
+            layer.zPosition = newValue
+        }
+    }
+    
+    /// Defines the anchor point of the layer's bounds rectangle. Animatable.
+    ///
+    /// You specify the value for this property using the unit coordinate space. The default value of this property
+    /// is (0.5, 0.5), which represents the center of the layer’s bounds rectangle. All geometric manipulations to the
+    /// view occur about the specified point. For example, applying a rotation transform to a layer with the default
+    /// anchor point causes the layer to rotate around its center. Changing the anchor point to a different location
+    /// would cause the layer to rotate around that new point.
+    ///
+    /// For more information about the relationship between the `frame`, `bounds`, `anchorPoint` and `position` properties,
+    /// see Core Animation Programming Guide.
+    @IBInspectable var anchorPoint: CGPoint {
+        get {
+            return layer.anchorPoint
+        }
+        set {
+            layer.anchorPoint = newValue
+        }
+    }
+    
+    /// The anchor point for the layer’s position along the z axis. Animatable.
+    ///
+    /// This property specifies the anchor point on the z axis around which geometric manipulations occur. The point is
+    /// expressed as a distance (measured in points) along the z axis. The default value of this property is `0`.
+    @IBInspectable var anchorPointZ: CGFloat {
+        get {
+            return layer.anchorPointZ
+        }
+        set {
+            layer.anchorPointZ = newValue
+        }
+    }
+}
+
+public extension UIView {
+    
+    /// A Boolean indicating whether the layer displays its content when facing away from the viewer. Animatable.
+    ///
+    /// When the value in this property is `false`, the layer hides its content when it faces away from the viewer.
+    /// The default value of this property is `true`.
+    @IBInspectable var doubleSided: Bool {
+        get {
+            return layer.doubleSided
+        }
+        set {
+            layer.doubleSided = newValue
+        }
+    }
     
     /// A Boolean that indicates whether the geometry of the layer and its sublayers is flipped vertically.
     ///
@@ -153,5 +246,12 @@ public extension UIView {
         set {
             layer.geometryFlipped = newValue
         }
+    }
+    
+    /// A Boolean indicating whether the layer content is implicitly flipped when rendered.
+    ///
+    /// true if the layer contents are implicitly flipped when rendered or false if they are not.
+    var contentsAreFlipped: Bool {
+        return layer.contentsAreFlipped()
     }
 }
