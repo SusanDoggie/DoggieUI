@@ -48,8 +48,13 @@ public class SDSwappageView: UIView {
     public var current: UIView?
     
     private var scrolling = false
+    private var jumpSwap : Int?
     
-    public weak var delegate : SDSwappageViewDelegate?
+    public weak var delegate : SDSwappageViewDelegate? {
+        didSet {
+            reload()
+        }
+    }
     
     public override init(frame: CGRect) {
         super.init(frame: frame)
@@ -61,10 +66,27 @@ public class SDSwappageView: UIView {
         self.constructView()
     }
     
+    @IBInspectable public var bounces: Bool {
+        get {
+            return scrollView.bounces
+        }
+        set {
+            scrollView.bounces = newValue
+        }
+    }
+    
+    @IBInspectable public var swapEnabled : Bool {
+        get {
+            return scrollView.scrollEnabled
+        }
+        set {
+            scrollView.scrollEnabled = newValue
+        }
+    }
+    
     private func constructView() {
         
         scrollView.pagingEnabled = true
-        scrollView.bounces = false
         scrollView.directionalLockEnabled = false
         scrollView.showsHorizontalScrollIndicator = false
         scrollView.showsVerticalScrollIndicator = false
@@ -222,15 +244,55 @@ public class SDSwappageView: UIView {
 
 extension SDSwappageView {
     
+    public func swapToView(index: Int, animated: Bool) {
+        
+        if self.index == index {
+            return
+        }
+        
+        if let jumpView = delegate?.swappageView(self, viewForItemInIndex: index) {
+            if animated {
+                if !scrolling && !scrollView.decelerating {
+                    jumpSwap = index
+                    scrolling = true
+                    if index < self.index {
+                        left = jumpView
+                        _layoutSubviews()
+                        scrollView.scrollRectToVisible(CGRect(x: 0, y: 0, width: scrollView.frame.width, height: scrollView.frame.height), animated: true)
+                    } else {
+                        right = jumpView
+                        _layoutSubviews()
+                        if left == nil {
+                            scrollView.scrollRectToVisible(CGRect(x: scrollView.frame.width, y: 0, width: scrollView.frame.width, height: scrollView.frame.height), animated: true)
+                        } else {
+                            scrollView.scrollRectToVisible(CGRect(x: 2 * scrollView.frame.width, y: 0, width: scrollView.frame.width, height: scrollView.frame.height), animated: true)
+                        }
+                    }
+                }
+            } else {
+                jumpSwap = nil
+                scrolling = false
+                right = nil
+                current = jumpView
+                left = nil
+                self.index = index
+                _layoutSubviews()
+                delegate?.swappageView(self, didDisplayingView: current!)
+            }
+        }
+    }
+    
     public func swapToLeft(animated: Bool) {
         
         if left != nil {
             if animated {
                 if !scrolling && !scrollView.decelerating {
+                    jumpSwap = nil
                     scrolling = true
                     scrollView.scrollRectToVisible(CGRect(x: 0, y: 0, width: scrollView.frame.width, height: scrollView.frame.height), animated: true)
                 }
             } else {
+                jumpSwap = nil
                 scrolling = false
                 right = current
                 current = left
@@ -246,6 +308,7 @@ extension SDSwappageView {
         if right != nil {
             if animated {
                 if !scrolling && !scrollView.decelerating {
+                    jumpSwap = nil
                     scrolling = true
                     if left == nil {
                         scrollView.scrollRectToVisible(CGRect(x: scrollView.frame.width, y: 0, width: scrollView.frame.width, height: scrollView.frame.height), animated: true)
@@ -254,6 +317,7 @@ extension SDSwappageView {
                     }
                 }
             } else {
+                jumpSwap = nil
                 scrolling = false
                 left = current
                 current = right
@@ -278,46 +342,35 @@ extension SDSwappageView : UIScrollViewDelegate {
         
         if scrollView === self.scrollView {
             endMoving()
+            jumpSwap = nil
             scrolling = false
         }
     }
     
     private func endMoving() {
         let shift = lround(Double(scrollView.contentOffset.x / scrollView.frame.width))
-        if left == nil {
-            if shift == 1 {
-                left = current
-                current = right
-                right = nil
-                index += 1
-                _layoutSubviews()
-                delegate?.swappageView(self, didDisplayingView: current!)
-            }
-        } else if right == nil {
-            if shift == 0 {
-                right = current
-                current = left
-                left = nil
+        if shift == 0 && left != nil {
+            right = jumpSwap == nil ? current : nil
+            current = left
+            left = nil
+            if jumpSwap == nil {
                 index -= 1
-                _layoutSubviews()
-                delegate?.swappageView(self, didDisplayingView: current!)
+            } else {
+                index = jumpSwap!
             }
-        } else {
-            if shift == 0 {
-                right = current
-                current = left
-                left = nil
-                index -= 1
-                _layoutSubviews()
-                delegate?.swappageView(self, didDisplayingView: current!)
-            } else if shift == 2 {
-                left = current
-                current = right
-                right = nil
+            _layoutSubviews()
+            delegate?.swappageView(self, didDisplayingView: current!)
+        } else if ((left == nil && shift == 1) || (left != nil && shift == 2)) && right != nil {
+            left = jumpSwap == nil ? current : nil
+            current = right
+            right = nil
+            if jumpSwap == nil {
                 index += 1
-                _layoutSubviews()
-                delegate?.swappageView(self, didDisplayingView: current!)
+            } else {
+                index = jumpSwap!
             }
+            _layoutSubviews()
+            delegate?.swappageView(self, didDisplayingView: current!)
         }
     }
 }

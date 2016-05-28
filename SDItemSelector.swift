@@ -31,9 +31,31 @@ import QuartzCore
     private var swappageView: SDSwappageView
     private var pageControl = UIPageControl()
     
-    public weak var delegate: SDItemSelectorDelegate?
+    public weak var delegate: SDItemSelectorDelegate? {
+        didSet {
+            reloadData()
+        }
+    }
     
     private var _cache: [UIView?] = []
+    
+    @IBInspectable public var bounces: Bool {
+        get {
+            return swappageView.bounces
+        }
+        set {
+            swappageView.bounces = newValue
+        }
+    }
+    
+    @IBInspectable public var swapEnabled : Bool {
+        get {
+            return swappageView.swapEnabled
+        }
+        set {
+            swappageView.swapEnabled = newValue
+        }
+    }
     
     @IBInspectable public var pageIndicatorTintColor: UIColor? {
         get {
