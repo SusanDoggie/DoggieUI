@@ -32,6 +32,13 @@ public protocol SDSwappageViewDelegate : class {
     func swappageView(swappageView: SDSwappageView, didDisplayingView view: UIView)
 }
 
+public extension SDSwappageViewDelegate {
+    
+    func swappageView(swappageView: SDSwappageView, didDisplayingView view: UIView) {
+        // do nothing
+    }
+}
+
 public class SDSwappageView: UIView {
     
     private let scrollView = UIScrollView()

@@ -1,5 +1,5 @@
 //
-//  UIViewExtension.swift
+//  UIKitExtension.swift
 //
 //  The MIT License
 //  Copyright (c) 2015 - 2016 Susan Cheng. All rights reserved.
@@ -24,6 +24,88 @@
 //
 
 import UIKit
+
+public extension CALayer {
+    
+    func addAnimation(duration duration: CFTimeInterval, from: AnyObject, to: AnyObject, timingFunction: CAMediaTimingFunction? = nil, forKey key: String) {
+        
+        let animate = CABasicAnimation(keyPath: key)
+        animate.duration = 0.1
+        animate.fromValue = from
+        animate.toValue = to
+        animate.timingFunction = timingFunction
+        self.setValue(to, forKey: key)
+        self.addAnimation(animate, forKey: key)
+    }
+}
+
+extension UIView : CollectionType {
+    
+    public typealias Generator = IndexingGenerator<[UIView]>
+    
+    public var startIndex : Int {
+        return subviews.startIndex
+    }
+    
+    public var endIndex : Int {
+        return subviews.endIndex
+    }
+    
+    public subscript(position: Int) -> UIView {
+        return subviews[position]
+    }
+    
+    public func generate() -> Generator {
+        return subviews.generate()
+    }
+}
+
+extension UIView : RangeReplaceableCollectionType {
+    
+    public func replaceRange<C : CollectionType where C.Generator.Element == UIView>(subRange: Range<Int>, with newElements: C) {
+        if !subRange.isEmpty {
+            self.removeRange(subRange)
+        }
+        if !newElements.isEmpty {
+            self.insertContentsOf(newElements, at: subRange.startIndex)
+        }
+    }
+    
+    public func append(newElement: UIView) {
+        self.addSubview(newElement)
+    }
+    public func appendContentsOf<S : SequenceType where S.Generator.Element == UIView>(newElements: S) {
+        for item in newElements {
+            self.addSubview(item)
+        }
+    }
+    public func insert(newElement: UIView, atIndex i: Int) {
+        self.insertSubview(newElement, atIndex: i)
+    }
+    public func insertContentsOf<C : CollectionType where C.Generator.Element == UIView>(newElements: C, at i: Int) {
+        for (idx, item) in newElements.enumerate() {
+            self.insertSubview(item, atIndex: idx + i)
+        }
+    }
+    public func removeAtIndex(index: Int) -> UIView {
+        let view = subviews[index]
+        view.removeFromSuperview()
+        return view
+    }
+    public func removeRange(subRange: Range<Int>) {
+        for view in subviews[subRange] {
+            view.removeFromSuperview()
+        }
+    }
+    public func removeFirst(n: Int) {
+        for view in subviews.prefix(n) {
+            view.removeFromSuperview()
+        }
+    }
+    public func removeFirst() -> UIView {
+        return removeAtIndex(0)
+    }
+}
 
 public extension UIView {
     

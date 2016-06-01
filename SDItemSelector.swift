@@ -183,3 +183,10 @@ public protocol SDItemSelectorDelegate : class {
     
     func itemSelector(itemSelector: SDItemSelector, didDisplayingView view: UIView, forIndex index: Int)
 }
+
+public extension SDItemSelectorDelegate {
+    
+    func itemSelector(itemSelector: SDItemSelector, didDisplayingView view: UIView, forIndex index: Int) {
+        // do nothing
+    }
+}
