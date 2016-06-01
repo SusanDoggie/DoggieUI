@@ -79,10 +79,14 @@ import QuartzCore
             return swappageView.index
         }
         set {
-            swappageView.index = newValue
-            pageControl.currentPage = newValue
-            swappageView.reload()
-            delegate?.itemSelector(self, didDisplayingView: self.itemForIndex(newValue), forIndex: newValue)
+            if swappageView.index != newValue {
+                swappageView.index = newValue
+                pageControl.currentPage = newValue
+                swappageView.reload()
+                if newValue < numberOfPages {
+                    delegate?.itemSelector(self, didDisplayingView: self.itemForIndex(newValue), forIndex: newValue)
+                }
+            }
         }
     }
     
@@ -101,7 +105,7 @@ import QuartzCore
             if pageControl.numberOfPages != newValue {
                 pageControl.numberOfPages = newValue
                 if pageControl.currentPage >= newValue {
-                    currentPage = newValue - 1
+                    currentPage = max(0, newValue - 1)
                 }
                 self.cleanCache()
             }
@@ -109,10 +113,13 @@ import QuartzCore
     }
     
     public func viewForIndex(index: Int) -> UIView? {
-        if _cache[index] == nil {
-            _cache[index] = delegate?.itemSelector(self, viewForItemInIndex: index)
+        if index < numberOfPages {
+            if _cache[index] == nil {
+                _cache[index] = delegate?.itemSelector(self, viewForItemInIndex: index)
+            }
+            return _cache[index]
         }
-        return _cache[index]
+        return nil
     }
     
     private func itemForIndex(index: Int) -> UIView {
