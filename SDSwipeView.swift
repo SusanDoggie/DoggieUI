@@ -30,21 +30,12 @@ public protocol SDSwipeViewDelegate : class {
     func swipeView(swipeView: SDSwipeView, viewForItemInIndex index: Int) -> UIView?
     
     func swipeView(swipeView: SDSwipeView, didDisplayingView view: UIView)
-    
-    func swipeView(swipeView: SDSwipeView, allowSwipeToLeft index: Int) -> Bool
-    func swipeView(swipeView: SDSwipeView, allowSwipeToRight index: Int) -> Bool
 }
 
 public extension SDSwipeViewDelegate {
     
     func swipeView(swipeView: SDSwipeView, didDisplayingView view: UIView) {
         // do nothing
-    }
-    func swipeView(swipeView: SDSwipeView, allowSwipeToLeft index: Int) -> Bool {
-        return true
-    }
-    func swipeView(swipeView: SDSwipeView, allowSwipeToRight index: Int) -> Bool {
-        return true
     }
 }
 
@@ -126,8 +117,8 @@ public class SDSwipeView: UIView {
         
         current = delegate?.swipeView(self, viewForItemInIndex: index)
         if current != nil {
-            left = (delegate?.swipeView(self, allowSwipeToLeft: index) ?? false) ? delegate?.swipeView(self, viewForItemInIndex: index - 1) : nil
-            right = (delegate?.swipeView(self, allowSwipeToRight: index) ?? false) ? delegate?.swipeView(self, viewForItemInIndex: index + 1) : nil
+            left = delegate?.swipeView(self, viewForItemInIndex: index - 1)
+            right = delegate?.swipeView(self, viewForItemInIndex: index + 1)
         } else {
             left = nil
             right = nil
@@ -207,8 +198,8 @@ public class SDSwipeView: UIView {
             return
         }
         
-        left = (scrolling || (delegate?.swipeView(self, allowSwipeToLeft: index) ?? false)) ? (left ?? delegate?.swipeView(self, viewForItemInIndex: index - 1)) : nil
-        right = (scrolling || (delegate?.swipeView(self, allowSwipeToRight: index) ?? false)) ? (right ?? delegate?.swipeView(self, viewForItemInIndex: index + 1)) : nil
+        left = left ?? delegate?.swipeView(self, viewForItemInIndex: index - 1)
+        right = right ?? delegate?.swipeView(self, viewForItemInIndex: index + 1)
         
         if left == nil && right == nil {
             _layoutOnePage()
@@ -305,7 +296,6 @@ extension SDSwipeView {
                 if !scrolling && !scrollView.decelerating {
                     jumpSwap = nil
                     scrolling = true
-                    _layoutSubviews()
                     scrollView.scrollRectToVisible(CGRect(x: 0, y: 0, width: scrollView.frame.width, height: scrollView.frame.height), animated: true)
                 }
             } else {
@@ -327,7 +317,6 @@ extension SDSwipeView {
                 if !scrolling && !scrollView.decelerating {
                     jumpSwap = nil
                     scrolling = true
-                    _layoutSubviews()
                     if left == nil {
                         scrollView.scrollRectToVisible(CGRect(x: scrollView.frame.width, y: 0, width: scrollView.frame.width, height: scrollView.frame.height), animated: true)
                     } else {
@@ -359,9 +348,9 @@ extension SDSwipeView : UIScrollViewDelegate {
     public func scrollViewDidEndScrollingAnimation(scrollView: UIScrollView) {
         
         if scrollView === self.scrollView {
-            scrolling = false
             endMoving()
             jumpSwap = nil
+            scrolling = false
         }
     }
     
