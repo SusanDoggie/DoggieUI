@@ -28,7 +28,7 @@ import QuartzCore
 
 @IBDesignable public class SDItemSelector : UIView {
     
-    private var swappageView: SDSwappageView
+    private var swappageView: SDSwipeView
     private var pageControl = UIPageControl()
     
     public weak var delegate: SDItemSelectorDelegate? {
@@ -133,13 +133,13 @@ import QuartzCore
     }
     
     public override init(frame: CGRect) {
-        swappageView = SDSwappageView()
+        swappageView = SDSwipeView()
         super.init(frame: frame)
         self.constructView()
     }
     
     public required init?(coder aDecoder: NSCoder) {
-        swappageView = SDSwappageView()
+        swappageView = SDSwipeView()
         super.init(coder: aDecoder)
         self.constructView()
     }
@@ -161,9 +161,9 @@ import QuartzCore
     }
 }
 
-extension SDItemSelector : SDSwappageViewDelegate {
+extension SDItemSelector : SDSwipeViewDelegate {
     
-    public func swappageView(swappageView: SDSwappageView, viewForItemInIndex index: Int) -> UIView? {
+    public func swipeView(swipeView: SDSwipeView, viewForItemInIndex index: Int) -> UIView? {
         
         if swappageView === self.swappageView {
             if (0..<numberOfPages).contains(index) {
@@ -173,7 +173,7 @@ extension SDItemSelector : SDSwappageViewDelegate {
         return nil
     }
     
-    public func swappageView(swappageView: SDSwappageView, didDisplayingView view: UIView) {
+    public func swipeView(swipeView: SDSwipeView, didDisplayingView view: UIView) {
         
         if swappageView === self.swappageView {
             pageControl.currentPage = swappageView.index

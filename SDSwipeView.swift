@@ -1,5 +1,5 @@
 //
-//  SDSwappageView.swift
+//  SDSwipeView.swift
 //
 //  The MIT License
 //  Copyright (c) 2015 - 2016 Susan Cheng. All rights reserved.
@@ -25,21 +25,21 @@
 
 import UIKit
 
-public protocol SDSwappageViewDelegate : class {
+public protocol SDSwipeViewDelegate : class {
     
-    func swappageView(swappageView: SDSwappageView, viewForItemInIndex index: Int) -> UIView?
+    func swipeView(swipeView: SDSwipeView, viewForItemInIndex index: Int) -> UIView?
     
-    func swappageView(swappageView: SDSwappageView, didDisplayingView view: UIView)
+    func swipeView(swipeView: SDSwipeView, didDisplayingView view: UIView)
 }
 
-public extension SDSwappageViewDelegate {
+public extension SDSwipeViewDelegate {
     
-    func swappageView(swappageView: SDSwappageView, didDisplayingView view: UIView) {
+    func swipeView(swipeView: SDSwipeView, didDisplayingView view: UIView) {
         // do nothing
     }
 }
 
-public class SDSwappageView: UIView {
+public class SDSwipeView: UIView {
     
     private let scrollView = UIScrollView()
     
@@ -57,7 +57,7 @@ public class SDSwappageView: UIView {
     private var scrolling = false
     private var jumpSwap : Int?
     
-    public weak var delegate : SDSwappageViewDelegate? {
+    public weak var delegate : SDSwipeViewDelegate? {
         didSet {
             reload()
         }
@@ -115,17 +115,17 @@ public class SDSwappageView: UIView {
     
     public func reload() {
         
-        current = delegate?.swappageView(self, viewForItemInIndex: index)
+        current = delegate?.swipeView(self, viewForItemInIndex: index)
         if current != nil {
-            left = delegate?.swappageView(self, viewForItemInIndex: index - 1)
-            right = delegate?.swappageView(self, viewForItemInIndex: index + 1)
+            left = delegate?.swipeView(self, viewForItemInIndex: index - 1)
+            right = delegate?.swipeView(self, viewForItemInIndex: index + 1)
         } else {
             left = nil
             right = nil
         }
         _layoutSubviews()
         if current != nil {
-            delegate?.swappageView(self, didDisplayingView: current!)
+            delegate?.swipeView(self, didDisplayingView: current!)
         }
     }
     
@@ -198,8 +198,8 @@ public class SDSwappageView: UIView {
             return
         }
         
-        left = left ?? delegate?.swappageView(self, viewForItemInIndex: index - 1)
-        right = right ?? delegate?.swappageView(self, viewForItemInIndex: index + 1)
+        left = left ?? delegate?.swipeView(self, viewForItemInIndex: index - 1)
+        right = right ?? delegate?.swipeView(self, viewForItemInIndex: index + 1)
         
         if left == nil && right == nil {
             _layoutOnePage()
@@ -249,7 +249,7 @@ public class SDSwappageView: UIView {
     }
 }
 
-extension SDSwappageView {
+extension SDSwipeView {
     
     public func swapToView(index: Int, animated: Bool) {
         
@@ -257,7 +257,7 @@ extension SDSwappageView {
             return
         }
         
-        if let jumpView = delegate?.swappageView(self, viewForItemInIndex: index) {
+        if let jumpView = delegate?.swipeView(self, viewForItemInIndex: index) {
             if animated {
                 if !scrolling && !scrollView.decelerating {
                     jumpSwap = index
@@ -284,7 +284,7 @@ extension SDSwappageView {
                 left = nil
                 self.index = index
                 _layoutSubviews()
-                delegate?.swappageView(self, didDisplayingView: current!)
+                delegate?.swipeView(self, didDisplayingView: current!)
             }
         }
     }
@@ -306,7 +306,7 @@ extension SDSwappageView {
                 left = nil
                 index -= 1
                 _layoutSubviews()
-                delegate?.swappageView(self, didDisplayingView: current!)
+                delegate?.swipeView(self, didDisplayingView: current!)
             }
         }
     }
@@ -331,13 +331,13 @@ extension SDSwappageView {
                 right = nil
                 index += 1
                 _layoutSubviews()
-                delegate?.swappageView(self, didDisplayingView: current!)
+                delegate?.swipeView(self, didDisplayingView: current!)
             }
         }
     }
 }
 
-extension SDSwappageView : UIScrollViewDelegate {
+extension SDSwipeView : UIScrollViewDelegate {
     
     public func scrollViewDidEndDecelerating(scrollView: UIScrollView) {
         
@@ -366,7 +366,7 @@ extension SDSwappageView : UIScrollViewDelegate {
                 index = jumpSwap!
             }
             _layoutSubviews()
-            delegate?.swappageView(self, didDisplayingView: current!)
+            delegate?.swipeView(self, didDisplayingView: current!)
         } else if ((left == nil && shift == 1) || (left != nil && shift == 2)) && right != nil {
             left = jumpSwap == nil ? current : nil
             current = right
@@ -377,7 +377,7 @@ extension SDSwappageView : UIScrollViewDelegate {
                 index = jumpSwap!
             }
             _layoutSubviews()
-            delegate?.swappageView(self, didDisplayingView: current!)
+            delegate?.swipeView(self, didDisplayingView: current!)
         }
     }
 }
