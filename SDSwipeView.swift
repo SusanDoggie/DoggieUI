@@ -300,6 +300,7 @@ extension SDSwipeView {
     
     public func swapToLeft(animated: Bool) {
         
+        left = left ?? delegate?.swipeView(self, viewForItemInIndex: index - 1)
         if left != nil {
             if animated {
                 if !scrolling && !scrollView.decelerating {
@@ -322,6 +323,7 @@ extension SDSwipeView {
     }
     public func swapToRight(animated: Bool) {
         
+        right = right ?? delegate?.swipeView(self, viewForItemInIndex: index + 1)
         if right != nil {
             if animated {
                 if !scrolling && !scrollView.decelerating {
