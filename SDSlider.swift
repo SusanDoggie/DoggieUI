@@ -260,7 +260,7 @@ extension SDSlider {
                 let thumbCenter = (trackHeight - trackCornerRadius * 2.0) * CGFloat(1 - t) + trackCornerRadius
                 thumbView.frame.origin = CGPoint(x: (bounds.width - thumbWidth) / 2.0, y: thumbCenter - thumbHeight / 2.0)
             } else {
-                let thumbCenter = trackHeight * CGFloat(t) + minImage!.size.height
+                let thumbCenter = trackHeight * CGFloat(1 - t) + minImage!.size.height
                 thumbView.frame.origin = CGPoint(x: (bounds.width - thumbWidth) / 2.0, y: thumbCenter - thumbHeight / 2.0)
             }
         }
