@@ -45,12 +45,12 @@ import QuartzCore
         }
     }
     
-    @IBInspectable public var minImage: UIImage? = nil {
+    @IBInspectable public var minTrackImage: UIImage? = nil {
         didSet {
             updateLayerFrames()
         }
     }
-    @IBInspectable public var maxImage: UIImage? = nil {
+    @IBInspectable public var maxTrackImage: UIImage? = nil {
         didSet {
             updateLayerFrames()
         }
@@ -74,7 +74,7 @@ import QuartzCore
     @IBInspectable public var trackCornerRadius: CGFloat = 0.0 {
         didSet {
             if trackCornerRadius * 2.0 > trackWidth || trackCornerRadius * 2.0 > trackHeight {
-                trackCornerRadius = min(trackWidth, trackHeight) / 2.0
+                trackCornerRadius = 0.5 * min(trackWidth, trackHeight)
             }
             updateTrackView()
         }
@@ -109,7 +109,7 @@ import QuartzCore
     @IBInspectable public var thumbCornerRadius: CGFloat = 0.0 {
         didSet {
             if thumbCornerRadius * 2.0 > thumbWidth || thumbCornerRadius * 2.0 > thumbHeight {
-                thumbCornerRadius = min(thumbWidth, thumbHeight) / 2.0
+                thumbCornerRadius = 0.5 * min(thumbWidth, thumbHeight)
             }
             updateThumbView()
         }
@@ -176,7 +176,7 @@ extension SDSlider {
     }
     private var trackWidth : CGFloat {
         if isHorizontal {
-            return bounds.width - (minImage?.size.width ?? 0) - (maxImage?.size.width ?? 0)
+            return bounds.width - (minTrackImage?.size.width ?? 0) - (maxTrackImage?.size.width ?? 0)
         }
         if trackImage == nil {
             return trackThickness
@@ -185,7 +185,7 @@ extension SDSlider {
     }
     private var trackHeight : CGFloat {
         if !isHorizontal {
-            return bounds.height - (minImage?.size.height ?? 0) - (maxImage?.size.height ?? 0)
+            return bounds.height - (minTrackImage?.size.height ?? 0) - (maxTrackImage?.size.height ?? 0)
         }
         if trackImage == nil {
             return trackThickness
@@ -194,22 +194,22 @@ extension SDSlider {
     }
     
     private func updateMinTrackView() {
-        minTrackView.image = minImage
-        if let minImage = minImage {
+        minTrackView.image = minTrackImage
+        if let minTrackImage = minTrackImage {
             if isHorizontal {
-                minTrackView.frame = CGRect(origin: CGPoint(x: 0.0, y: (bounds.height - minImage.size.height) / 2.0), size: minImage.size)
+                minTrackView.frame = CGRect(origin: CGPoint(x: 0.0, y: 0.5 * (bounds.height - minTrackImage.size.height)), size: minTrackImage.size)
             } else {
-                minTrackView.frame = CGRect(origin: CGPoint(x: (bounds.width - minImage.size.width) / 2.0, y: 0.0), size: minImage.size)
+                minTrackView.frame = CGRect(origin: CGPoint(x: 0.5 * (bounds.width - minTrackImage.size.width), y: 0.0), size: minTrackImage.size)
             }
         }
     }
     private func updateMaxTrackView() {
-        maxTrackView.image = maxImage
-        if let maxImage = maxImage {
+        maxTrackView.image = maxTrackImage
+        if let maxTrackImage = maxTrackImage {
             if isHorizontal {
-                maxTrackView.frame = CGRect(origin: CGPoint(x: bounds.width - maxImage.size.width, y: (bounds.height - maxImage.size.height) / 2.0), size: maxImage.size)
+                maxTrackView.frame = CGRect(origin: CGPoint(x: bounds.width - maxTrackImage.size.width, y: 0.5 * (bounds.height - maxTrackImage.size.height)), size: maxTrackImage.size)
             } else {
-                maxTrackView.frame = CGRect(origin: CGPoint(x: (bounds.width - maxImage.size.width) / 2.0, y: bounds.height - maxImage.size.height), size: maxImage.size)
+                maxTrackView.frame = CGRect(origin: CGPoint(x: 0.5 * (bounds.width - maxTrackImage.size.width), y: bounds.height - maxTrackImage.size.height), size: maxTrackImage.size)
             }
         }
     }
@@ -221,12 +221,12 @@ extension SDSlider {
             trackView.backgroundColor = trackTintColor
         }
         if isHorizontal {
-            trackView.frame.origin = CGPoint(x: minImage?.size.width ?? 0, y: (bounds.height - trackHeight) / 2.0)
+            trackView.frame.origin = CGPoint(x: minTrackImage?.size.width ?? 0, y: 0.5 * (bounds.height - trackHeight))
         } else {
-            trackView.frame.origin = CGPoint(x: (bounds.width - trackWidth) / 2.0, y: minImage?.size.width ?? 0)
+            trackView.frame.origin = CGPoint(x: 0.5 * (bounds.width - trackWidth), y: minTrackImage?.size.width ?? 0)
         }
         trackView.frame.size = CGSize(width: trackWidth, height: trackHeight)
-        if trackImage == nil && minImage == nil && maxImage == nil {
+        if trackImage == nil && minTrackImage == nil && maxTrackImage == nil {
             trackView.cornerRadius = trackCornerRadius
         } else {
             trackView.cornerRadius = 0
@@ -248,20 +248,20 @@ extension SDSlider {
     private func updateThumbViewPosition() {
         let t = (value - minValue) / (maxValue - minValue)
         if isHorizontal {
-            if minImage == nil {
-                let thumbCenter = (trackWidth - trackCornerRadius * 2.0) * CGFloat(t) + trackCornerRadius
-                thumbView.frame.origin = CGPoint(x: thumbCenter - thumbWidth / 2.0, y: (bounds.height - thumbHeight) / 2.0)
+            if minTrackImage == nil && maxTrackImage == nil {
+                let thumbCenter = (trackWidth - thumbWidth) * CGFloat(t)
+                thumbView.frame.origin = CGPoint(x: thumbCenter, y: 0.5 * (bounds.height - thumbHeight))
             } else {
-                let thumbCenter = trackWidth * CGFloat(t) + minImage!.size.width
-                thumbView.frame.origin = CGPoint(x: thumbCenter - thumbWidth / 2.0, y: (bounds.height - thumbHeight) / 2.0)
+                let thumbCenter = trackWidth * CGFloat(t) + minTrackImage!.size.width
+                thumbView.frame.origin = CGPoint(x: thumbCenter - 0.5 * thumbWidth, y: 0.5 * (bounds.height - thumbHeight))
             }
         } else {
-            if minImage == nil {
-                let thumbCenter = (trackHeight - trackCornerRadius * 2.0) * CGFloat(1 - t) + trackCornerRadius
-                thumbView.frame.origin = CGPoint(x: (bounds.width - thumbWidth) / 2.0, y: thumbCenter - thumbHeight / 2.0)
+            if minTrackImage == nil && maxTrackImage == nil {
+                let thumbCenter = (trackHeight - thumbHeight) * CGFloat(1 - t)
+                thumbView.frame.origin = CGPoint(x: 0.5 * (bounds.width - thumbWidth), y: thumbCenter)
             } else {
-                let thumbCenter = trackHeight * CGFloat(1 - t) + minImage!.size.height
-                thumbView.frame.origin = CGPoint(x: (bounds.width - thumbWidth) / 2.0, y: thumbCenter - thumbHeight / 2.0)
+                let thumbCenter = trackHeight * CGFloat(1 - t) + minTrackImage!.size.height
+                thumbView.frame.origin = CGPoint(x: 0.5 * (bounds.width - thumbWidth), y: thumbCenter - 0.5 * thumbHeight)
             }
         }
     }
@@ -279,19 +279,19 @@ extension SDSlider {
     
     private func locateAndUpdateValue(location: CGPoint) {
         if isHorizontal {
-            if minImage == nil {
-                let s = (location.x - trackCornerRadius) / (trackWidth - trackCornerRadius * 2.0)
+            if minTrackImage == nil && maxTrackImage == nil {
+                let s = (location.x + 0.5 * thumbWidth) / (trackWidth - thumbWidth)
                 self.value = Double(s) * (maxValue - minValue) + minValue
             } else {
-                let s = (location.x - minImage!.size.width) / trackWidth
+                let s = (location.x - minTrackImage!.size.width) / trackWidth
                 self.value = Double(s) * (maxValue - minValue) + minValue
             }
         } else {
-            if minImage == nil {
-                let s = (location.y - trackCornerRadius) / (trackHeight - trackCornerRadius * 2.0)
+            if minTrackImage == nil && maxTrackImage == nil {
+                let s = (location.y + 0.5 * thumbHeight) / (trackHeight - thumbHeight)
                 self.value = Double(1 - s) * (maxValue - minValue) + minValue
             } else {
-                let s = (location.y - minImage!.size.height) / trackHeight
+                let s = (location.y - minTrackImage!.size.height) / trackHeight
                 self.value = Double(1 - s) * (maxValue - minValue) + minValue
             }
         }
