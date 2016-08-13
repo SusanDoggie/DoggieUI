@@ -110,13 +110,17 @@ extension SDTextField {
         guard let curve = userInfo[UIKeyboardAnimationCurveUserInfoKey] as? NSNumber else { return }
         guard let startFrame = userInfo[UIKeyboardFrameBeginUserInfoKey] as? NSValue else { return }
         guard let endFrame = userInfo[UIKeyboardFrameEndUserInfoKey] as? NSValue else { return }
-        _delegate?.textFieldKeyboardWillShow(self, animationDuration: duration.doubleValue, animationCurve: UIViewAnimationCurve(rawValue: curve.longValue)!, startFrame: startFrame.CGRectValue(), endFrame: endFrame.CGRectValue())
+        if self.isFirstResponder() {
+            _delegate?.textFieldKeyboardWillShow(self, animationDuration: duration.doubleValue, animationCurve: UIViewAnimationCurve(rawValue: curve.longValue)!, startFrame: startFrame.CGRectValue(), endFrame: endFrame.CGRectValue())
+        }
     }
     func _textFieldKeyboardDidShow(notification: NSNotification) {
         
         guard let userInfo = notification.userInfo else { return }
         guard let endFrame = userInfo[UIKeyboardFrameEndUserInfoKey] as? NSValue else { return }
-        _delegate?.textFieldKeyboardDidShow(self, frame: endFrame.CGRectValue())
+        if self.isFirstResponder() {
+            _delegate?.textFieldKeyboardDidShow(self, frame: endFrame.CGRectValue())
+        }
     }
     func _textFieldKeyboardWillHide(notification: NSNotification) {
         
@@ -125,7 +129,9 @@ extension SDTextField {
         guard let curve = userInfo[UIKeyboardAnimationCurveUserInfoKey] as? NSNumber else { return }
         guard let startFrame = userInfo[UIKeyboardFrameBeginUserInfoKey] as? NSValue else { return }
         guard let endFrame = userInfo[UIKeyboardFrameEndUserInfoKey] as? NSValue else { return }
-        _delegate?.textFieldKeyboardWillHide(self, animationDuration: duration.doubleValue, animationCurve: UIViewAnimationCurve(rawValue: curve.longValue)!, startFrame: startFrame.CGRectValue(), endFrame: endFrame.CGRectValue())
+        if self.isFirstResponder() {
+            _delegate?.textFieldKeyboardWillHide(self, animationDuration: duration.doubleValue, animationCurve: UIViewAnimationCurve(rawValue: curve.longValue)!, startFrame: startFrame.CGRectValue(), endFrame: endFrame.CGRectValue())
+        }
     }
     func _textFieldKeyboardDidHide(notification: NSNotification) {
         
@@ -140,7 +146,9 @@ extension SDTextField {
         guard let curve = userInfo[UIKeyboardAnimationCurveUserInfoKey] as? NSNumber else { return }
         guard let startFrame = userInfo[UIKeyboardFrameBeginUserInfoKey] as? NSValue else { return }
         guard let endFrame = userInfo[UIKeyboardFrameEndUserInfoKey] as? NSValue else { return }
-        _delegate?.textFieldKeyboardWillChangeFrame(self, animationDuration: duration.doubleValue, animationCurve: UIViewAnimationCurve(rawValue: curve.longValue)!, startFrame: startFrame.CGRectValue(), endFrame: endFrame.CGRectValue())
+        if self.isFirstResponder() {
+            _delegate?.textFieldKeyboardWillChangeFrame(self, animationDuration: duration.doubleValue, animationCurve: UIViewAnimationCurve(rawValue: curve.longValue)!, startFrame: startFrame.CGRectValue(), endFrame: endFrame.CGRectValue())
+        }
     }
     func _textFieldKeyboardDidChangeFrame(notification: NSNotification) {
         
