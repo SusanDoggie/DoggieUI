@@ -158,7 +158,8 @@ extension SDTextField {
     }
     
     func _textFieldDidChanged(notification: NSNotification) {
-        
-        _delegate?.textFieldDidChanged(self)
+        if self.isFirstResponder() {
+            _delegate?.textFieldDidChanged(self)
+        }
     }
 }
