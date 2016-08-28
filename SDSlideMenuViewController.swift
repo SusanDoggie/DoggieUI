@@ -26,7 +26,7 @@
 import UIKit
 import QuartzCore
 
-public class SDSlideMenuViewController: UIViewController {
+public class SDSlideMenuViewController: UIViewController, UIGestureRecognizerDelegate {
     
     @IBInspectable public var transformTrailing: CGFloat = 260
     
@@ -42,39 +42,39 @@ public class SDSlideMenuViewController: UIViewController {
     @IBInspectable public var shadowRadius: CGFloat = 3
     @IBInspectable public var shadowOpacity: Float = 0.25
     @IBInspectable public var shadowLayerOpacity: Float = 0.4
-    @IBInspectable public var shadowColor: UIColor = UIColor.blackColor()
+    @IBInspectable public var shadowColor: UIColor = UIColor.black
     
     @IBInspectable public var scrollsToTop: Bool = true
     
     @IBInspectable public var disableMenu: Bool = false {
         didSet {
             if disableMenu && toggleState == 1 {
-                slideDampingAnimation(0)
+                slideDampingAnimation(position: 0)
                 toggleState = 0
             }
         }
     }
     
-    public var MenuRootViewController: UIViewController!
-    public var ContentViewController: UIViewController!
+    public var menuRoot: UIViewController!
+    public var content: UIViewController!
     
     private var contentContainerView: UIView!
     private var contentMaskView: UIView!
     private var shadowLayer: UIView!
     
     public var menuRootView: UIView! {
-        return MenuRootViewController?.view
+        return menuRoot?.view
     }
     public var contentView: UIView! {
-        return ContentViewController?.view
+        return content?.view
     }
     
     private var toggleState: UInt = 0 {
         didSet {
-            if let scrollView = MenuRootViewController.view as? UIScrollView {
+            if let scrollView = menuRoot.view as? UIScrollView {
                 scrollView.scrollsToTop = scrollsToTop && toggleState != 0
             }
-            if let scrollView = ContentViewController.view as? UIScrollView {
+            if let scrollView = content.view as? UIScrollView {
                 scrollView.scrollsToTop = scrollsToTop && toggleState == 0
             }
         }
@@ -100,7 +100,7 @@ public class SDSlideMenuViewController: UIViewController {
         shadowLayer = UIView(frame: view.frame)
         shadowLayer.backgroundColor = shadowColor
         shadowLayer.alpha = CGFloat(shadowLayerOpacity)
-        shadowLayer.userInteractionEnabled = false
+        shadowLayer.isUserInteractionEnabled = false
         view.addSubview(shadowLayer)
         
         contentMaskView = UIView(frame: view.frame)
@@ -110,22 +110,22 @@ public class SDSlideMenuViewController: UIViewController {
         contentContainerView.translatesAutoresizingMaskIntoConstraints = false
         shadowLayer.translatesAutoresizingMaskIntoConstraints = false
         contentMaskView.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activateConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|[content]|", options: [], metrics: nil, views: ["content": contentContainerView]))
-        NSLayoutConstraint.activateConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|[content]|", options: [], metrics: nil, views: ["content": contentContainerView]))
-        NSLayoutConstraint.activateConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|[shadow]|", options: [], metrics: nil, views: ["shadow": shadowLayer]))
-        NSLayoutConstraint.activateConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|[shadow]|", options: [], metrics: nil, views: ["shadow": shadowLayer]))
-        NSLayoutConstraint.activateConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|[mask]|", options: [], metrics: nil, views: ["mask": contentMaskView]))
-        NSLayoutConstraint.activateConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|[mask]|", options: [], metrics: nil, views: ["mask": contentMaskView]))
+        NSLayoutConstraint.activate(NSLayoutConstraint.constraints(withVisualFormat: "V:|[content]|", options: [], metrics: nil, views: ["content": contentContainerView]))
+        NSLayoutConstraint.activate(NSLayoutConstraint.constraints(withVisualFormat: "H:|[content]|", options: [], metrics: nil, views: ["content": contentContainerView]))
+        NSLayoutConstraint.activate(NSLayoutConstraint.constraints(withVisualFormat: "V:|[shadow]|", options: [], metrics: nil, views: ["shadow": shadowLayer]))
+        NSLayoutConstraint.activate(NSLayoutConstraint.constraints(withVisualFormat: "H:|[shadow]|", options: [], metrics: nil, views: ["shadow": shadowLayer]))
+        NSLayoutConstraint.activate(NSLayoutConstraint.constraints(withVisualFormat: "V:|[mask]|", options: [], metrics: nil, views: ["mask": contentMaskView]))
+        NSLayoutConstraint.activate(NSLayoutConstraint.constraints(withVisualFormat: "H:|[mask]|", options: [], metrics: nil, views: ["mask": contentMaskView]))
         
-        performSegueWithIdentifier("MenuRoot", sender: nil)
-        performSegueWithIdentifier("MainContent", sender: nil)
+        performSegue(withIdentifier: "MenuRoot", sender: nil)
+        performSegue(withIdentifier: "MainContent", sender: nil)
         
-        MenuRootViewController.view.hidden = true
-        shadowLayer.hidden = true
-        if let scrollView = MenuRootViewController.view as? UIScrollView {
+        menuRoot.view.isHidden = true
+        shadowLayer.isHidden = true
+        if let scrollView = menuRoot.view as? UIScrollView {
             scrollView.scrollsToTop = false
         }
-        if let scrollView = ContentViewController.view as? UIScrollView {
+        if let scrollView = content.view as? UIScrollView {
             scrollView.scrollsToTop = true
         }
         
@@ -141,104 +141,101 @@ public class SDSlideMenuViewController: UIViewController {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-}
-
-extension SDSlideMenuViewController {
     
-    private func addMenuRootViewController(rootViewController: UIViewController) {
+    fileprivate func addmenuRoot(rootViewController: UIViewController) {
         
         var hidden = true
-        if let MenuRootViewController = MenuRootViewController {
-            hidden = MenuRootViewController.view.hidden
-            MenuRootViewController.willMoveToParentViewController(nil)
-            MenuRootViewController.removeFromParentViewController()
-            MenuRootViewController.view.removeFromSuperview()
+        if let menuRoot = menuRoot {
+            hidden = menuRoot.view.isHidden
+            menuRoot.willMove(toParentViewController: nil)
+            menuRoot.removeFromParentViewController()
+            menuRoot.view.removeFromSuperview()
         }
         
         shadowLayer.alpha = hidden ? CGFloat(shadowLayerOpacity) : 0
-        view.sendSubviewToBack(shadowLayer)
+        view.sendSubview(toBack: shadowLayer)
         
-        MenuRootViewController = rootViewController
-        addChildViewController(MenuRootViewController)
-        MenuRootViewController.didMoveToParentViewController(self)
+        menuRoot = rootViewController
+        addChildViewController(menuRoot)
+        menuRoot.didMove(toParentViewController: self)
         
-        view.addSubview(MenuRootViewController.view)
-        view.sendSubviewToBack(MenuRootViewController.view)
+        view.addSubview(menuRoot.view)
+        view.sendSubview(toBack: menuRoot.view)
         
-        MenuRootViewController.view.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activateConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|[menu]|", options: [], metrics: nil, views: ["menu": MenuRootViewController.view]))
-        NSLayoutConstraint.activateConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|[menu]|", options: [], metrics: nil, views: ["menu": MenuRootViewController.view]))
+        menuRoot.view.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate(NSLayoutConstraint.constraints(withVisualFormat: "V:|[menu]|", options: [], metrics: nil, views: ["menu": menuRoot.view]))
+        NSLayoutConstraint.activate(NSLayoutConstraint.constraints(withVisualFormat: "H:|[menu]|", options: [], metrics: nil, views: ["menu": menuRoot.view]))
         
-        MenuRootViewController.view.hidden = hidden
-        shadowLayer.hidden = hidden
+        menuRoot.view.isHidden = hidden
+        shadowLayer.isHidden = hidden
     }
     
     private func _addContentViewController(contentViewController: UIViewController) {
         
-        if let ContentViewController = ContentViewController {
-            ContentViewController.willMoveToParentViewController(nil)
+        if let ContentViewController = content {
+            ContentViewController.willMove(toParentViewController: nil)
             ContentViewController.removeFromParentViewController()
             ContentViewController.view.removeFromSuperview()
         }
         
-        ContentViewController = contentViewController
-        addChildViewController(ContentViewController)
-        ContentViewController.didMoveToParentViewController(self)
+        content = contentViewController
+        addChildViewController(content)
+        content.didMove(toParentViewController: self)
         
-        contentMaskView.addSubview(ContentViewController.view)
-        view.bringSubviewToFront(contentContainerView)
+        contentMaskView.addSubview(content.view)
+        view.bringSubview(toFront: contentContainerView)
         
-        ContentViewController.view.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activateConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|[content]|", options: [], metrics: nil, views: ["content": ContentViewController.view]))
-        NSLayoutConstraint.activateConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|[content]|", options: [], metrics: nil, views: ["content": ContentViewController.view]))
+        content.view.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate(NSLayoutConstraint.constraints(withVisualFormat: "V:|[content]|", options: [], metrics: nil, views: ["content": content.view]))
+        NSLayoutConstraint.activate(NSLayoutConstraint.constraints(withVisualFormat: "H:|[content]|", options: [], metrics: nil, views: ["content": content.view]))
     }
     
-    private func addContentViewController(contentViewController: UIViewController) {
+    fileprivate func addContentViewController(contentViewController: UIViewController) {
         
-        if ContentViewController == nil {
-            _addContentViewController(contentViewController)
+        if content == nil {
+            _addContentViewController(contentViewController: contentViewController)
         } else {
             let rightPosition = view.frame.width + self.shadowWidth
             
             if toggleState == 1 {
-                if ContentViewController.equalTo(contentViewController) {
-                    self.slideDampingAnimation(0)
+                if content.equalTo(otherViewController: contentViewController) {
+                    self.slideDampingAnimation(position: 0)
                     self.toggleState = 0
                 } else {
-                    UIView.animateWithDuration(
-                        self.linearTransformDuration,
+                    UIView.animate(
+                        withDuration: self.linearTransformDuration,
                         delay: self.linearTransformDelay,
-                        options: UIViewAnimationOptions.CurveLinear,
+                        options: UIViewAnimationOptions.curveLinear,
                         animations: {
                             self.contentContainerView.transform.tx = rightPosition
                         },
                         completion: { finished in
-                            self._addContentViewController(contentViewController)
-                            self.slideDampingAnimation(0)
+                            self._addContentViewController(contentViewController: contentViewController)
+                            self.slideDampingAnimation(position: 0)
                             self.toggleState = 0
                     })
                 }
-            } else if !ContentViewController.equalTo(contentViewController) {
+            } else if !content.equalTo(otherViewController: contentViewController) {
                 
                 let _shadowLayer = UIView(frame: view.frame)
                 _shadowLayer.backgroundColor = self.shadowColor
                 _shadowLayer.alpha = 0
-                _shadowLayer.userInteractionEnabled = false
+                _shadowLayer.isUserInteractionEnabled = false
                 view.addSubview(_shadowLayer)
-                view.bringSubviewToFront(_shadowLayer)
+                view.bringSubview(toFront: _shadowLayer)
                 
                 view.addSubview(contentViewController.view)
-                view.bringSubviewToFront(contentViewController.view)
+                view.bringSubview(toFront: contentViewController.view)
                 contentViewController.view.transform.tx = rightPosition
                 
                 let translatesAutoresizingMaskIntoConstraints = contentViewController.view.translatesAutoresizingMaskIntoConstraints
                 
                 _shadowLayer.translatesAutoresizingMaskIntoConstraints = false
                 contentViewController.view.translatesAutoresizingMaskIntoConstraints = false
-                NSLayoutConstraint.activateConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|[shadow]|", options: [], metrics: nil, views: ["shadow": shadowLayer]))
-                NSLayoutConstraint.activateConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|[shadow]|", options: [], metrics: nil, views: ["shadow": shadowLayer]))
-                NSLayoutConstraint.activateConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|[content]|", options: [], metrics: nil, views: ["content": contentViewController.view]))
-                NSLayoutConstraint.activateConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|[content]|", options: [], metrics: nil, views: ["content": contentViewController.view]))
+                NSLayoutConstraint.activate(NSLayoutConstraint.constraints(withVisualFormat: "V:|[shadow]|", options: [], metrics: nil, views: ["shadow": shadowLayer]))
+                NSLayoutConstraint.activate(NSLayoutConstraint.constraints(withVisualFormat: "H:|[shadow]|", options: [], metrics: nil, views: ["shadow": shadowLayer]))
+                NSLayoutConstraint.activate(NSLayoutConstraint.constraints(withVisualFormat: "V:|[content]|", options: [], metrics: nil, views: ["content": contentViewController.view]))
+                NSLayoutConstraint.activate(NSLayoutConstraint.constraints(withVisualFormat: "H:|[content]|", options: [], metrics: nil, views: ["content": contentViewController.view]))
                 
                 let masksToBounds = contentViewController.view.layer.masksToBounds
                 let shadowOpacity = contentViewController.view.shadowOpacity
@@ -253,12 +250,12 @@ extension SDSlideMenuViewController {
                     contentViewController.view.shadowColor = self.shadowColor
                 }
                 
-                UIView.animateWithDuration(
-                    self.springDampingTransformDuration,
+                UIView.animate(
+                    withDuration: self.springDampingTransformDuration,
                     delay: self.springDampingTransformDelay,
                     usingSpringWithDamping: self.springDampingRatio,
                     initialSpringVelocity: self.springDampingVelocity,
-                    options: UIViewAnimationOptions.CurveLinear,
+                    options: UIViewAnimationOptions.curveLinear,
                     animations: {
                         _shadowLayer.alpha = CGFloat(self.shadowLayerOpacity)
                         contentViewController.view.transform.tx = 0
@@ -274,36 +271,25 @@ extension SDSlideMenuViewController {
                             contentViewController.view.shadowColor = shadowColor
                         }
                         contentViewController.view.removeFromSuperview()
-                        self._addContentViewController(contentViewController)
+                        self._addContentViewController(contentViewController: contentViewController)
                 })
             }
         }
     }
-}
-
-extension UIViewController {
     
-    @IBAction public func menuToggle(sender: AnyObject?) {
-        
-        self.slideMenuViewController?._menuToggle(sender)
-    }
-}
-
-extension SDSlideMenuViewController {
-    
-    private func _menuToggle(sender: AnyObject?) {
+    fileprivate func _menuToggle(sender: AnyObject?) {
         
         switch toggleState {
         case 0:
-            slideDampingAnimation(self.transformTrailing)
+            slideDampingAnimation(position: self.transformTrailing)
             toggleState = 1
             
         case 1:
-            slideDampingAnimation(0)
+            slideDampingAnimation(position: 0)
             toggleState = 0
             
         default:
-            slideDampingAnimation(0)
+            slideDampingAnimation(position: 0)
             toggleState = 0
         }
     }
@@ -311,35 +297,32 @@ extension SDSlideMenuViewController {
     private func slideDampingAnimation(position: CGFloat) {
         
         if position != 0 {
-            MenuRootViewController.view.hidden = false
-            shadowLayer.hidden = false
-            contentMaskView.userInteractionEnabled = false
+            menuRoot.view.isHidden = false
+            shadowLayer.isHidden = false
+            contentMaskView.isUserInteractionEnabled = false
         }
-        UIView.animateWithDuration(
-            self.springDampingTransformDuration,
+        UIView.animate(
+            withDuration: self.springDampingTransformDuration,
             delay: self.springDampingTransformDelay,
             usingSpringWithDamping: self.springDampingRatio,
             initialSpringVelocity: self.springDampingVelocity,
-            options: UIViewAnimationOptions.CurveLinear,
+            options: UIViewAnimationOptions.curveLinear,
             animations: {
-                self.MenuRootViewController.view.transform.tx = 0
+                self.menuRoot.view.transform.tx = 0
                 self.shadowLayer.transform.tx = 0
                 self.shadowLayer.alpha = position == 0 ? CGFloat(self.shadowLayerOpacity) : 0
                 self.contentContainerView.transform.tx = position
             },
             completion: { finished in
                 if position == 0 {
-                    self.MenuRootViewController.view.hidden = true
-                    self.shadowLayer.hidden = true
-                    self.contentMaskView.userInteractionEnabled = true
+                    self.menuRoot.view.isHidden = true
+                    self.shadowLayer.isHidden = true
+                    self.contentMaskView.isUserInteractionEnabled = true
                 }
         })
     }
-}
-
-extension SDSlideMenuViewController: UIGestureRecognizerDelegate {
     
-    public func gestureRecognizer(gestureRecognizer: UIGestureRecognizer, shouldReceiveTouch touch: UITouch) -> Bool {
+    public func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
         
         if panRecongnizer === gestureRecognizer {
             return !disableMenu
@@ -349,15 +332,15 @@ extension SDSlideMenuViewController: UIGestureRecognizerDelegate {
             if toggleState != 1 {
                 return false
             }
-            return CGRectContainsPoint(contentContainerView.frame, touch.locationInView(view)) && !disableMenu
+            return contentContainerView.frame.contains(touch.location(in: view)) && !disableMenu
         }
         
         return !disableMenu
     }
     
-    public func gestureRecognizerShouldBegin(gestureRecognizer: UIGestureRecognizer) -> Bool {
+    public func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
         if panRecongnizer === gestureRecognizer {
-            let velocity = panRecongnizer.velocityInView(view)
+            let velocity = panRecongnizer.velocity(in: view)
             return abs(velocity.x) > abs(velocity.y) && (toggleState != 0 || velocity.x > 0)
         }
         return true
@@ -367,55 +350,55 @@ extension SDSlideMenuViewController: UIGestureRecognizerDelegate {
         
         self.view.endEditing(true)
         
-        let translation = sender.translationInView(view)
-        let velocity = sender.velocityInView(view)
+        let translation = sender.translation(in: view)
+        let velocity = sender.velocity(in: view)
         
         switch sender.state {
-        case UIGestureRecognizerState.Began:
+        case UIGestureRecognizerState.began:
             
-            MenuRootViewController.view.hidden = false
-            shadowLayer.hidden = false
-            contentMaskView.userInteractionEnabled = false
-            sender.setTranslation(CGPointMake(contentContainerView.transform.tx, 0), inView: view)
-        case UIGestureRecognizerState.Changed:
+            menuRoot.view.isHidden = false
+            shadowLayer.isHidden = false
+            contentMaskView.isUserInteractionEnabled = false
+            sender.setTranslation(CGPoint(x: contentContainerView.transform.tx, y: 0), in: view)
+        case UIGestureRecognizerState.changed:
             
             var position = translation.x
             
             if position < 0 {
                 position = -sqrt(-position * 16)
-                MenuRootViewController.view.transform.tx = position
+                menuRoot.view.transform.tx = position
                 shadowLayer.transform.tx = position
                 shadowLayer.alpha = CGFloat(self.shadowLayerOpacity)
                 contentContainerView.transform.tx = position
             } else if position > self.transformTrailing {
                 position = sqrt((position - self.transformTrailing) * 16) + self.transformTrailing
-                MenuRootViewController.view.transform.tx = 0
+                menuRoot.view.transform.tx = 0
                 shadowLayer.transform.tx = 0
                 shadowLayer.alpha = 0
                 contentContainerView.transform.tx = position
             } else {
-                MenuRootViewController.view.transform.tx = 0
+                menuRoot.view.transform.tx = 0
                 shadowLayer.transform.tx = 0
                 shadowLayer.alpha = max(0, min(1, CGFloat(self.shadowLayerOpacity) * (self.transformTrailing - position) / self.transformTrailing))
                 contentContainerView.transform.tx = position
             }
             
-        case UIGestureRecognizerState.Ended:
+        case UIGestureRecognizerState.ended:
             
             if velocity.x > 0 {
-                slideDampingAnimation(self.transformTrailing)
+                slideDampingAnimation(position: self.transformTrailing)
                 toggleState = 1
             } else if velocity.x < 0 {
-                slideDampingAnimation(0)
+                slideDampingAnimation(position: 0)
                 toggleState = 0
             } else {
                 if translation.x > self.transformTrailing / 2
                 {
-                    slideDampingAnimation(self.transformTrailing)
+                    slideDampingAnimation(position: self.transformTrailing)
                     toggleState = 1
                 } else
                 {
-                    slideDampingAnimation(0)
+                    slideDampingAnimation(position: 0)
                     toggleState = 0
                 }
             }
@@ -429,7 +412,7 @@ extension SDSlideMenuViewController: UIGestureRecognizerDelegate {
         self.view.endEditing(true)
         
         if toggleState == 1 {
-            slideDampingAnimation(0)
+            slideDampingAnimation(position: 0)
             toggleState = 0
         }
     }
@@ -437,12 +420,17 @@ extension SDSlideMenuViewController: UIGestureRecognizerDelegate {
 
 extension UIViewController {
     
-    public var slideMenuViewController: SDSlideMenuViewController? {
+    @IBAction public func menuToggle(sender: AnyObject?) {
         
-        return self as? SDSlideMenuViewController ?? self.parentViewController?.slideMenuViewController
+        self.slideMenu?._menuToggle(sender: sender)
     }
     
-    private func equalTo(otherViewController: UIViewController) -> Bool {
+    public var slideMenu: SDSlideMenuViewController? {
+        
+        return self as? SDSlideMenuViewController ?? self.parent?.slideMenu
+    }
+    
+    fileprivate func equalTo(otherViewController: UIViewController) -> Bool {
         var selfTag = self.view.tag
         var otherTag = otherViewController.view.tag
         
@@ -455,11 +443,11 @@ extension UIViewController {
     }
 }
 
-public class SDMenuRootViewControllerSegue: UIStoryboardSegue {
+public class SDmenuRootSegue: UIStoryboardSegue {
     
     public override func perform() {
         
-        sourceViewController.slideMenuViewController?.addMenuRootViewController(destinationViewController)
+        source.slideMenu?.addmenuRoot(rootViewController: destination)
     }
 }
 
@@ -467,6 +455,6 @@ public class SDContentViewControllerSegue: UIStoryboardSegue {
     
     public override func perform() {
         
-        sourceViewController.slideMenuViewController?.addContentViewController(destinationViewController)
+        source.slideMenu?.addContentViewController(contentViewController: destination)
     }
 }

@@ -27,19 +27,19 @@ import UIKit
 
 public protocol SDSwipeViewDelegate : class {
     
-    func swipeView(swipeView: SDSwipeView, viewForItemInIndex index: Int) -> UIView?
+    func swipeView(_ swipeView: SDSwipeView, viewForItemInIndex index: Int) -> UIView?
     
-    func swipeView(swipeView: SDSwipeView, didDisplayingView view: UIView)
+    func swipeView(_ swipeView: SDSwipeView, didDisplayingView view: UIView)
 }
 
 public extension SDSwipeViewDelegate {
     
-    func swipeView(swipeView: SDSwipeView, didDisplayingView view: UIView) {
+    func swipeView(_ swipeView: SDSwipeView, didDisplayingView view: UIView) {
         // do nothing
     }
 }
 
-public class SDSwipeView: UIView {
+public class SDSwipeView: UIView, UIScrollViewDelegate {
     
     private let scrollView = UIScrollView()
     
@@ -84,17 +84,17 @@ public class SDSwipeView: UIView {
     
     @IBInspectable public var swapEnabled : Bool {
         get {
-            return scrollView.scrollEnabled
+            return scrollView.isScrollEnabled
         }
         set {
-            scrollView.scrollEnabled = newValue
+            scrollView.isScrollEnabled = newValue
         }
     }
     
     private func constructView() {
         
-        scrollView.pagingEnabled = true
-        scrollView.directionalLockEnabled = false
+        scrollView.isPagingEnabled = true
+        scrollView.isDirectionalLockEnabled = false
         scrollView.showsHorizontalScrollIndicator = false
         scrollView.showsVerticalScrollIndicator = false
         scrollView.scrollsToTop = false
@@ -115,17 +115,17 @@ public class SDSwipeView: UIView {
     
     public func reload() {
         
-        current = delegate?.swipeView(self, viewForItemInIndex: index)
+        current = delegate?.swipeView(_ swipeView: self, viewForItemInIndex: index)
         if current != nil {
-            left = delegate?.swipeView(self, viewForItemInIndex: index - 1)
-            right = delegate?.swipeView(self, viewForItemInIndex: index + 1)
+            left = delegate?.swipeView(_ swipeView: self, viewForItemInIndex: index - 1)
+            right = delegate?.swipeView(_ swipeView: self, viewForItemInIndex: index + 1)
         } else {
             left = nil
             right = nil
         }
         _layoutSubviews()
         if current != nil {
-            delegate?.swipeView(self, didDisplayingView: current!)
+            delegate?.swipeView(_ swipeView: self, didDisplayingView: current!)
         }
     }
     
@@ -136,47 +136,47 @@ public class SDSwipeView: UIView {
     
     private func _layoutOnePage() {
         scrollView.addSubview(page_1)
-        NSLayoutConstraint.activateConstraints([
-            NSLayoutConstraint(item: page_1, attribute: .Width, relatedBy: .Equal, toItem: scrollView, attribute: .Width, multiplier: 1, constant: 0),
-            NSLayoutConstraint(item: page_1, attribute: .Height, relatedBy: .Equal, toItem: scrollView, attribute: .Height, multiplier: 1, constant: 0)])
-        NSLayoutConstraint.activateConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|[scroll]|", options: [], metrics: nil, views: ["scroll": scrollView]))
-        NSLayoutConstraint.activateConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|[scroll]|", options: [], metrics: nil, views: ["scroll": scrollView]))
-        NSLayoutConstraint.activateConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|[page]|", options: [], metrics: nil, views: ["page": page_1]))
-        NSLayoutConstraint.activateConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|[one]", options: [], metrics: nil, views: ["one": page_1]))
+        NSLayoutConstraint.activate([
+            NSLayoutConstraint(item: page_1, attribute: .width, relatedBy: .equal, toItem: scrollView, attribute: .width, multiplier: 1, constant: 0),
+            NSLayoutConstraint(item: page_1, attribute: .height, relatedBy: .equal, toItem: scrollView, attribute: .height, multiplier: 1, constant: 0)])
+        NSLayoutConstraint.activate(NSLayoutConstraint.constraints(withVisualFormat: "V:|[scroll]|", options: [], metrics: nil, views: ["scroll": scrollView]))
+        NSLayoutConstraint.activate(NSLayoutConstraint.constraints(withVisualFormat: "H:|[scroll]|", options: [], metrics: nil, views: ["scroll": scrollView]))
+        NSLayoutConstraint.activate(NSLayoutConstraint.constraints(withVisualFormat: "V:|[page]|", options: [], metrics: nil, views: ["page": page_1]))
+        NSLayoutConstraint.activate(NSLayoutConstraint.constraints(withVisualFormat: "H:|[one]", options: [], metrics: nil, views: ["one": page_1]))
     }
     
     private func _layoutTwoPage() {
         scrollView.addSubview(page_1)
         scrollView.addSubview(page_2)
-        NSLayoutConstraint.activateConstraints([
-            NSLayoutConstraint(item: page_1, attribute: .Width, relatedBy: .Equal, toItem: scrollView, attribute: .Width, multiplier: 1, constant: 0),
-            NSLayoutConstraint(item: page_1, attribute: .Height, relatedBy: .Equal, toItem: scrollView, attribute: .Height, multiplier: 1, constant: 0),
-            NSLayoutConstraint(item: page_2, attribute: .Width, relatedBy: .Equal, toItem: scrollView, attribute: .Width, multiplier: 1, constant: 0),
-            NSLayoutConstraint(item: page_2, attribute: .Height, relatedBy: .Equal, toItem: scrollView, attribute: .Height, multiplier: 1, constant: 0)])
-        NSLayoutConstraint.activateConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|[scroll]|", options: [], metrics: nil, views: ["scroll": scrollView]))
-        NSLayoutConstraint.activateConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|[scroll]|", options: [], metrics: nil, views: ["scroll": scrollView]))
-        NSLayoutConstraint.activateConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|[page]|", options: [], metrics: nil, views: ["page": page_1]))
-        NSLayoutConstraint.activateConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|[page]|", options: [], metrics: nil, views: ["page": page_2]))
-        NSLayoutConstraint.activateConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|[one][two]|", options: [], metrics: nil, views: ["one": page_1, "two": page_2]))
+        NSLayoutConstraint.activate([
+            NSLayoutConstraint(item: page_1, attribute: .width, relatedBy: .equal, toItem: scrollView, attribute: .width, multiplier: 1, constant: 0),
+            NSLayoutConstraint(item: page_1, attribute: .height, relatedBy: .equal, toItem: scrollView, attribute: .height, multiplier: 1, constant: 0),
+            NSLayoutConstraint(item: page_2, attribute: .width, relatedBy: .equal, toItem: scrollView, attribute: .width, multiplier: 1, constant: 0),
+            NSLayoutConstraint(item: page_2, attribute: .height, relatedBy: .equal, toItem: scrollView, attribute: .height, multiplier: 1, constant: 0)])
+        NSLayoutConstraint.activate(NSLayoutConstraint.constraints(withVisualFormat: "V:|[scroll]|", options: [], metrics: nil, views: ["scroll": scrollView]))
+        NSLayoutConstraint.activate(NSLayoutConstraint.constraints(withVisualFormat: "H:|[scroll]|", options: [], metrics: nil, views: ["scroll": scrollView]))
+        NSLayoutConstraint.activate(NSLayoutConstraint.constraints(withVisualFormat: "V:|[page]|", options: [], metrics: nil, views: ["page": page_1]))
+        NSLayoutConstraint.activate(NSLayoutConstraint.constraints(withVisualFormat: "V:|[page]|", options: [], metrics: nil, views: ["page": page_2]))
+        NSLayoutConstraint.activate(NSLayoutConstraint.constraints(withVisualFormat: "H:|[one][two]|", options: [], metrics: nil, views: ["one": page_1, "two": page_2]))
     }
     
     private func _layoutThreePage() {
         scrollView.addSubview(page_1)
         scrollView.addSubview(page_2)
         scrollView.addSubview(page_3)
-        NSLayoutConstraint.activateConstraints([
-            NSLayoutConstraint(item: page_1, attribute: .Width, relatedBy: .Equal, toItem: scrollView, attribute: .Width, multiplier: 1, constant: 0),
-            NSLayoutConstraint(item: page_1, attribute: .Height, relatedBy: .Equal, toItem: scrollView, attribute: .Height, multiplier: 1, constant: 0),
-            NSLayoutConstraint(item: page_2, attribute: .Width, relatedBy: .Equal, toItem: scrollView, attribute: .Width, multiplier: 1, constant: 0),
-            NSLayoutConstraint(item: page_2, attribute: .Height, relatedBy: .Equal, toItem: scrollView, attribute: .Height, multiplier: 1, constant: 0),
-            NSLayoutConstraint(item: page_3, attribute: .Width, relatedBy: .Equal, toItem: scrollView, attribute: .Width, multiplier: 1, constant: 0),
-            NSLayoutConstraint(item: page_3, attribute: .Height, relatedBy: .Equal, toItem: scrollView, attribute: .Height, multiplier: 1, constant: 0)])
-        NSLayoutConstraint.activateConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|[scroll]|", options: [], metrics: nil, views: ["scroll": scrollView]))
-        NSLayoutConstraint.activateConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|[scroll]|", options: [], metrics: nil, views: ["scroll": scrollView]))
-        NSLayoutConstraint.activateConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|[page]|", options: [], metrics: nil, views: ["page": page_1]))
-        NSLayoutConstraint.activateConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|[page]|", options: [], metrics: nil, views: ["page": page_2]))
-        NSLayoutConstraint.activateConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|[page]|", options: [], metrics: nil, views: ["page": page_3]))
-        NSLayoutConstraint.activateConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|[one][two][three]|", options: [], metrics: nil, views: ["one": page_1, "two": page_2, "three": page_3]))
+        NSLayoutConstraint.activate([
+            NSLayoutConstraint(item: page_1, attribute: .width, relatedBy: .equal, toItem: scrollView, attribute: .width, multiplier: 1, constant: 0),
+            NSLayoutConstraint(item: page_1, attribute: .height, relatedBy: .equal, toItem: scrollView, attribute: .height, multiplier: 1, constant: 0),
+            NSLayoutConstraint(item: page_2, attribute: .width, relatedBy: .equal, toItem: scrollView, attribute: .width, multiplier: 1, constant: 0),
+            NSLayoutConstraint(item: page_2, attribute: .height, relatedBy: .equal, toItem: scrollView, attribute: .height, multiplier: 1, constant: 0),
+            NSLayoutConstraint(item: page_3, attribute: .width, relatedBy: .equal, toItem: scrollView, attribute: .width, multiplier: 1, constant: 0),
+            NSLayoutConstraint(item: page_3, attribute: .height, relatedBy: .equal, toItem: scrollView, attribute: .height, multiplier: 1, constant: 0)])
+        NSLayoutConstraint.activate(NSLayoutConstraint.constraints(withVisualFormat: "V:|[scroll]|", options: [], metrics: nil, views: ["scroll": scrollView]))
+        NSLayoutConstraint.activate(NSLayoutConstraint.constraints(withVisualFormat: "H:|[scroll]|", options: [], metrics: nil, views: ["scroll": scrollView]))
+        NSLayoutConstraint.activate(NSLayoutConstraint.constraints(withVisualFormat: "V:|[page]|", options: [], metrics: nil, views: ["page": page_1]))
+        NSLayoutConstraint.activate(NSLayoutConstraint.constraints(withVisualFormat: "V:|[page]|", options: [], metrics: nil, views: ["page": page_2]))
+        NSLayoutConstraint.activate(NSLayoutConstraint.constraints(withVisualFormat: "V:|[page]|", options: [], metrics: nil, views: ["page": page_3]))
+        NSLayoutConstraint.activate(NSLayoutConstraint.constraints(withVisualFormat: "H:|[one][two][three]|", options: [], metrics: nil, views: ["one": page_1, "two": page_2, "three": page_3]))
     }
     
     private func _layoutSubviews() {
@@ -198,15 +198,15 @@ public class SDSwipeView: UIView {
             return
         }
         
-        left = left ?? delegate?.swipeView(self, viewForItemInIndex: index - 1)
-        right = right ?? delegate?.swipeView(self, viewForItemInIndex: index + 1)
+        left = left ?? delegate?.swipeView(_ swipeView: self, viewForItemInIndex: index - 1)
+        right = right ?? delegate?.swipeView(_ swipeView: self, viewForItemInIndex: index + 1)
         
         if left == nil && right == nil {
             _layoutOnePage()
             page_1.addSubview(current!)
             current!.translatesAutoresizingMaskIntoConstraints = false
-            NSLayoutConstraint.activateConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|[current]|", options: [], metrics: nil, views: ["current": current!]))
-            NSLayoutConstraint.activateConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|[current]|", options: [], metrics: nil, views: ["current": current!]))
+            NSLayoutConstraint.activate(NSLayoutConstraint.constraints(withVisualFormat: "V:|[current]|", options: [], metrics: nil, views: ["current": current!]))
+            NSLayoutConstraint.activate(NSLayoutConstraint.constraints(withVisualFormat: "H:|[current]|", options: [], metrics: nil, views: ["current": current!]))
             scrollView.scrollRectToVisible(CGRect(x: 0, y: 0, width: scrollView.frame.width, height: scrollView.frame.height), animated: false)
         } else if left == nil {
             _layoutTwoPage()
@@ -214,10 +214,10 @@ public class SDSwipeView: UIView {
             page_2.addSubview(right!)
             current!.translatesAutoresizingMaskIntoConstraints = false
             right!.translatesAutoresizingMaskIntoConstraints = false
-            NSLayoutConstraint.activateConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|[current]|", options: [], metrics: nil, views: ["current": current!]))
-            NSLayoutConstraint.activateConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|[current]|", options: [], metrics: nil, views: ["current": current!]))
-            NSLayoutConstraint.activateConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|[right]|", options: [], metrics: nil, views: ["right": right!]))
-            NSLayoutConstraint.activateConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|[right]|", options: [], metrics: nil, views: ["right": right!]))
+            NSLayoutConstraint.activate(NSLayoutConstraint.constraints(withVisualFormat: "V:|[current]|", options: [], metrics: nil, views: ["current": current!]))
+            NSLayoutConstraint.activate(NSLayoutConstraint.constraints(withVisualFormat: "H:|[current]|", options: [], metrics: nil, views: ["current": current!]))
+            NSLayoutConstraint.activate(NSLayoutConstraint.constraints(withVisualFormat: "V:|[right]|", options: [], metrics: nil, views: ["right": right!]))
+            NSLayoutConstraint.activate(NSLayoutConstraint.constraints(withVisualFormat: "H:|[right]|", options: [], metrics: nil, views: ["right": right!]))
             scrollView.scrollRectToVisible(CGRect(x: 0, y: 0, width: scrollView.frame.width, height: scrollView.frame.height), animated: false)
         } else if right == nil {
             _layoutTwoPage()
@@ -225,10 +225,10 @@ public class SDSwipeView: UIView {
             page_2.addSubview(current!)
             left!.translatesAutoresizingMaskIntoConstraints = false
             current!.translatesAutoresizingMaskIntoConstraints = false
-            NSLayoutConstraint.activateConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|[left]|", options: [], metrics: nil, views: ["left": left!]))
-            NSLayoutConstraint.activateConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|[left]|", options: [], metrics: nil, views: ["left": left!]))
-            NSLayoutConstraint.activateConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|[current]|", options: [], metrics: nil, views: ["current": current!]))
-            NSLayoutConstraint.activateConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|[current]|", options: [], metrics: nil, views: ["current": current!]))
+            NSLayoutConstraint.activate(NSLayoutConstraint.constraints(withVisualFormat: "V:|[left]|", options: [], metrics: nil, views: ["left": left!]))
+            NSLayoutConstraint.activate(NSLayoutConstraint.constraints(withVisualFormat: "H:|[left]|", options: [], metrics: nil, views: ["left": left!]))
+            NSLayoutConstraint.activate(NSLayoutConstraint.constraints(withVisualFormat: "V:|[current]|", options: [], metrics: nil, views: ["current": current!]))
+            NSLayoutConstraint.activate(NSLayoutConstraint.constraints(withVisualFormat: "H:|[current]|", options: [], metrics: nil, views: ["current": current!]))
             scrollView.scrollRectToVisible(CGRect(x: scrollView.frame.width, y: 0, width: scrollView.frame.width, height: scrollView.frame.height), animated: false)
         } else {
             _layoutThreePage()
@@ -238,18 +238,15 @@ public class SDSwipeView: UIView {
             left!.translatesAutoresizingMaskIntoConstraints = false
             current!.translatesAutoresizingMaskIntoConstraints = false
             right!.translatesAutoresizingMaskIntoConstraints = false
-            NSLayoutConstraint.activateConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|[left]|", options: [], metrics: nil, views: ["left": left!]))
-            NSLayoutConstraint.activateConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|[left]|", options: [], metrics: nil, views: ["left": left!]))
-            NSLayoutConstraint.activateConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|[current]|", options: [], metrics: nil, views: ["current": current!]))
-            NSLayoutConstraint.activateConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|[current]|", options: [], metrics: nil, views: ["current": current!]))
-            NSLayoutConstraint.activateConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|[right]|", options: [], metrics: nil, views: ["right": right!]))
-            NSLayoutConstraint.activateConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|[right]|", options: [], metrics: nil, views: ["right": right!]))
+            NSLayoutConstraint.activate(NSLayoutConstraint.constraints(withVisualFormat: "V:|[left]|", options: [], metrics: nil, views: ["left": left!]))
+            NSLayoutConstraint.activate(NSLayoutConstraint.constraints(withVisualFormat: "H:|[left]|", options: [], metrics: nil, views: ["left": left!]))
+            NSLayoutConstraint.activate(NSLayoutConstraint.constraints(withVisualFormat: "V:|[current]|", options: [], metrics: nil, views: ["current": current!]))
+            NSLayoutConstraint.activate(NSLayoutConstraint.constraints(withVisualFormat: "H:|[current]|", options: [], metrics: nil, views: ["current": current!]))
+            NSLayoutConstraint.activate(NSLayoutConstraint.constraints(withVisualFormat: "V:|[right]|", options: [], metrics: nil, views: ["right": right!]))
+            NSLayoutConstraint.activate(NSLayoutConstraint.constraints(withVisualFormat: "H:|[right]|", options: [], metrics: nil, views: ["right": right!]))
             scrollView.scrollRectToVisible(CGRect(x: scrollView.frame.width, y: 0, width: scrollView.frame.width, height: scrollView.frame.height), animated: false)
         }
     }
-}
-
-extension SDSwipeView {
     
     public func swapToView(index: Int, animated: Bool) {
         
@@ -257,9 +254,9 @@ extension SDSwipeView {
             return
         }
         
-        if let jumpView = delegate?.swipeView(self, viewForItemInIndex: index) {
+        if let jumpView = delegate?.swipeView(_ swipeView: self, viewForItemInIndex: index) {
             if animated {
-                if !scrolling && !scrollView.decelerating {
+                if !scrolling && !scrollView.isDecelerating {
                     jumpSwap = index
                     scrolling = true
                     if index < self.index {
@@ -284,7 +281,7 @@ extension SDSwipeView {
                 left = nil
                 self.index = index
                 _layoutSubviews()
-                delegate?.swipeView(self, didDisplayingView: current!)
+                delegate?.swipeView(_ swipeView: self, didDisplayingView: current!)
             }
         }
     }
@@ -293,7 +290,7 @@ extension SDSwipeView {
         
         if left != nil {
             if animated {
-                if !scrolling && !scrollView.decelerating {
+                if !scrolling && !scrollView.isDecelerating {
                     jumpSwap = nil
                     scrolling = true
                     scrollView.scrollRectToVisible(CGRect(x: 0, y: 0, width: scrollView.frame.width, height: scrollView.frame.height), animated: true)
@@ -306,7 +303,7 @@ extension SDSwipeView {
                 left = nil
                 index -= 1
                 _layoutSubviews()
-                delegate?.swipeView(self, didDisplayingView: current!)
+                delegate?.swipeView(_ swipeView: self, didDisplayingView: current!)
             }
         }
     }
@@ -314,7 +311,7 @@ extension SDSwipeView {
         
         if right != nil {
             if animated {
-                if !scrolling && !scrollView.decelerating {
+                if !scrolling && !scrollView.isDecelerating {
                     jumpSwap = nil
                     scrolling = true
                     if left == nil {
@@ -331,21 +328,18 @@ extension SDSwipeView {
                 right = nil
                 index += 1
                 _layoutSubviews()
-                delegate?.swipeView(self, didDisplayingView: current!)
+                delegate?.swipeView(_ swipeView: self, didDisplayingView: current!)
             }
         }
     }
-}
-
-extension SDSwipeView : UIScrollViewDelegate {
     
-    public func scrollViewDidEndDecelerating(scrollView: UIScrollView) {
+    public func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
         
         if scrollView === self.scrollView {
             endMoving()
         }
     }
-    public func scrollViewDidEndScrollingAnimation(scrollView: UIScrollView) {
+    public func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
         
         if scrollView === self.scrollView {
             endMoving()
@@ -366,7 +360,7 @@ extension SDSwipeView : UIScrollViewDelegate {
                 index = jumpSwap!
             }
             _layoutSubviews()
-            delegate?.swipeView(self, didDisplayingView: current!)
+            delegate?.swipeView(_ swipeView: self, didDisplayingView: current!)
         } else if ((left == nil && shift == 1) || (left != nil && shift == 2)) && right != nil {
             left = jumpSwap == nil ? current : nil
             current = right
@@ -377,7 +371,7 @@ extension SDSwipeView : UIScrollViewDelegate {
                 index = jumpSwap!
             }
             _layoutSubviews()
-            delegate?.swipeView(self, didDisplayingView: current!)
+            delegate?.swipeView(_ swipeView: self, didDisplayingView: current!)
         }
     }
 }

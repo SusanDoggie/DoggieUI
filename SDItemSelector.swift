@@ -84,7 +84,7 @@ import QuartzCore
                 pageControl.currentPage = newValue
                 swappageView.reload()
                 if newValue < numberOfPages {
-                    delegate?.itemSelector(self, didDisplayingView: self.itemForIndex(newValue), forIndex: newValue)
+                    delegate?.itemSelector(self, didDisplayingView: self.itemForIndex(index: newValue), forIndex: newValue)
                 }
             }
         }
@@ -94,7 +94,7 @@ import QuartzCore
         for item in _cache where item?.superview != nil {
             item?.removeFromSuperview()
         }
-        _cache = [UIView?](count: numberOfPages, repeatedValue: nil)
+        _cache = [UIView?](repeatedValue: nil, count: numberOfPages)
     }
     
     public private(set) var numberOfPages: Int {
@@ -115,7 +115,7 @@ import QuartzCore
     public func viewForIndex(index: Int) -> UIView? {
         if index < numberOfPages {
             if _cache[index] == nil {
-                _cache[index] = delegate?.itemSelector(self, viewForItemInIndex: index)
+                _cache[index] = delegate?.itemSelector(_ itemSelector: self, viewForItemInIndex: index)
             }
             return _cache[index]
         }
@@ -123,11 +123,11 @@ import QuartzCore
     }
     
     private func itemForIndex(index: Int) -> UIView {
-        return self.viewForIndex(index) ?? UIView()
+        return self.viewForIndex(index: index) ?? UIView()
     }
     
     public func reloadData() {
-        numberOfPages = delegate?.numberOfPagesInItemSelector(self) ?? 0
+        numberOfPages = delegate?.numberOfPagesInItemSelector(_ itemSelector: self) ?? 0
         self.cleanCache()
         swappageView.reload()
     }
@@ -163,7 +163,7 @@ import QuartzCore
 
 extension SDItemSelector : SDSwipeViewDelegate {
     
-    public func swipeView(swipeView: SDSwipeView, viewForItemInIndex index: Int) -> UIView? {
+    public func swipeView(_ swipeView: SDSwipeView, viewForItemInIndex index: Int) -> UIView? {
         
         if swappageView === self.swappageView {
             if (0..<numberOfPages).contains(index) {
@@ -173,7 +173,7 @@ extension SDItemSelector : SDSwipeViewDelegate {
         return nil
     }
     
-    public func swipeView(swipeView: SDSwipeView, didDisplayingView view: UIView) {
+    public func swipeView(_ swipeView: SDSwipeView, didDisplayingView view: UIView) {
         
         if swappageView === self.swappageView {
             pageControl.currentPage = swappageView.index
@@ -184,16 +184,16 @@ extension SDItemSelector : SDSwipeViewDelegate {
 
 public protocol SDItemSelectorDelegate : class {
     
-    func numberOfPagesInItemSelector(itemSelector: SDItemSelector) -> Int
+    func numberOfPagesInItemSelector(_ itemSelector: SDItemSelector) -> Int
     
-    func itemSelector(itemSelector: SDItemSelector, viewForItemInIndex index: Int) -> UIView?
+    func itemSelector(_ itemSelector: SDItemSelector, viewForItemInIndex index: Int) -> UIView?
     
-    func itemSelector(itemSelector: SDItemSelector, didDisplayingView view: UIView, forIndex index: Int)
+    func itemSelector(_ itemSelector: SDItemSelector, didDisplayingView view: UIView, forIndex index: Int)
 }
 
 public extension SDItemSelectorDelegate {
     
-    func itemSelector(itemSelector: SDItemSelector, didDisplayingView view: UIView, forIndex index: Int) {
+    func itemSelector(_ itemSelector: SDItemSelector, didDisplayingView view: UIView, forIndex index: Int) {
         // do nothing
     }
 }

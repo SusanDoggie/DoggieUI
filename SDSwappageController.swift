@@ -40,12 +40,12 @@ public class SDSwappageController: UIViewController {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         
-        self.performSegueWithIdentifier(SDSwappageController.rootViewControllerIdentifier, sender: self)
+        self.performSegue(withIdentifier: SDSwappageController.rootViewControllerIdentifier, sender: self)
         self.view.addSubview(self.rootView)
         
         self.rootView.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activateConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|[content]|", options: [], metrics: nil, views: ["content": self.rootView]))
-        NSLayoutConstraint.activateConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|[content]|", options: [], metrics: nil, views: ["content": self.rootView]))
+        NSLayoutConstraint.activate(NSLayoutConstraint.constraints(withVisualFormat: "V:|[content]|", options: [], metrics: nil, views: ["content": self.rootView]))
+        NSLayoutConstraint.activate(NSLayoutConstraint.constraints(withVisualFormat: "H:|[content]|", options: [], metrics: nil, views: ["content": self.rootView]))
     }
     
     public override func didReceiveMemoryWarning() {
@@ -104,27 +104,27 @@ extension SDSwappageController {
         self.view.addSubview(toViewController.view)
         toViewController.view.frame = self.view.frame
         toViewController.view.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activateConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|[content]|", options: [], metrics: nil, views: ["content": toViewController.view]))
-        NSLayoutConstraint.activateConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|[content]|", options: [], metrics: nil, views: ["content": toViewController.view]))
+        NSLayoutConstraint.activate(NSLayoutConstraint.constraints(withVisualFormat: "V:|[content]|", options: [], metrics: nil, views: ["content": toViewController.view]))
+        NSLayoutConstraint.activate(NSLayoutConstraint.constraints(withVisualFormat: "H:|[content]|", options: [], metrics: nil, views: ["content": toViewController.view]))
         
         if animated {
-            self.pushViewAnimateBegin(fromViewController.view, toView: toViewController.view)
-            UIView.animateWithDuration(
-                springDampingTransformDuration,
+            self.pushViewAnimateBegin(fromView: fromViewController.view, toView: toViewController.view)
+            UIView.animate(
+                withDuration: springDampingTransformDuration,
                 delay: springDampingTransformDelay,
                 usingSpringWithDamping: springDampingRatio,
                 initialSpringVelocity: springDampingVelocity,
                 options: transitionAnimateOptions,
                 animations: {
-                    self.pushViewAnimate(fromViewController.view, toView: toViewController.view)
+                    self.pushViewAnimate(fromView: fromViewController.view, toView: toViewController.view)
                 },
                 completion: { _ in
                     fromViewController.view.removeFromSuperview()
-                    self.pushViewCompletion(fromViewController.view, toView: toViewController.view)
+                    self.pushViewCompletion(fromView: fromViewController.view, toView: toViewController.view)
             })
         } else {
             fromViewController.view.removeFromSuperview()
-            self.pushViewCompletion(fromViewController.view, toView: toViewController.view)
+            self.pushViewCompletion(fromView: fromViewController.view, toView: toViewController.view)
         }
     }
     
@@ -133,27 +133,27 @@ extension SDSwappageController {
         self.view.addSubview(toViewController.view)
         toViewController.view.frame = self.view.frame
         toViewController.view.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activateConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|[content]|", options: [], metrics: nil, views: ["content": toViewController.view]))
-        NSLayoutConstraint.activateConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|[content]|", options: [], metrics: nil, views: ["content": toViewController.view]))
+        NSLayoutConstraint.activate(NSLayoutConstraint.constraints(withVisualFormat: "V:|[content]|", options: [], metrics: nil, views: ["content": toViewController.view]))
+        NSLayoutConstraint.activate(NSLayoutConstraint.constraints(withVisualFormat: "H:|[content]|", options: [], metrics: nil, views: ["content": toViewController.view]))
         
         if animated {
-            self.popViewAnimateBegin(fromViewController.view, toView: toViewController.view)
-            UIView.animateWithDuration(
-                springDampingTransformDuration,
+            self.popViewAnimateBegin(fromView: fromViewController.view, toView: toViewController.view)
+            UIView.animate(
+                withDuration: springDampingTransformDuration,
                 delay: springDampingTransformDelay,
                 usingSpringWithDamping: springDampingRatio,
                 initialSpringVelocity: springDampingVelocity,
                 options: transitionAnimateOptions,
                 animations: {
-                    self.popViewAnimate(fromViewController.view, toView: toViewController.view)
+                    self.popViewAnimate(fromView: fromViewController.view, toView: toViewController.view)
                 },
                 completion: { _ in
                     fromViewController.view.removeFromSuperview()
-                    self.popViewCompletion(fromViewController.view, toView: toViewController.view)
+                    self.popViewCompletion(fromView: fromViewController.view, toView: toViewController.view)
             })
         } else {
             fromViewController.view.removeFromSuperview()
-            self.popViewCompletion(fromViewController.view, toView: toViewController.view)
+            self.popViewCompletion(fromView: fromViewController.view, toView: toViewController.view)
         }
     }
     
@@ -162,30 +162,32 @@ extension SDSwappageController {
         let currentViewController = self.childViewControllers.last
         self.addChildViewController(viewController)
         if currentViewController != nil {
-            self.push(currentViewController!, toViewController: viewController, animated: animated)
+            self.push(fromViewController: currentViewController!, toViewController: viewController, animated: animated)
         }
-        viewController.didMoveToParentViewController(self)
+        viewController.didMove(toParentViewController: self)
     }
     
+    @discardableResult
     public func popViewControllerAnimated(animated: Bool) -> UIViewController? {
         
         if self.childViewControllers.count > 1, let viewControllerToPop = self.childViewControllers.last {
-            viewControllerToPop.willMoveToParentViewController(nil)
-            self.pop(viewControllerToPop, toViewController: self.childViewControllers[self.childViewControllers.endIndex - 2], animated: animated)
+            viewControllerToPop.willMove(toParentViewController: nil)
+            self.pop(fromViewController: viewControllerToPop, toViewController: self.childViewControllers[self.childViewControllers.endIndex - 2], animated: animated)
             viewControllerToPop.removeFromParentViewController()
             return viewControllerToPop
         }
         return nil
     }
     
+    @discardableResult
     public func popToViewController(viewController: UIViewController, animated: Bool) -> [UIViewController]? {
         
-        if let idx = self.childViewControllers.indexOf(viewController) where idx + 1 != self.childViewControllers.endIndex {
+        if let idx = self.childViewControllers.index(of: viewController), idx + 1 != self.childViewControllers.endIndex {
             let viewControllersToPop = Array(self.childViewControllers.dropFirst(idx + 1))
             for item in viewControllersToPop {
-                item.willMoveToParentViewController(nil)
+                item.willMove(toParentViewController: nil)
             }
-            self.pop(self.childViewControllers.last!, toViewController: viewController, animated: animated)
+            self.pop(fromViewController: self.childViewControllers.last!, toViewController: viewController, animated: animated)
             for item in viewControllersToPop {
                 item.removeFromParentViewController()
             }
@@ -194,14 +196,15 @@ extension SDSwappageController {
         return nil
     }
     
+    @discardableResult
     public func popToRootViewControllerAnimated(animated: Bool) -> [UIViewController]? {
         
         if self.childViewControllers.endIndex != 1 {
             let viewControllersToPop = Array(self.childViewControllers.dropFirst(1))
             for item in viewControllersToPop {
-                item.willMoveToParentViewController(nil)
+                item.willMove(toParentViewController: nil)
             }
-            self.pop(self.childViewControllers.last!, toViewController: self.childViewControllers.first!, animated: animated)
+            self.pop(fromViewController: self.childViewControllers.last!, toViewController: self.childViewControllers.first!, animated: animated)
             for item in viewControllersToPop {
                 item.removeFromParentViewController()
             }
@@ -214,23 +217,23 @@ extension SDSwappageController {
 
 extension SDSwappageController {
     
-    public override func canPerformUnwindSegueAction(action: Selector, fromViewController: UIViewController, withSender sender: AnyObject) -> Bool {
+    public override func canPerformUnwindSegueAction(_ action: Selector, from fromViewController: UIViewController, withSender sender: Any) -> Bool {
         
         return self.childViewControllers.dropFirst().contains(fromViewController)
     }
     
     @available(iOS 9.0, *)
-    public override func allowedChildViewControllersForUnwindingFromSource(source: UIStoryboardUnwindSegueSource) -> [UIViewController] {
+    public override func allowedChildViewControllersForUnwinding(from source: UIStoryboardUnwindSegueSource) -> [UIViewController] {
         
         if self.childViewControllers.count > 1 {
-            return self.childViewControllers.dropLast().reverse()
+            return self.childViewControllers.dropLast().reversed()
         }
         return []
     }
-    @IBAction public override func unwindForSegue(unwindSegue: UIStoryboardSegue, towardsViewController subsequentVC: UIViewController) {
+    @IBAction public override func unwind(for unwindSegue: UIStoryboardSegue, towardsViewController subsequentVC: UIViewController) {
         
         if self.childViewControllers.contains(subsequentVC) {
-            self.popToViewController(subsequentVC, animated: true)
+            self.popToViewController(viewController: subsequentVC, animated: true)
         }
     }
 }
@@ -239,7 +242,7 @@ extension UIViewController {
     
     public var swappageController: SDSwappageController? {
         
-        return self as? SDSwappageController ?? self.parentViewController?.swappageController
+        return self as? SDSwappageController ?? self.parent?.swappageController
     }
 }
 
@@ -247,6 +250,6 @@ public class SDSwappageSegue: UIStoryboardSegue {
     
     public override func perform() {
         
-        sourceViewController.swappageController?.pushViewController(destinationViewController, animated: true)
+        source.swappageController?.pushViewController(viewController: destination, animated: true)
     }
 }

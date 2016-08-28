@@ -61,7 +61,7 @@ import QuartzCore
             updateTrackView()
         }
     }
-    @IBInspectable public var trackTintColor: UIColor = UIColor.lightGrayColor() {
+    @IBInspectable public var trackTintColor: UIColor = UIColor.lightGray {
         didSet {
             updateTrackView()
         }
@@ -91,7 +91,7 @@ import QuartzCore
             updateThumbView()
         }
     }
-    @IBInspectable public var thumbTintColor: UIColor = UIColor.blackColor() {
+    @IBInspectable public var thumbTintColor: UIColor = UIColor.black {
         didSet {
             updateThumbView()
         }
@@ -147,10 +147,6 @@ import QuartzCore
     public override func layoutSubviews() {
         self.updateLayerFrames()
     }
-    
-}
-
-extension SDSlider {
     
     private var isHorizontal: Bool {
         return bounds.height < bounds.width
@@ -216,7 +212,7 @@ extension SDSlider {
     private func updateTrackView() {
         trackView.image = trackImage
         if trackImage != nil {
-            trackView.backgroundColor = UIColor.clearColor()
+            trackView.backgroundColor = UIColor.clear
         } else {
             trackView.backgroundColor = trackTintColor
         }
@@ -236,7 +232,7 @@ extension SDSlider {
         thumbView.image = thumbImage
         thumbView.highlightedImage = thumbHighlightedImage
         if thumbImage != nil {
-            thumbView.backgroundColor = UIColor.clearColor()
+            thumbView.backgroundColor = UIColor.clear
             thumbView.cornerRadius = 0.0
         } else {
             thumbView.backgroundColor = thumbTintColor
@@ -273,10 +269,6 @@ extension SDSlider {
         updateThumbView()
     }
     
-}
-
-extension SDSlider {
-    
     private func locateAndUpdateValue(location: CGPoint) {
         if isHorizontal {
             if minTrackImage == nil && maxTrackImage == nil {
@@ -295,42 +287,42 @@ extension SDSlider {
                 self.value = Double(1 - s) * (maxValue - minValue) + minValue
             }
         }
-        self.sendActionsForControlEvents(.ValueChanged)
+        self.sendActions(for: .valueChanged)
     }
     
-    public override func beginTrackingWithTouch(touch: UITouch, withEvent event: UIEvent?) -> Bool {
-        let location = touch.locationInView(self)
+    public override func beginTracking(_ touch: UITouch, with event: UIEvent?) -> Bool {
+        let location = touch.location(in: self)
         
         let minSize = min(bounds.width, bounds.height)
         let hitTestMinSize = CGSize(width: minSize, height: minSize)
         
-        let thumbViewHitBox = CGRectUnion(thumbView.frame, CGRect(origin: thumbView.frame.origin, size: hitTestMinSize))
+        let thumbViewHitBox = thumbView.frame.union(CGRect(origin: thumbView.frame.origin, size: hitTestMinSize))
         let thumbViewHitBoxCenterOffsetX = thumbViewHitBox.midX - thumbView.frame.midX
         let thumbViewHitBoxCenterOffsetY = thumbViewHitBox.midY - thumbView.frame.midY
         
-        if CGRectContainsPoint(CGRectOffset(thumbViewHitBox, -thumbViewHitBoxCenterOffsetX, -thumbViewHitBoxCenterOffsetY), location) {
-            thumbView.highlighted = true
-            locateAndUpdateValue(location)
+        if thumbViewHitBox.offsetBy(dx: -thumbViewHitBoxCenterOffsetX, dy: -thumbViewHitBoxCenterOffsetY).contains(location) {
+            thumbView.isHighlighted = true
+            locateAndUpdateValue(location: location)
         } else if trackTouchRespond {
-            let trackViewHitBox = CGRectUnion(trackView.frame, CGRect(origin: trackView.frame.origin, size: hitTestMinSize))
+            let trackViewHitBox = trackView.frame.union(CGRect(origin: trackView.frame.origin, size: hitTestMinSize))
             let trackViewHitBoxCenterOffsetX = trackViewHitBox.midX - trackView.frame.midX
             let trackViewHitBoxCenterOffsetY = trackViewHitBox.midY - trackView.frame.midY
-            if CGRectContainsPoint(CGRectOffset(trackViewHitBox, -trackViewHitBoxCenterOffsetX, -trackViewHitBoxCenterOffsetY), location) {
-                thumbView.highlighted = true
-                locateAndUpdateValue(location)
+            if trackViewHitBox.offsetBy(dx: -trackViewHitBoxCenterOffsetX, dy: -trackViewHitBoxCenterOffsetY).contains(location) {
+                thumbView.isHighlighted = true
+                locateAndUpdateValue(location: location)
             }
         }
         
-        return thumbView.highlighted
+        return thumbView.isHighlighted
     }
-    public override func continueTrackingWithTouch(touch: UITouch, withEvent event: UIEvent?) -> Bool {
-        locateAndUpdateValue(touch.locationInView(self))
+    public override func continueTracking(_ touch: UITouch, with event: UIEvent?) -> Bool {
+        locateAndUpdateValue(location: touch.location(in: self))
         return true
     }
-    public override func endTrackingWithTouch(touch: UITouch?, withEvent event: UIEvent?) {
+    public override func endTracking(_ touch: UITouch?, with event: UIEvent?) {
         if touch != nil {
-            locateAndUpdateValue(touch!.locationInView(self))
-            thumbView.highlighted = false
+            locateAndUpdateValue(location: touch!.location(in: self))
+            thumbView.isHighlighted = false
         }
     }
 }

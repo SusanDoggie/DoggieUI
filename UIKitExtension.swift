@@ -27,7 +27,7 @@ import UIKit
 
 public extension CALayer {
     
-    func addAnimation(duration duration: CFTimeInterval, from: AnyObject, to: AnyObject, timingFunction: CAMediaTimingFunction? = nil, forKey key: String) {
+    func addAnimation(duration: CFTimeInterval, from: AnyObject, to: AnyObject, timingFunction: CAMediaTimingFunction? = nil, forKey key: String) {
         
         let animate = CABasicAnimation(keyPath: key)
         animate.duration = 0.1
@@ -35,13 +35,13 @@ public extension CALayer {
         animate.toValue = to
         animate.timingFunction = timingFunction
         self.setValue(to, forKey: key)
-        self.addAnimation(animate, forKey: key)
+        self.add(animate, forKey: key)
     }
 }
 
-extension UIView : CollectionType {
+extension UIView : RandomAccessCollection {
     
-    public typealias Generator = IndexingGenerator<[UIView]>
+    public typealias Indices = CountableRange<Int>
     
     public var startIndex : Int {
         return subviews.startIndex
@@ -54,48 +54,41 @@ extension UIView : CollectionType {
     public subscript(position: Int) -> UIView {
         return subviews[position]
     }
-    
-    public func generate() -> Generator {
-        return subviews.generate()
-    }
 }
 
-extension UIView : RangeReplaceableCollectionType {
+extension UIView : RangeReplaceableCollection {
     
-    public func replaceRange<C : CollectionType where C.Generator.Element == UIView>(subRange: Range<Int>, with newElements: C) {
-        if !subRange.isEmpty {
-            self.removeRange(subRange)
+    public func replaceSubrange<C : Collection>(_ subrange: Range<Int>, with newElements: C) where C.Iterator.Element == UIView {
+        if !subrange.isEmpty {
+            for view in subviews[subrange] {
+                view.removeFromSuperview()
+            }
         }
         if !newElements.isEmpty {
-            self.insertContentsOf(newElements, at: subRange.startIndex)
+            self.insert(contentsOf: newElements, at: subrange.lowerBound)
         }
     }
     
-    public func append(newElement: UIView) {
+    public func append(_ newElement: UIView) {
         self.addSubview(newElement)
     }
-    public func appendContentsOf<S : SequenceType where S.Generator.Element == UIView>(newElements: S) {
+    public func append<S : Sequence>(contentsOf newElements: S) where S.Iterator.Element == UIView {
         for item in newElements {
             self.addSubview(item)
         }
     }
-    public func insert(newElement: UIView, atIndex i: Int) {
-        self.insertSubview(newElement, atIndex: i)
+    public func insert(_ newElement: UIView, at i: Int) {
+        self.insertSubview(newElement, at: i)
     }
-    public func insertContentsOf<C : CollectionType where C.Generator.Element == UIView>(newElements: C, at i: Int) {
-        for (idx, item) in newElements.enumerate() {
-            self.insertSubview(item, atIndex: idx + i)
+    public func insert<C : Collection>(contentsOf newElements: C, at i: Int) where C.Iterator.Element == UIView {
+        for (idx, item) in newElements.enumerated() {
+            self.insertSubview(item, at: idx + i)
         }
     }
-    public func removeAtIndex(index: Int) -> UIView {
-        let view = subviews[index]
+    public func remove(at i: Int) -> UIView {
+        let view = subviews[i]
         view.removeFromSuperview()
         return view
-    }
-    public func removeRange(subRange: Range<Int>) {
-        for view in subviews[subRange] {
-            view.removeFromSuperview()
-        }
     }
     public func removeFirst(n: Int) {
         for view in subviews.prefix(n) {
@@ -103,7 +96,7 @@ extension UIView : RangeReplaceableCollectionType {
         }
     }
     public func removeFirst() -> UIView {
-        return removeAtIndex(0)
+        return remove(at: 0)
     }
 }
 
@@ -157,7 +150,7 @@ public extension UIView {
             return layer.borderColor.map(UIColor.init)
         }
         set {
-            layer.borderColor = newValue?.CGColor
+            layer.borderColor = newValue?.cgColor
         }
     }
 }
@@ -176,7 +169,7 @@ public extension UIView {
             return layer.shadowColor.map(UIColor.init)
         }
         set {
-            layer.shadowColor = newValue?.CGColor
+            layer.shadowColor = newValue?.cgColor
         }
     }
     
@@ -306,10 +299,10 @@ public extension UIView {
     /// The default value of this property is `true`.
     @IBInspectable var doubleSided: Bool {
         get {
-            return layer.doubleSided
+            return layer.isDoubleSided
         }
         set {
-            layer.doubleSided = newValue
+            layer.isDoubleSided = newValue
         }
     }
     
@@ -323,10 +316,10 @@ public extension UIView {
     /// The default value of this property is `false`.
     @IBInspectable var geometryFlipped: Bool {
         get {
-            return layer.geometryFlipped
+            return layer.isGeometryFlipped
         }
         set {
-            layer.geometryFlipped = newValue
+            layer.isGeometryFlipped = newValue
         }
     }
     
