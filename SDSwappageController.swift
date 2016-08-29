@@ -240,9 +240,9 @@ extension SDSwappageController {
 
 extension UIViewController {
     
-    public var swappageController: SDSwappageController? {
+    public var swappage: SDSwappageController? {
         
-        return self as? SDSwappageController ?? self.parent?.swappageController
+        return self as? SDSwappageController ?? self.parent?.swappage
     }
 }
 
@@ -250,6 +250,6 @@ public class SDSwappageSegue: UIStoryboardSegue {
     
     public override func perform() {
         
-        source.swappageController?.pushViewController(viewController: destination, animated: true)
+        source.swappage?.pushViewController(viewController: destination, animated: true)
     }
 }

@@ -115,17 +115,17 @@ public class SDSwipeView: UIView, UIScrollViewDelegate {
     
     public func reload() {
         
-        current = delegate?.swipeView(_ swipeView: self, viewForItemInIndex: index)
+        current = delegate?.swipeView(self, viewForItemInIndex: index)
         if current != nil {
-            left = delegate?.swipeView(_ swipeView: self, viewForItemInIndex: index - 1)
-            right = delegate?.swipeView(_ swipeView: self, viewForItemInIndex: index + 1)
+            left = delegate?.swipeView(self, viewForItemInIndex: index - 1)
+            right = delegate?.swipeView(self, viewForItemInIndex: index + 1)
         } else {
             left = nil
             right = nil
         }
         _layoutSubviews()
         if current != nil {
-            delegate?.swipeView(_ swipeView: self, didDisplayingView: current!)
+            delegate?.swipeView(self, didDisplayingView: current!)
         }
     }
     
@@ -198,8 +198,8 @@ public class SDSwipeView: UIView, UIScrollViewDelegate {
             return
         }
         
-        left = left ?? delegate?.swipeView(_ swipeView: self, viewForItemInIndex: index - 1)
-        right = right ?? delegate?.swipeView(_ swipeView: self, viewForItemInIndex: index + 1)
+        left = left ?? delegate?.swipeView(self, viewForItemInIndex: index - 1)
+        right = right ?? delegate?.swipeView(self, viewForItemInIndex: index + 1)
         
         if left == nil && right == nil {
             _layoutOnePage()
@@ -254,7 +254,7 @@ public class SDSwipeView: UIView, UIScrollViewDelegate {
             return
         }
         
-        if let jumpView = delegate?.swipeView(_ swipeView: self, viewForItemInIndex: index) {
+        if let jumpView = delegate?.swipeView(self, viewForItemInIndex: index) {
             if animated {
                 if !scrolling && !scrollView.isDecelerating {
                     jumpSwap = index
@@ -281,7 +281,7 @@ public class SDSwipeView: UIView, UIScrollViewDelegate {
                 left = nil
                 self.index = index
                 _layoutSubviews()
-                delegate?.swipeView(_ swipeView: self, didDisplayingView: current!)
+                delegate?.swipeView(self, didDisplayingView: current!)
             }
         }
     }
@@ -303,7 +303,7 @@ public class SDSwipeView: UIView, UIScrollViewDelegate {
                 left = nil
                 index -= 1
                 _layoutSubviews()
-                delegate?.swipeView(_ swipeView: self, didDisplayingView: current!)
+                delegate?.swipeView(self, didDisplayingView: current!)
             }
         }
     }
@@ -328,7 +328,7 @@ public class SDSwipeView: UIView, UIScrollViewDelegate {
                 right = nil
                 index += 1
                 _layoutSubviews()
-                delegate?.swipeView(_ swipeView: self, didDisplayingView: current!)
+                delegate?.swipeView(self, didDisplayingView: current!)
             }
         }
     }
@@ -360,7 +360,7 @@ public class SDSwipeView: UIView, UIScrollViewDelegate {
                 index = jumpSwap!
             }
             _layoutSubviews()
-            delegate?.swipeView(_ swipeView: self, didDisplayingView: current!)
+            delegate?.swipeView(self, didDisplayingView: current!)
         } else if ((left == nil && shift == 1) || (left != nil && shift == 2)) && right != nil {
             left = jumpSwap == nil ? current : nil
             current = right
@@ -371,7 +371,7 @@ public class SDSwipeView: UIView, UIScrollViewDelegate {
                 index = jumpSwap!
             }
             _layoutSubviews()
-            delegate?.swipeView(_ swipeView: self, didDisplayingView: current!)
+            delegate?.swipeView(self, didDisplayingView: current!)
         }
     }
 }

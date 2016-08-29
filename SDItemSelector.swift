@@ -28,8 +28,8 @@ import QuartzCore
 
 @IBDesignable public class SDItemSelector : UIView {
     
-    private var swappageView: SDSwipeView
-    private var pageControl = UIPageControl()
+    fileprivate var swipeView: SDSwipeView
+    fileprivate var pageControl = UIPageControl()
     
     public weak var delegate: SDItemSelectorDelegate? {
         didSet {
@@ -41,19 +41,19 @@ import QuartzCore
     
     @IBInspectable public var bounces: Bool {
         get {
-            return swappageView.bounces
+            return swipeView.bounces
         }
         set {
-            swappageView.bounces = newValue
+            swipeView.bounces = newValue
         }
     }
     
     @IBInspectable public var swapEnabled : Bool {
         get {
-            return swappageView.swapEnabled
+            return swipeView.swapEnabled
         }
         set {
-            swappageView.swapEnabled = newValue
+            swipeView.swapEnabled = newValue
         }
     }
     
@@ -76,13 +76,13 @@ import QuartzCore
     
     public private(set) var currentPage: Int {
         get {
-            return swappageView.index
+            return swipeView.index
         }
         set {
-            if swappageView.index != newValue {
-                swappageView.index = newValue
+            if swipeView.index != newValue {
+                swipeView.index = newValue
                 pageControl.currentPage = newValue
-                swappageView.reload()
+                swipeView.reload()
                 if newValue < numberOfPages {
                     delegate?.itemSelector(self, didDisplayingView: self.itemForIndex(index: newValue), forIndex: newValue)
                 }
@@ -94,7 +94,7 @@ import QuartzCore
         for item in _cache where item?.superview != nil {
             item?.removeFromSuperview()
         }
-        _cache = [UIView?](repeatedValue: nil, count: numberOfPages)
+        _cache = [UIView?](repeating: nil, count: numberOfPages)
     }
     
     public private(set) var numberOfPages: Int {
@@ -115,7 +115,7 @@ import QuartzCore
     public func viewForIndex(index: Int) -> UIView? {
         if index < numberOfPages {
             if _cache[index] == nil {
-                _cache[index] = delegate?.itemSelector(_ itemSelector: self, viewForItemInIndex: index)
+                _cache[index] = delegate?.itemSelector(self, viewForItemInIndex: index)
             }
             return _cache[index]
         }
@@ -127,37 +127,37 @@ import QuartzCore
     }
     
     public func reloadData() {
-        numberOfPages = delegate?.numberOfPagesInItemSelector(_ itemSelector: self) ?? 0
+        numberOfPages = delegate?.numberOfPagesInItemSelector(self) ?? 0
         self.cleanCache()
-        swappageView.reload()
+        swipeView.reload()
     }
     
     public override init(frame: CGRect) {
-        swappageView = SDSwipeView()
+        swipeView = SDSwipeView()
         super.init(frame: frame)
         self.constructView()
     }
     
     public required init?(coder aDecoder: NSCoder) {
-        swappageView = SDSwipeView()
+        swipeView = SDSwipeView()
         super.init(coder: aDecoder)
         self.constructView()
     }
     
     private func constructView() {
         
-        swappageView.delegate = self
+        swipeView.delegate = self
         
-        self.addSubview(swappageView)
+        self.addSubview(swipeView)
         self.addSubview(pageControl)
         
-        swappageView.translatesAutoresizingMaskIntoConstraints = false
+        swipeView.translatesAutoresizingMaskIntoConstraints = false
         pageControl.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activateConstraints([
-            NSLayoutConstraint(item: pageControl, attribute: .Bottom, relatedBy: .Equal, toItem: swappageView, attribute: .Bottom, multiplier: 1, constant: 0),
-            NSLayoutConstraint(item: pageControl, attribute: .CenterX, relatedBy: .Equal, toItem: self, attribute: .CenterX, multiplier: 1, constant: 0)])
-        NSLayoutConstraint.activateConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|[content]|", options: [], metrics: nil, views: ["content": swappageView]))
-        NSLayoutConstraint.activateConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|[content]|", options: [], metrics: nil, views: ["content": swappageView]))
+        NSLayoutConstraint.activate([
+            NSLayoutConstraint(item: pageControl, attribute: .bottom, relatedBy: .equal, toItem: swipeView, attribute: .bottom, multiplier: 1, constant: 0),
+            NSLayoutConstraint(item: pageControl, attribute: .centerX, relatedBy: .equal, toItem: self, attribute: .centerX, multiplier: 1, constant: 0)])
+        NSLayoutConstraint.activate(NSLayoutConstraint.constraints(withVisualFormat: "V:|[content]|", options: [], metrics: nil, views: ["content": swipeView]))
+        NSLayoutConstraint.activate(NSLayoutConstraint.constraints(withVisualFormat: "H:|[content]|", options: [], metrics: nil, views: ["content": swipeView]))
     }
 }
 
@@ -165,9 +165,9 @@ extension SDItemSelector : SDSwipeViewDelegate {
     
     public func swipeView(_ swipeView: SDSwipeView, viewForItemInIndex index: Int) -> UIView? {
         
-        if swappageView === self.swappageView {
+        if swipeView === self.swipeView {
             if (0..<numberOfPages).contains(index) {
-                return viewForIndex(index) ?? UIView()
+                return viewForIndex(index: index) ?? UIView()
             }
         }
         return nil
@@ -175,9 +175,9 @@ extension SDItemSelector : SDSwipeViewDelegate {
     
     public func swipeView(_ swipeView: SDSwipeView, didDisplayingView view: UIView) {
         
-        if swappageView === self.swappageView {
-            pageControl.currentPage = swappageView.index
-            delegate?.itemSelector(self, didDisplayingView: view, forIndex: swappageView.index)
+        if swipeView === self.swipeView {
+            pageControl.currentPage = swipeView.index
+            delegate?.itemSelector(self, didDisplayingView: view, forIndex: swipeView.index)
         }
     }
 }

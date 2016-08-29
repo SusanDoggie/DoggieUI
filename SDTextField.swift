@@ -111,7 +111,7 @@ extension SDTextField {
         guard let startFrame = userInfo[UIKeyboardFrameBeginUserInfoKey] as? NSValue else { return }
         guard let endFrame = userInfo[UIKeyboardFrameEndUserInfoKey] as? NSValue else { return }
         if self.isFirstResponder {
-            _delegate?.textFieldKeyboardWillShow(_ textField: self, animationDuration: duration.doubleValue, animationCurve: UIViewAnimationCurve(rawValue: curve.intValue)!, startFrame: startFrame.cgRectValue, endFrame: endFrame.cgRectValue)
+            _delegate?.textFieldKeyboardWillShow(self, animationDuration: duration.doubleValue, animationCurve: UIViewAnimationCurve(rawValue: curve.intValue)!, startFrame: startFrame.cgRectValue, endFrame: endFrame.cgRectValue)
         }
     }
     func _textFieldKeyboardDidShow(notification: NSNotification) {
@@ -119,7 +119,7 @@ extension SDTextField {
         guard let userInfo = notification.userInfo else { return }
         guard let endFrame = userInfo[UIKeyboardFrameEndUserInfoKey] as? NSValue else { return }
         if self.isFirstResponder {
-            _delegate?.textFieldKeyboardDidShow(_ textField: self, frame: endFrame.cgRectValue)
+            _delegate?.textFieldKeyboardDidShow(self, frame: endFrame.cgRectValue)
         }
     }
     func _textFieldKeyboardWillHide(notification: NSNotification) {
@@ -130,14 +130,14 @@ extension SDTextField {
         guard let startFrame = userInfo[UIKeyboardFrameBeginUserInfoKey] as? NSValue else { return }
         guard let endFrame = userInfo[UIKeyboardFrameEndUserInfoKey] as? NSValue else { return }
         if self.isFirstResponder {
-            _delegate?.textFieldKeyboardWillHide(_ textField: self, animationDuration: duration.doubleValue, animationCurve: UIViewAnimationCurve(rawValue: curve.intValue)!, startFrame: startFrame.cgRectValue, endFrame: endFrame.cgRectValue)
+            _delegate?.textFieldKeyboardWillHide(self, animationDuration: duration.doubleValue, animationCurve: UIViewAnimationCurve(rawValue: curve.intValue)!, startFrame: startFrame.cgRectValue, endFrame: endFrame.cgRectValue)
         }
     }
     func _textFieldKeyboardDidHide(notification: NSNotification) {
         
         guard let userInfo = notification.userInfo else { return }
         guard let endFrame = userInfo[UIKeyboardFrameEndUserInfoKey] as? NSValue else { return }
-        _delegate?.textFieldKeyboardDidHide(_ textField: self, frame: endFrame.cgRectValue)
+        _delegate?.textFieldKeyboardDidHide(self, frame: endFrame.cgRectValue)
     }
     func _textFieldKeyboardWillChangeFrame(notification: NSNotification) {
         
@@ -147,19 +147,19 @@ extension SDTextField {
         guard let startFrame = userInfo[UIKeyboardFrameBeginUserInfoKey] as? NSValue else { return }
         guard let endFrame = userInfo[UIKeyboardFrameEndUserInfoKey] as? NSValue else { return }
         if self.isFirstResponder {
-            _delegate?.textFieldKeyboardWillChangeFrame(_ textField: self, animationDuration: duration.doubleValue, animationCurve: UIViewAnimationCurve(rawValue: curve.intValue)!, startFrame: startFrame.cgRectValue, endFrame: endFrame.cgRectValue)
+            _delegate?.textFieldKeyboardWillChangeFrame(self, animationDuration: duration.doubleValue, animationCurve: UIViewAnimationCurve(rawValue: curve.intValue)!, startFrame: startFrame.cgRectValue, endFrame: endFrame.cgRectValue)
         }
     }
     func _textFieldKeyboardDidChangeFrame(notification: NSNotification) {
         
         guard let userInfo = notification.userInfo else { return }
         guard let endFrame = userInfo[UIKeyboardFrameEndUserInfoKey] as? NSValue else { return }
-        _delegate?.textFieldKeyboardDidChangeFrame(_ textField: self, frame: endFrame.cgRectValue)
+        _delegate?.textFieldKeyboardDidChangeFrame(self, frame: endFrame.cgRectValue)
     }
     
     func _textFieldDidChanged(notification: NSNotification) {
         if self.isFirstResponder {
-            _delegate?.textFieldDidChanged(_ textField: self)
+            _delegate?.textFieldDidChanged(self)
         }
     }
 }
