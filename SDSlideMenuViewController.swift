@@ -443,7 +443,7 @@ extension UIViewController {
     }
 }
 
-public class SDmenuRootSegue: UIStoryboardSegue {
+public class SDMenuRootViewControllerSegue: UIStoryboardSegue {
     
     public override func perform() {
         
