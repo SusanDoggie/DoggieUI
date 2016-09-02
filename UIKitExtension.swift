@@ -39,9 +39,11 @@ public extension CALayer {
     }
 }
 
-extension UIView : RandomAccessCollection {
+extension UIView : RandomAccessCollection, MutableCollection {
     
     public typealias Indices = CountableRange<Int>
+    
+    public typealias Index = Int
     
     public var startIndex : Int {
         return subviews.startIndex
@@ -52,7 +54,23 @@ extension UIView : RandomAccessCollection {
     }
     
     public subscript(position: Int) -> UIView {
-        return subviews[position]
+        get {
+            return subviews[position]
+        }
+        set {
+            self.remove(at: position)
+            self.insert(newValue, at: position)
+        }
+    }
+    
+    public subscript(bounds: Range<Int>) -> MutableRangeReplaceableRandomAccessSlice<UIView> {
+        get {
+            _failEarlyRangeCheck(bounds, bounds: startIndex..<endIndex)
+            return MutableRangeReplaceableRandomAccessSlice(base: self, bounds: bounds)
+        }
+        set {
+            self.replaceSubrange(bounds, with: newValue)
+        }
     }
 }
 
@@ -85,6 +103,7 @@ extension UIView : RangeReplaceableCollection {
             self.insertSubview(item, at: idx + i)
         }
     }
+    @discardableResult
     public func remove(at i: Int) -> UIView {
         let view = subviews[i]
         view.removeFromSuperview()
