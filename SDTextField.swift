@@ -64,7 +64,7 @@ public extension SDTextFieldDelegate {
 }
 
 @objc
-public class SDTextField: UITextField {
+open class SDTextField: UITextField {
     
     public override init(frame: CGRect) {
         super.init(frame: frame)

@@ -26,20 +26,20 @@
 import UIKit
 import QuartzCore
 
-@IBDesignable public class SDItemSelector : UIView {
+@IBDesignable open class SDItemSelector : UIView {
     
     fileprivate var swipeView: SDSwipeView
     fileprivate var pageControl = UIPageControl()
     
-    public weak var delegate: SDItemSelectorDelegate? {
+    open weak var delegate: SDItemSelectorDelegate? {
         didSet {
             reloadData()
         }
     }
     
-    private var _cache: [UIView?] = []
+    fileprivate var _cache: [UIView?] = []
     
-    @IBInspectable public var bounces: Bool {
+    @IBInspectable open var bounces: Bool {
         get {
             return swipeView.bounces
         }
@@ -48,7 +48,7 @@ import QuartzCore
         }
     }
     
-    @IBInspectable public var swapEnabled : Bool {
+    @IBInspectable open var swapEnabled : Bool {
         get {
             return swipeView.swapEnabled
         }
@@ -57,7 +57,7 @@ import QuartzCore
         }
     }
     
-    @IBInspectable public var pageIndicatorTintColor: UIColor? {
+    @IBInspectable open var pageIndicatorTintColor: UIColor? {
         get {
             return pageControl.pageIndicatorTintColor
         }
@@ -65,7 +65,7 @@ import QuartzCore
             pageControl.pageIndicatorTintColor = newValue
         }
     }
-    @IBInspectable public var currentPageIndicatorTintColor: UIColor? {
+    @IBInspectable open var currentPageIndicatorTintColor: UIColor? {
         get {
             return pageControl.currentPageIndicatorTintColor
         }
@@ -74,7 +74,7 @@ import QuartzCore
         }
     }
     
-    public private(set) var currentPage: Int {
+    open fileprivate(set) var currentPage: Int {
         get {
             return swipeView.index
         }
@@ -84,20 +84,20 @@ import QuartzCore
                 pageControl.currentPage = newValue
                 swipeView.reload()
                 if newValue < numberOfPages {
-                    delegate?.itemSelector(self, didDisplayingView: self.itemForIndex(index: newValue), forIndex: newValue)
+                    delegate?.itemSelector(self, didDisplayingView: self.itemForIndex(newValue), forIndex: newValue)
                 }
             }
         }
     }
     
-    private func cleanCache() {
+    fileprivate func cleanCache() {
         for item in _cache where item?.superview != nil {
             item?.removeFromSuperview()
         }
         _cache = [UIView?](repeating: nil, count: numberOfPages)
     }
     
-    public private(set) var numberOfPages: Int {
+    open fileprivate(set) var numberOfPages: Int {
         get {
             return pageControl.numberOfPages
         }
@@ -112,7 +112,7 @@ import QuartzCore
         }
     }
     
-    public func viewForIndex(index: Int) -> UIView? {
+    open func viewForIndex(_ index: Int) -> UIView? {
         if index < numberOfPages {
             if _cache[index] == nil {
                 _cache[index] = delegate?.itemSelector(self, viewForItemInIndex: index)
@@ -122,11 +122,11 @@ import QuartzCore
         return nil
     }
     
-    private func itemForIndex(index: Int) -> UIView {
-        return self.viewForIndex(index: index) ?? UIView()
+    fileprivate func itemForIndex(_ index: Int) -> UIView {
+        return self.viewForIndex(index) ?? UIView()
     }
     
-    public func reloadData() {
+    open func reloadData() {
         numberOfPages = delegate?.numberOfPagesInItemSelector(self) ?? 0
         self.cleanCache()
         swipeView.reload()
@@ -144,7 +144,7 @@ import QuartzCore
         self.constructView()
     }
     
-    private func constructView() {
+    fileprivate func constructView() {
         
         swipeView.delegate = self
         
@@ -167,7 +167,7 @@ extension SDItemSelector : SDSwipeViewDelegate {
         
         if swipeView === self.swipeView {
             if (0..<numberOfPages).contains(index) {
-                return viewForIndex(index: index) ?? UIView()
+                return viewForIndex(index) ?? UIView()
             }
         }
         return nil

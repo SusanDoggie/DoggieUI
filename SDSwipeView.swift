@@ -39,25 +39,25 @@ public extension SDSwipeViewDelegate {
     }
 }
 
-public class SDSwipeView: UIView, UIScrollViewDelegate {
+open class SDSwipeView: UIView, UIScrollViewDelegate {
     
-    private let scrollView = UIScrollView()
+    fileprivate let scrollView = UIScrollView()
     
-    private let page_1 = UIView()
-    private let page_2 = UIView()
-    private let page_3 = UIView()
+    fileprivate let page_1 = UIView()
+    fileprivate let page_2 = UIView()
+    fileprivate let page_3 = UIView()
     
-    public var index = 0
+    open var index = 0
     
-    private var left: UIView?
-    private var right: UIView?
+    fileprivate var left: UIView?
+    fileprivate var right: UIView?
     
-    public var current: UIView?
+    open var current: UIView?
     
-    private var scrolling = false
-    private var jumpSwap : Int?
+    fileprivate var scrolling = false
+    fileprivate var jumpSwap : Int?
     
-    public weak var delegate : SDSwipeViewDelegate? {
+    open weak var delegate : SDSwipeViewDelegate? {
         didSet {
             reload()
         }
@@ -73,7 +73,7 @@ public class SDSwipeView: UIView, UIScrollViewDelegate {
         self.constructView()
     }
     
-    @IBInspectable public var bounces: Bool {
+    @IBInspectable open var bounces: Bool {
         get {
             return scrollView.bounces
         }
@@ -82,7 +82,7 @@ public class SDSwipeView: UIView, UIScrollViewDelegate {
         }
     }
     
-    @IBInspectable public var swapEnabled : Bool {
+    @IBInspectable open var swapEnabled : Bool {
         get {
             return scrollView.isScrollEnabled
         }
@@ -91,7 +91,7 @@ public class SDSwipeView: UIView, UIScrollViewDelegate {
         }
     }
     
-    private func constructView() {
+    fileprivate func constructView() {
         
         scrollView.isPagingEnabled = true
         scrollView.isDirectionalLockEnabled = false
@@ -113,7 +113,7 @@ public class SDSwipeView: UIView, UIScrollViewDelegate {
         page_3.translatesAutoresizingMaskIntoConstraints = false
     }
     
-    public func reload() {
+    open func reload() {
         
         current = delegate?.swipeView(self, viewForItemInIndex: index)
         if current != nil {
@@ -129,12 +129,12 @@ public class SDSwipeView: UIView, UIScrollViewDelegate {
         }
     }
     
-    public override func layoutSubviews() {
+    open override func layoutSubviews() {
         super.layoutSubviews()
         _layoutSubviews()
     }
     
-    private func _layoutOnePage() {
+    fileprivate func _layoutOnePage() {
         scrollView.addSubview(page_1)
         NSLayoutConstraint.activate([
             NSLayoutConstraint(item: page_1, attribute: .width, relatedBy: .equal, toItem: scrollView, attribute: .width, multiplier: 1, constant: 0),
@@ -145,7 +145,7 @@ public class SDSwipeView: UIView, UIScrollViewDelegate {
         NSLayoutConstraint.activate(NSLayoutConstraint.constraints(withVisualFormat: "H:|[one]", options: [], metrics: nil, views: ["one": page_1]))
     }
     
-    private func _layoutTwoPage() {
+    fileprivate func _layoutTwoPage() {
         scrollView.addSubview(page_1)
         scrollView.addSubview(page_2)
         NSLayoutConstraint.activate([
@@ -160,7 +160,7 @@ public class SDSwipeView: UIView, UIScrollViewDelegate {
         NSLayoutConstraint.activate(NSLayoutConstraint.constraints(withVisualFormat: "H:|[one][two]|", options: [], metrics: nil, views: ["one": page_1, "two": page_2]))
     }
     
-    private func _layoutThreePage() {
+    fileprivate func _layoutThreePage() {
         scrollView.addSubview(page_1)
         scrollView.addSubview(page_2)
         scrollView.addSubview(page_3)
@@ -179,7 +179,7 @@ public class SDSwipeView: UIView, UIScrollViewDelegate {
         NSLayoutConstraint.activate(NSLayoutConstraint.constraints(withVisualFormat: "H:|[one][two][three]|", options: [], metrics: nil, views: ["one": page_1, "two": page_2, "three": page_3]))
     }
     
-    private func _layoutSubviews() {
+    fileprivate func _layoutSubviews() {
         
         for item in page_1.subviews {
             item.removeFromSuperview()
@@ -248,7 +248,7 @@ public class SDSwipeView: UIView, UIScrollViewDelegate {
         }
     }
     
-    public func swapToView(index: Int, animated: Bool) {
+    open func swapToView(_ index: Int, animated: Bool) {
         
         if self.index == index {
             return
@@ -286,7 +286,7 @@ public class SDSwipeView: UIView, UIScrollViewDelegate {
         }
     }
     
-    public func swapToLeft(animated: Bool) {
+    open func swapToLeft(_ animated: Bool) {
         
         if left != nil {
             if animated {
@@ -307,7 +307,7 @@ public class SDSwipeView: UIView, UIScrollViewDelegate {
             }
         }
     }
-    public func swapToRight(animated: Bool) {
+    open func swapToRight(_ animated: Bool) {
         
         if right != nil {
             if animated {
@@ -333,13 +333,13 @@ public class SDSwipeView: UIView, UIScrollViewDelegate {
         }
     }
     
-    public func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+    open func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
         
         if scrollView === self.scrollView {
             endMoving()
         }
     }
-    public func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
+    open func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
         
         if scrollView === self.scrollView {
             endMoving()
@@ -348,7 +348,7 @@ public class SDSwipeView: UIView, UIScrollViewDelegate {
         }
     }
     
-    private func endMoving() {
+    fileprivate func endMoving() {
         let shift = lround(Double(scrollView.contentOffset.x / scrollView.frame.width))
         if shift == 0 && left != nil {
             right = jumpSwap == nil ? current : nil
