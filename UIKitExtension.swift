@@ -114,6 +114,7 @@ extension UIView : RangeReplaceableCollection {
             view.removeFromSuperview()
         }
     }
+    @discardableResult
     public func removeFirst() -> UIView {
         return remove(at: 0)
     }
