@@ -105,7 +105,7 @@ import QuartzCore
             if pageControl.numberOfPages != newValue {
                 pageControl.numberOfPages = newValue
                 if pageControl.currentPage >= newValue {
-                    currentPage = max(0, newValue - 1)
+                    currentPage = Swift.max(0, newValue - 1)
                 }
                 self.cleanCache()
             }

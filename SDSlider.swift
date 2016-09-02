@@ -26,13 +26,6 @@
 import UIKit
 import QuartzCore
 
-public func _min<T : Comparable>(_ x: T, _ y: T) -> T {
-    return y < x ? y : x
-}
-public func _max<T : Comparable>(_ x: T, _ y: T) -> T {
-    return y >= x ? y : x
-}
-
 @IBDesignable public class SDSlider : UIControl {
     
     @IBInspectable public var minValue: Double = 0.0 {
@@ -47,7 +40,7 @@ public func _max<T : Comparable>(_ x: T, _ y: T) -> T {
     }
     @IBInspectable public var value: Double = 0.5 {
         didSet {
-            value = _max(minValue, _min(maxValue, value))
+            value = Swift.max(minValue, Swift.min(maxValue, value))
             updateThumbViewPosition()
         }
     }
@@ -81,7 +74,7 @@ public func _max<T : Comparable>(_ x: T, _ y: T) -> T {
     @IBInspectable public var trackCornerRadius: CGFloat = 0.0 {
         didSet {
             if trackCornerRadius * 2.0 > trackWidth || trackCornerRadius * 2.0 > trackHeight {
-                trackCornerRadius = 0.5 * _min(trackWidth, trackHeight)
+                trackCornerRadius = 0.5 * Swift.min(trackWidth, trackHeight)
             }
             updateTrackView()
         }
@@ -116,7 +109,7 @@ public func _max<T : Comparable>(_ x: T, _ y: T) -> T {
     @IBInspectable public var thumbCornerRadius: CGFloat = 0.0 {
         didSet {
             if thumbCornerRadius * 2.0 > thumbWidth || thumbCornerRadius * 2.0 > thumbHeight {
-                thumbCornerRadius = 0.5 * _min(thumbWidth, thumbHeight)
+                thumbCornerRadius = 0.5 * Swift.min(thumbWidth, thumbHeight)
             }
             updateThumbView()
         }
@@ -300,7 +293,7 @@ public func _max<T : Comparable>(_ x: T, _ y: T) -> T {
     public override func beginTracking(_ touch: UITouch, with event: UIEvent?) -> Bool {
         let location = touch.location(in: self)
         
-        let minSize = _min(bounds.width, bounds.height)
+        let minSize = Swift.min(bounds.width, bounds.height)
         let hitTestMinSize = CGSize(width: minSize, height: minSize)
         
         let thumbViewHitBox = thumbView.frame.union(CGRect(origin: thumbView.frame.origin, size: hitTestMinSize))
