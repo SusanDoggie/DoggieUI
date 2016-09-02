@@ -106,9 +106,7 @@ extension SDTextField {
         
         guard let userInfo = notification.userInfo else { return }
         guard let endFrame = userInfo[UIKeyboardFrameEndUserInfoKey] as? NSValue else { return }
-        if self.isFirstResponder {
-            _delegate?.textFieldKeyboardDidShow(self, frame: endFrame.cgRectValue)
-        }
+        _delegate?.textFieldKeyboardDidShow(self, frame: endFrame.cgRectValue)
     }
     func _textFieldKeyboardWillHide(notification: NSNotification) {
         
