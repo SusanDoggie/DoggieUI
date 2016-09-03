@@ -112,7 +112,7 @@ import QuartzCore
         }
     }
     
-    open func viewForIndex(_ index: Int) -> UIView? {
+    public func viewForIndex(_ index: Int) -> UIView? {
         if index < numberOfPages {
             if _cache[index] == nil {
                 _cache[index] = delegate?.itemSelector(self, viewForItemInIndex: index)
@@ -126,7 +126,7 @@ import QuartzCore
         return self.viewForIndex(index) ?? UIView()
     }
     
-    open func reloadData() {
+    public func reloadData() {
         numberOfPages = delegate?.numberOfPagesInItemSelector(self) ?? 0
         self.cleanCache()
         swipeView.reload()

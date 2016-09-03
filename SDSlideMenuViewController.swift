@@ -26,27 +26,27 @@
 import UIKit
 import QuartzCore
 
-public class SDSlideMenuViewController: UIViewController, UIGestureRecognizerDelegate {
+open class SDSlideMenuViewController: UIViewController, UIGestureRecognizerDelegate {
     
-    @IBInspectable public var transformTrailing: CGFloat = 260
+    @IBInspectable open var transformTrailing: CGFloat = 260
     
-    @IBInspectable public var linearTransformDuration: Double = 0.1
-    @IBInspectable public var linearTransformDelay: Double = 0.0
+    @IBInspectable open var linearTransformDuration: Double = 0.1
+    @IBInspectable open var linearTransformDelay: Double = 0.0
     
-    @IBInspectable public var springDampingTransformDuration: Double = 0.4
-    @IBInspectable public var springDampingTransformDelay: Double = 0.0
-    @IBInspectable public var springDampingRatio: CGFloat = 1.0
-    @IBInspectable public var springDampingVelocity: CGFloat = 1.0
+    @IBInspectable open var springDampingTransformDuration: Double = 0.4
+    @IBInspectable open var springDampingTransformDelay: Double = 0.0
+    @IBInspectable open var springDampingRatio: CGFloat = 1.0
+    @IBInspectable open var springDampingVelocity: CGFloat = 1.0
     
-    @IBInspectable public var shadowWidth: CGFloat = 3
-    @IBInspectable public var shadowRadius: CGFloat = 3
-    @IBInspectable public var shadowOpacity: Float = 0.25
-    @IBInspectable public var shadowLayerOpacity: Float = 0.4
-    @IBInspectable public var shadowColor: UIColor = UIColor.black
+    @IBInspectable open var shadowWidth: CGFloat = 3
+    @IBInspectable open var shadowRadius: CGFloat = 3
+    @IBInspectable open var shadowOpacity: Float = 0.25
+    @IBInspectable open var shadowLayerOpacity: Float = 0.4
+    @IBInspectable open var shadowColor: UIColor = UIColor.black
     
-    @IBInspectable public var scrollsToTop: Bool = true
+    @IBInspectable open var scrollsToTop: Bool = true
     
-    @IBInspectable public var disableMenu: Bool = false {
+    @IBInspectable open var disableMenu: Bool = false {
         didSet {
             if disableMenu && toggleState == 1 {
                 slideDampingAnimation(position: 0)
@@ -83,7 +83,7 @@ public class SDSlideMenuViewController: UIViewController, UIGestureRecognizerDel
     private var panRecongnizer: UIPanGestureRecognizer!
     private var tapRecongnizer: UITapGestureRecognizer!
     
-    public override func viewDidLoad() {
+    open override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         
@@ -137,7 +137,7 @@ public class SDSlideMenuViewController: UIViewController, UIGestureRecognizerDel
         view.addGestureRecognizer(tapRecongnizer)
     }
     
-    public override func didReceiveMemoryWarning() {
+    open override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
@@ -445,7 +445,7 @@ extension UIViewController {
 
 public class SDMenuRootViewControllerSegue: UIStoryboardSegue {
     
-    public override func perform() {
+    open override func perform() {
         
         source.slideMenu?.addmenuRoot(rootViewController: destination)
     }
@@ -453,7 +453,7 @@ public class SDMenuRootViewControllerSegue: UIStoryboardSegue {
 
 public class SDContentViewControllerSegue: UIStoryboardSegue {
     
-    public override func perform() {
+    open override func perform() {
         
         source.slideMenu?.addContentViewController(contentViewController: destination)
     }

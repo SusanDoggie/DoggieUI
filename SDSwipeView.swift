@@ -113,7 +113,7 @@ open class SDSwipeView: UIView, UIScrollViewDelegate {
         page_3.translatesAutoresizingMaskIntoConstraints = false
     }
     
-    open func reload() {
+    public func reload() {
         
         current = delegate?.swipeView(self, viewForItemInIndex: index)
         if current != nil {
@@ -248,7 +248,7 @@ open class SDSwipeView: UIView, UIScrollViewDelegate {
         }
     }
     
-    open func swapToView(_ index: Int, animated: Bool) {
+    public func swapToView(_ index: Int, animated: Bool) {
         
         if self.index == index {
             return
@@ -286,7 +286,7 @@ open class SDSwipeView: UIView, UIScrollViewDelegate {
         }
     }
     
-    open func swapToLeft(_ animated: Bool) {
+    public func swapToLeft(_ animated: Bool) {
         
         if left != nil {
             if animated {
@@ -307,7 +307,7 @@ open class SDSwipeView: UIView, UIScrollViewDelegate {
             }
         }
     }
-    open func swapToRight(_ animated: Bool) {
+    public func swapToRight(_ animated: Bool) {
         
         if right != nil {
             if animated {
@@ -333,13 +333,13 @@ open class SDSwipeView: UIView, UIScrollViewDelegate {
         }
     }
     
-    open func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+    public func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
         
         if scrollView === self.scrollView {
             endMoving()
         }
     }
-    open func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
+    public func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
         
         if scrollView === self.scrollView {
             endMoving()

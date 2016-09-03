@@ -56,35 +56,35 @@ open class SDSwappageController: UIViewController {
 
 extension SDSwappageController {
     
-    public func pushViewAnimateBegin(_ fromView: UIView, toView: UIView) {
+    open func pushViewAnimateBegin(_ fromView: UIView, toView: UIView) {
         
         fromView.alpha = 1
         toView.alpha = 0
     }
     
-    public func pushViewAnimate(_ fromView: UIView, toView: UIView) {
+    open func pushViewAnimate(_ fromView: UIView, toView: UIView) {
         
         fromView.alpha = 0
         toView.alpha = 1
     }
     
-    public func pushViewCompletion(_ fromView: UIView, toView: UIView) {
+    open func pushViewCompletion(_ fromView: UIView, toView: UIView) {
         
     }
     
-    public func popViewAnimateBegin(_ fromView: UIView, toView: UIView) {
+    open func popViewAnimateBegin(_ fromView: UIView, toView: UIView) {
         
         fromView.alpha = 1
         toView.alpha = 0
     }
     
-    public func popViewAnimate(_ fromView: UIView, toView: UIView) {
+    open func popViewAnimate(_ fromView: UIView, toView: UIView) {
         
         fromView.alpha = 0
         toView.alpha = 1
     }
     
-    public func popViewCompletion(_ fromView: UIView, toView: UIView) {
+    open func popViewCompletion(_ fromView: UIView, toView: UIView) {
         
     }
 }
