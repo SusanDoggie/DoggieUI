@@ -277,7 +277,7 @@ open class SDSlideMenuViewController: UIViewController, UIGestureRecognizerDeleg
         }
     }
     
-    fileprivate func _menuToggle(sender: AnyObject?) {
+    fileprivate func _menuToggle(_ sender: AnyObject?) {
         
         switch toggleState {
         case 0:
@@ -346,7 +346,7 @@ open class SDSlideMenuViewController: UIViewController, UIGestureRecognizerDeleg
         return true
     }
     
-    func handlePan(sender: UIPanGestureRecognizer) {
+    func handlePan(_ sender: UIPanGestureRecognizer) {
         
         self.view.endEditing(true)
         
@@ -407,7 +407,7 @@ open class SDSlideMenuViewController: UIViewController, UIGestureRecognizerDeleg
             break
         }
     }
-    func handleTap(sender: UITapGestureRecognizer) {
+    func handleTap(_ sender: UITapGestureRecognizer) {
         
         self.view.endEditing(true)
         
@@ -420,9 +420,9 @@ open class SDSlideMenuViewController: UIViewController, UIGestureRecognizerDeleg
 
 extension UIViewController {
     
-    @IBAction public func menuToggle(sender: AnyObject?) {
+    @IBAction public func menuToggle(_ sender: AnyObject?) {
         
-        self.slideMenu?._menuToggle(sender: sender)
+        self.slideMenu?._menuToggle(sender)
     }
     
     public var slideMenu: SDSlideMenuViewController? {
