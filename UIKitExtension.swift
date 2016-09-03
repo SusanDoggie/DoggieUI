@@ -25,9 +25,9 @@
 
 import UIKit
 
-public extension CALayer {
+extension CALayer {
     
-    func addAnimation(duration: CFTimeInterval, from: AnyObject, to: AnyObject, timingFunction: CAMediaTimingFunction? = nil, forKey key: String) {
+    open func addAnimation(duration: CFTimeInterval, from: AnyObject, to: AnyObject, timingFunction: CAMediaTimingFunction? = nil, forKey key: String) {
         
         let animate = CABasicAnimation(keyPath: key)
         animate.duration = 0.1
@@ -45,15 +45,15 @@ extension UIView : RandomAccessCollection, MutableCollection {
     
     public typealias Index = Int
     
-    public var startIndex : Int {
+    open var startIndex : Int {
         return subviews.startIndex
     }
     
-    public var endIndex : Int {
+    open var endIndex : Int {
         return subviews.endIndex
     }
     
-    public subscript(position: Int) -> UIView {
+    open subscript(position: Int) -> UIView {
         get {
             return subviews[position]
         }
@@ -63,7 +63,7 @@ extension UIView : RandomAccessCollection, MutableCollection {
         }
     }
     
-    public subscript(bounds: Range<Int>) -> MutableRangeReplaceableRandomAccessSlice<UIView> {
+    open subscript(bounds: Range<Int>) -> MutableRangeReplaceableRandomAccessSlice<UIView> {
         get {
             _failEarlyRangeCheck(bounds, bounds: startIndex..<endIndex)
             return MutableRangeReplaceableRandomAccessSlice(base: self, bounds: bounds)
@@ -76,7 +76,7 @@ extension UIView : RandomAccessCollection, MutableCollection {
 
 extension UIView : RangeReplaceableCollection {
     
-    public func replaceSubrange<C : Collection>(_ subrange: Range<Int>, with newElements: C) where C.Iterator.Element == UIView {
+    open func replaceSubrange<C : Collection>(_ subrange: Range<Int>, with newElements: C) where C.Iterator.Element == UIView {
         if !subrange.isEmpty {
             for view in subviews[subrange] {
                 view.removeFromSuperview()
@@ -87,40 +87,40 @@ extension UIView : RangeReplaceableCollection {
         }
     }
     
-    public func append(_ newElement: UIView) {
+    open func append(_ newElement: UIView) {
         self.addSubview(newElement)
     }
-    public func append<S : Sequence>(contentsOf newElements: S) where S.Iterator.Element == UIView {
+    open func append<S : Sequence>(contentsOf newElements: S) where S.Iterator.Element == UIView {
         for item in newElements {
             self.addSubview(item)
         }
     }
-    public func insert(_ newElement: UIView, at i: Int) {
+    open func insert(_ newElement: UIView, at i: Int) {
         self.insertSubview(newElement, at: i)
     }
-    public func insert<C : Collection>(contentsOf newElements: C, at i: Int) where C.Iterator.Element == UIView {
+    open func insert<C : Collection>(contentsOf newElements: C, at i: Int) where C.Iterator.Element == UIView {
         for (idx, item) in newElements.enumerated() {
             self.insertSubview(item, at: idx + i)
         }
     }
     @discardableResult
-    public func remove(at i: Int) -> UIView {
+    open func remove(at i: Int) -> UIView {
         let view = subviews[i]
         view.removeFromSuperview()
         return view
     }
-    public func removeFirst(n: Int) {
+    open func removeFirst(n: Int) {
         for view in subviews.prefix(n) {
             view.removeFromSuperview()
         }
     }
     @discardableResult
-    public func removeFirst() -> UIView {
+    open func removeFirst() -> UIView {
         return remove(at: 0)
     }
 }
 
-public extension UIView {
+extension UIView {
     
     /// The radius to use when drawing rounded corners for the layer’s background. Animatable.
     ///
@@ -130,7 +130,7 @@ public extension UIView {
     /// true causes the content to be clipped to the rounded corners.
     ///
     /// The default value of this property is `0.0`.
-    @IBInspectable var cornerRadius: CGFloat {
+    @IBInspectable open var cornerRadius: CGFloat {
         get {
             return layer.cornerRadius
         }
@@ -140,7 +140,7 @@ public extension UIView {
     }
 }
 
-public extension UIView {
+extension UIView {
     
     /// The width of the layer’s border. Animatable.
     ///
@@ -149,7 +149,7 @@ public extension UIView {
     /// above the receiver’s contents and sublayers and includes the effects of the `cornerRadius` property.
     ///
     /// The default value of this property is `0.0`.
-    @IBInspectable var borderWidth: CGFloat {
+    @IBInspectable open var borderWidth: CGFloat {
         get {
             return layer.borderWidth
         }
@@ -165,7 +165,7 @@ public extension UIView {
     /// The value of this property is retained using the Core Foundation retain/release semantics. This behavior
     /// occurs despite the fact that the property declaration appears to use the default assign semantics for
     /// object retention.
-    @IBInspectable var borderColor: UIColor? {
+    @IBInspectable open var borderColor: UIColor? {
         get {
             return layer.borderColor.map(UIColor.init)
         }
@@ -175,7 +175,7 @@ public extension UIView {
     }
 }
 
-public extension UIView {
+extension UIView {
     
     /// The color of the layer’s shadow. Animatable.
     ///
@@ -184,7 +184,7 @@ public extension UIView {
     /// The value of this property is retained using the Core Foundation retain/release semantics. This behavior
     /// occurs despite the fact that the property declaration appears to use the default assign semantics for
     /// object retention.
-    @IBInspectable var shadowColor: UIColor? {
+    @IBInspectable open var shadowColor: UIColor? {
         get {
             return layer.shadowColor.map(UIColor.init)
         }
@@ -197,7 +197,7 @@ public extension UIView {
     ///
     /// The value in this property must be in the range `0.0` (transparent) to `1.0` (opaque). The default
     /// value of this property is `0.0`.
-    @IBInspectable var shadowOpacity: Float {
+    @IBInspectable open var shadowOpacity: Float {
         get {
             return layer.shadowOpacity
         }
@@ -209,7 +209,7 @@ public extension UIView {
     /// The offset (in points) of the layer’s shadow. Animatable.
     ///
     /// The default value of this property is `(0.0, -3.0)`.
-    @IBInspectable var shadowOffset: CGSize {
+    @IBInspectable open var shadowOffset: CGSize {
         get {
             return layer.shadowOffset
         }
@@ -221,7 +221,7 @@ public extension UIView {
     /// The blur radius (in points) used to render the layer’s shadow. Animatable.
     ///
     /// You specify the radius The default value of this property is `3.0`.
-    @IBInspectable var shadowRadius: CGFloat {
+    @IBInspectable open var shadowRadius: CGFloat {
         get {
             return layer.shadowRadius
         }
@@ -250,7 +250,7 @@ public extension UIView {
     /// The value of this property is retained using the Core Foundation retain/release semantics. This behavior
     /// occurs despite the fact that the property declaration appears to use the default assign semantics for
     /// object retention.
-    var shadowPath: CGPath? {
+    open var shadowPath: CGPath? {
         get {
             return layer.shadowPath
         }
@@ -269,7 +269,7 @@ public extension UIView {
     /// lower values. This can affect the visibility of layers whose frame rectangles overlap.
     ///
     /// The value of this property is measured in points.
-    @IBInspectable var zPosition: CGFloat {
+    @IBInspectable open var zPosition: CGFloat {
         get {
             return layer.zPosition
         }
@@ -288,7 +288,7 @@ public extension UIView {
     ///
     /// For more information about the relationship between the `frame`, `bounds`, `anchorPoint` and `position` properties,
     /// see Core Animation Programming Guide.
-    @IBInspectable var anchorPoint: CGPoint {
+    @IBInspectable open var anchorPoint: CGPoint {
         get {
             return layer.anchorPoint
         }
@@ -301,7 +301,7 @@ public extension UIView {
     ///
     /// This property specifies the anchor point on the z axis around which geometric manipulations occur. The point is
     /// expressed as a distance (measured in points) along the z axis. The default value of this property is `0`.
-    @IBInspectable var anchorPointZ: CGFloat {
+    @IBInspectable open var anchorPointZ: CGFloat {
         get {
             return layer.anchorPointZ
         }
@@ -317,7 +317,7 @@ public extension UIView {
     ///
     /// When the value in this property is `false`, the layer hides its content when it faces away from the viewer.
     /// The default value of this property is `true`.
-    @IBInspectable var doubleSided: Bool {
+    @IBInspectable open var doubleSided: Bool {
         get {
             return layer.isDoubleSided
         }
@@ -334,7 +334,7 @@ public extension UIView {
     /// does not affect the rendering of the layer’s content.
     ///
     /// The default value of this property is `false`.
-    @IBInspectable var geometryFlipped: Bool {
+    @IBInspectable open var geometryFlipped: Bool {
         get {
             return layer.isGeometryFlipped
         }
@@ -346,7 +346,7 @@ public extension UIView {
     /// A Boolean indicating whether the layer content is implicitly flipped when rendered.
     ///
     /// true if the layer contents are implicitly flipped when rendered or false if they are not.
-    var contentsAreFlipped: Bool {
+    open var contentsAreFlipped: Bool {
         return layer.contentsAreFlipped()
     }
 }
