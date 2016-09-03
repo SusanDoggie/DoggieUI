@@ -260,7 +260,7 @@ extension UIView {
     }
 }
 
-public extension UIView {
+extension UIView {
     
     /// The layer’s position on the z axis. Animatable.
     ///
@@ -311,7 +311,7 @@ public extension UIView {
     }
 }
 
-public extension UIView {
+extension UIView {
     
     /// A Boolean indicating whether the layer displays its content when facing away from the viewer. Animatable.
     ///
