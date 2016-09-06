@@ -317,7 +317,7 @@ extension UIView {
     ///
     /// When the value in this property is `false`, the layer hides its content when it faces away from the viewer.
     /// The default value of this property is `true`.
-    @IBInspectable open var doubleSided: Bool {
+    @IBInspectable open var isDoubleSided: Bool {
         get {
             return layer.isDoubleSided
         }
@@ -334,7 +334,7 @@ extension UIView {
     /// does not affect the rendering of the layer’s content.
     ///
     /// The default value of this property is `false`.
-    @IBInspectable open var geometryFlipped: Bool {
+    @IBInspectable open var isGeometryFlipped: Bool {
         get {
             return layer.isGeometryFlipped
         }
