@@ -164,7 +164,7 @@ extension SDSwappageController {
         NSLayoutConstraint.activate(NSLayoutConstraint.constraints(withVisualFormat: "H:|[content]|", options: [], metrics: nil, views: ["content": toViewController.view]))
         
         if animated {
-            toViewController.swappagePopViewAnimateBegin(fromView: fromViewController.view, toView: toViewController.view)
+            fromViewController.swappagePopViewAnimateBegin(fromView: fromViewController.view, toView: toViewController.view)
             UIView.animate(
                 withDuration: springDampingTransformDuration,
                 delay: springDampingTransformDelay,
@@ -172,15 +172,15 @@ extension SDSwappageController {
                 initialSpringVelocity: springDampingVelocity,
                 options: transitionAnimateOptions,
                 animations: {
-                    toViewController.swappagePopViewAnimate(fromView: fromViewController.view, toView: toViewController.view)
+                    fromViewController.swappagePopViewAnimate(fromView: fromViewController.view, toView: toViewController.view)
                 },
                 completion: { _ in
                     fromViewController.view.removeFromSuperview()
-                    toViewController.swappagePopViewCompletion(fromView: fromViewController.view, toView: toViewController.view)
+                    fromViewController.swappagePopViewCompletion(fromView: fromViewController.view, toView: toViewController.view)
             })
         } else {
             fromViewController.view.removeFromSuperview()
-            toViewController.swappagePopViewCompletion(fromView: fromViewController.view, toView: toViewController.view)
+            fromViewController.swappagePopViewCompletion(fromView: fromViewController.view, toView: toViewController.view)
         }
     }
     
