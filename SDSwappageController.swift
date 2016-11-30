@@ -257,7 +257,13 @@ extension SDSwappageController {
         }
         return []
     }
-    @IBAction open override func unwind(for unwindSegue: UIStoryboardSegue, towardsViewController subsequentVC: UIViewController) {
+    @IBAction open func unwindSwapage(for unwindSegue: UIStoryboardSegue) {
+        self.popViewControllerAnimated(true)
+    }
+    @IBAction open func unwindSwapageToRoot(for unwindSegue: UIStoryboardSegue) {
+        self.popToRootViewControllerAnimated(true)
+    }
+    open override func unwind(for unwindSegue: UIStoryboardSegue, towardsViewController subsequentVC: UIViewController) {
         
         if self.childViewControllers.contains(subsequentVC) {
             self.popToViewController(subsequentVC, animated: true)
