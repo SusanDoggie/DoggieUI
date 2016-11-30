@@ -56,62 +56,62 @@ open class SDSwappageController: UIViewController {
 
 extension UIViewController {
     
-    open func swappagePushViewAnimateBegin(fromView: UIView, toView: UIView) {
-        self.swappage?.pushViewAnimateBegin(fromView: fromView, toView: toView)
+    open func swappagePushViewAnimateBegin(from fromViewController: UIViewController, to toViewController: UIViewController) {
+        self.swappage?.pushViewAnimateBegin(from: fromViewController, to: toViewController)
     }
     
-    open func swappagePushViewAnimate(fromView: UIView, toView: UIView) {
-        self.swappage?.pushViewAnimate(fromView: fromView, toView: toView)
+    open func swappagePushViewAnimate(from fromViewController: UIViewController, to toViewController: UIViewController) {
+        self.swappage?.pushViewAnimate(from: fromViewController, to: toViewController)
     }
     
-    open func swappagePushViewCompletion(fromView: UIView, toView: UIView) {
-        self.swappage?.pushViewCompletion(fromView: fromView, toView: toView)
+    open func swappagePushViewCompletion(from fromViewController: UIViewController, to toViewController: UIViewController) {
+        self.swappage?.pushViewCompletion(from: fromViewController, to: toViewController)
     }
     
-    open func swappagePopViewAnimateBegin(fromView: UIView, toView: UIView) {
-        self.swappage?.popViewAnimateBegin(fromView: fromView, toView: toView)
+    open func swappagePopViewAnimateBegin(from fromViewController: UIViewController, to toViewController: UIViewController) {
+        self.swappage?.popViewAnimateBegin(from: fromViewController, to: toViewController)
     }
     
-    open func swappagePopViewAnimate(fromView: UIView, toView: UIView) {
-        self.swappage?.popViewAnimate(fromView: fromView, toView: toView)
+    open func swappagePopViewAnimate(from fromViewController: UIViewController, to toViewController: UIViewController) {
+        self.swappage?.popViewAnimate(from: fromViewController, to: toViewController)
     }
     
-    open func swappagePopViewCompletion(fromView: UIView, toView: UIView) {
-        self.swappage?.popViewCompletion(fromView: fromView, toView: toView)
+    open func swappagePopViewCompletion(from fromViewController: UIViewController, to toViewController: UIViewController) {
+        self.swappage?.popViewCompletion(from: fromViewController, to: toViewController)
     }
 }
 
 extension SDSwappageController {
     
-    open func pushViewAnimateBegin(fromView: UIView, toView: UIView) {
+    open func pushViewAnimateBegin(from fromViewController: UIViewController, to toViewController: UIViewController) {
         
-        fromView.alpha = 1
-        toView.alpha = 0
+        fromViewController.view?.alpha = 1
+        toViewController.view?.alpha = 0
     }
     
-    open func pushViewAnimate(fromView: UIView, toView: UIView) {
+    open func pushViewAnimate(from fromViewController: UIViewController, to toViewController: UIViewController) {
         
-        fromView.alpha = 0
-        toView.alpha = 1
+        fromViewController.view?.alpha = 0
+        toViewController.view?.alpha = 1
     }
     
-    open func pushViewCompletion(fromView: UIView, toView: UIView) {
+    open func pushViewCompletion(from fromViewController: UIViewController, to toViewController: UIViewController) {
         
     }
     
-    open func popViewAnimateBegin(fromView: UIView, toView: UIView) {
+    open func popViewAnimateBegin(from fromViewController: UIViewController, to toViewController: UIViewController) {
         
-        fromView.alpha = 1
-        toView.alpha = 0
+        fromViewController.view?.alpha = 1
+        toViewController.view?.alpha = 0
     }
     
-    open func popViewAnimate(fromView: UIView, toView: UIView) {
+    open func popViewAnimate(from fromViewController: UIViewController, to toViewController: UIViewController) {
         
-        fromView.alpha = 0
-        toView.alpha = 1
+        fromViewController.view?.alpha = 0
+        toViewController.view?.alpha = 1
     }
     
-    open func popViewCompletion(fromView: UIView, toView: UIView) {
+    open func popViewCompletion(from fromViewController: UIViewController, to toViewController: UIViewController) {
         
     }
 }
@@ -135,7 +135,7 @@ extension SDSwappageController {
         NSLayoutConstraint.activate(NSLayoutConstraint.constraints(withVisualFormat: "H:|[content]|", options: [], metrics: nil, views: ["content": toViewController.view]))
         
         if animated {
-            toViewController.swappagePushViewAnimateBegin(fromView: fromViewController.view, toView: toViewController.view)
+            toViewController.swappagePushViewAnimateBegin(from: fromViewController, to: toViewController)
             UIView.animate(
                 withDuration: springDampingTransformDuration,
                 delay: springDampingTransformDelay,
@@ -143,15 +143,15 @@ extension SDSwappageController {
                 initialSpringVelocity: springDampingVelocity,
                 options: transitionAnimateOptions,
                 animations: {
-                    toViewController.swappagePushViewAnimate(fromView: fromViewController.view, toView: toViewController.view)
+                    toViewController.swappagePushViewAnimate(from: fromViewController, to: toViewController)
                 },
                 completion: { _ in
                     fromViewController.view.removeFromSuperview()
-                    toViewController.swappagePushViewCompletion(fromView: fromViewController.view, toView: toViewController.view)
+                    toViewController.swappagePushViewCompletion(from: fromViewController, to: toViewController)
             })
         } else {
             fromViewController.view.removeFromSuperview()
-            toViewController.swappagePushViewCompletion(fromView: fromViewController.view, toView: toViewController.view)
+            toViewController.swappagePushViewCompletion(from: fromViewController, to: toViewController)
         }
     }
     
@@ -164,7 +164,7 @@ extension SDSwappageController {
         NSLayoutConstraint.activate(NSLayoutConstraint.constraints(withVisualFormat: "H:|[content]|", options: [], metrics: nil, views: ["content": toViewController.view]))
         
         if animated {
-            fromViewController.swappagePopViewAnimateBegin(fromView: fromViewController.view, toView: toViewController.view)
+            fromViewController.swappagePopViewAnimateBegin(from: fromViewController, to: toViewController)
             UIView.animate(
                 withDuration: springDampingTransformDuration,
                 delay: springDampingTransformDelay,
@@ -172,15 +172,15 @@ extension SDSwappageController {
                 initialSpringVelocity: springDampingVelocity,
                 options: transitionAnimateOptions,
                 animations: {
-                    fromViewController.swappagePopViewAnimate(fromView: fromViewController.view, toView: toViewController.view)
+                    fromViewController.swappagePopViewAnimate(from: fromViewController, to: toViewController)
                 },
                 completion: { _ in
                     fromViewController.view.removeFromSuperview()
-                    fromViewController.swappagePopViewCompletion(fromView: fromViewController.view, toView: toViewController.view)
+                    fromViewController.swappagePopViewCompletion(from: fromViewController, to: toViewController)
             })
         } else {
             fromViewController.view.removeFromSuperview()
-            fromViewController.swappagePopViewCompletion(fromView: fromViewController.view, toView: toViewController.view)
+            fromViewController.swappagePopViewCompletion(from: fromViewController, to: toViewController)
         }
     }
     
