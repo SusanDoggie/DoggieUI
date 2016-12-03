@@ -205,7 +205,7 @@ open class SDSlideMenuViewController: UIViewController, UIGestureRecognizerDeleg
                     UIView.animate(
                         withDuration: self.linearTransformDuration,
                         delay: self.linearTransformDelay,
-                        options: UIViewAnimationOptions.curveLinear,
+                        options: .curveLinear,
                         animations: {
                             self.contentContainerView.transform.tx = rightPosition
                         },
@@ -255,7 +255,7 @@ open class SDSlideMenuViewController: UIViewController, UIGestureRecognizerDeleg
                     delay: self.springDampingTransformDelay,
                     usingSpringWithDamping: self.springDampingRatio,
                     initialSpringVelocity: self.springDampingVelocity,
-                    options: UIViewAnimationOptions.curveLinear,
+                    options: .curveLinear,
                     animations: {
                         _shadowLayer.alpha = CGFloat(self.shadowLayerOpacity)
                         contentViewController.view.transform.tx = 0
@@ -306,7 +306,7 @@ open class SDSlideMenuViewController: UIViewController, UIGestureRecognizerDeleg
             delay: self.springDampingTransformDelay,
             usingSpringWithDamping: self.springDampingRatio,
             initialSpringVelocity: self.springDampingVelocity,
-            options: UIViewAnimationOptions.curveLinear,
+            options: .curveLinear,
             animations: {
                 self.menuRoot.view.transform.tx = 0
                 self.shadowLayer.transform.tx = 0
