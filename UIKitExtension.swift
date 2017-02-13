@@ -25,6 +25,14 @@
 
 import UIKit
 
+extension UIView {
+    
+    open class func loadNib(name: String, bundle: Bundle? = nil, owner: Any? = nil, options: [AnyHashable : Any]? = nil) -> UIView? {
+        
+        return UINib(nibName: name, bundle: bundle).instantiate(withOwner: owner, options: options)[0] as? UIView
+    }
+}
+
 extension CALayer {
     
     open func addAnimation(duration: CFTimeInterval, from: AnyObject, to: AnyObject, timingFunction: CAMediaTimingFunction? = nil, forKey key: String) {
