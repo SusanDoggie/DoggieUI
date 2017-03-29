@@ -49,6 +49,8 @@ extension CALayer {
 
 extension UIView : RandomAccessCollection, MutableCollection {
     
+    public typealias SubSequence = MutableRangeReplaceableRandomAccessSlice<UIView>
+    
     public typealias Indices = CountableRange<Int>
     
     public typealias Index = Int
@@ -68,16 +70,6 @@ extension UIView : RandomAccessCollection, MutableCollection {
         set {
             self.remove(at: position)
             self.insert(newValue, at: position)
-        }
-    }
-    
-    open subscript(bounds: Range<Int>) -> MutableRangeReplaceableRandomAccessSlice<UIView> {
-        get {
-            _failEarlyRangeCheck(bounds, bounds: startIndex..<endIndex)
-            return MutableRangeReplaceableRandomAccessSlice(base: self, bounds: bounds)
-        }
-        set {
-            self.replaceSubrange(bounds, with: newValue)
         }
     }
 }
