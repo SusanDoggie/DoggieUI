@@ -346,7 +346,7 @@ open class SDSlideMenuViewController: UIViewController, UIGestureRecognizerDeleg
         return true
     }
     
-    func handlePan(_ sender: UIPanGestureRecognizer) {
+    @objc func handlePan(_ sender: UIPanGestureRecognizer) {
         
         self.view.endEditing(true)
         
@@ -407,7 +407,7 @@ open class SDSlideMenuViewController: UIViewController, UIGestureRecognizerDeleg
             break
         }
     }
-    func handleTap(_ sender: UITapGestureRecognizer) {
+    @objc func handleTap(_ sender: UITapGestureRecognizer) {
         
         self.view.endEditing(true)
         
