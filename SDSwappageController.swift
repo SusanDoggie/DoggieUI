@@ -56,62 +56,62 @@ open class SDSwappageController: UIViewController {
 
 extension UIViewController {
     
-    open func swappagePushViewAnimateBegin(from fromViewController: UIViewController, to toViewController: UIViewController) {
+    @objc open func swappagePushViewAnimateBegin(from fromViewController: UIViewController, to toViewController: UIViewController) {
         self.swappage?.pushViewAnimateBegin(from: fromViewController, to: toViewController)
     }
     
-    open func swappagePushViewAnimate(from fromViewController: UIViewController, to toViewController: UIViewController) {
+    @objc open func swappagePushViewAnimate(from fromViewController: UIViewController, to toViewController: UIViewController) {
         self.swappage?.pushViewAnimate(from: fromViewController, to: toViewController)
     }
     
-    open func swappagePushViewCompletion(from fromViewController: UIViewController, to toViewController: UIViewController) {
+    @objc open func swappagePushViewCompletion(from fromViewController: UIViewController, to toViewController: UIViewController) {
         self.swappage?.pushViewCompletion(from: fromViewController, to: toViewController)
     }
     
-    open func swappagePopViewAnimateBegin(from fromViewController: UIViewController, to toViewController: UIViewController) {
+    @objc open func swappagePopViewAnimateBegin(from fromViewController: UIViewController, to toViewController: UIViewController) {
         self.swappage?.popViewAnimateBegin(from: fromViewController, to: toViewController)
     }
     
-    open func swappagePopViewAnimate(from fromViewController: UIViewController, to toViewController: UIViewController) {
+    @objc open func swappagePopViewAnimate(from fromViewController: UIViewController, to toViewController: UIViewController) {
         self.swappage?.popViewAnimate(from: fromViewController, to: toViewController)
     }
     
-    open func swappagePopViewCompletion(from fromViewController: UIViewController, to toViewController: UIViewController) {
+    @objc open func swappagePopViewCompletion(from fromViewController: UIViewController, to toViewController: UIViewController) {
         self.swappage?.popViewCompletion(from: fromViewController, to: toViewController)
     }
 }
 
 extension SDSwappageController {
     
-    open func pushViewAnimateBegin(from fromViewController: UIViewController, to toViewController: UIViewController) {
+    @objc open func pushViewAnimateBegin(from fromViewController: UIViewController, to toViewController: UIViewController) {
         
         fromViewController.view?.alpha = 1
         toViewController.view?.alpha = 0
     }
     
-    open func pushViewAnimate(from fromViewController: UIViewController, to toViewController: UIViewController) {
+    @objc open func pushViewAnimate(from fromViewController: UIViewController, to toViewController: UIViewController) {
         
         fromViewController.view?.alpha = 0
         toViewController.view?.alpha = 1
     }
     
-    open func pushViewCompletion(from fromViewController: UIViewController, to toViewController: UIViewController) {
+    @objc open func pushViewCompletion(from fromViewController: UIViewController, to toViewController: UIViewController) {
         
     }
     
-    open func popViewAnimateBegin(from fromViewController: UIViewController, to toViewController: UIViewController) {
+    @objc open func popViewAnimateBegin(from fromViewController: UIViewController, to toViewController: UIViewController) {
         
         fromViewController.view?.alpha = 1
         toViewController.view?.alpha = 0
     }
     
-    open func popViewAnimate(from fromViewController: UIViewController, to toViewController: UIViewController) {
+    @objc open func popViewAnimate(from fromViewController: UIViewController, to toViewController: UIViewController) {
         
         fromViewController.view?.alpha = 0
         toViewController.view?.alpha = 1
     }
     
-    open func popViewCompletion(from fromViewController: UIViewController, to toViewController: UIViewController) {
+    @objc open func popViewCompletion(from fromViewController: UIViewController, to toViewController: UIViewController) {
         
     }
 }
