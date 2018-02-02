@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0A7A0C3C20246CA3003A0962 /* UIShortTapGestureRecognizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A7A0C3B20246CA3003A0962 /* UIShortTapGestureRecognizer.swift */; };
 		0A9D37211D73D9E600941254 /* DoggieUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A9D37171D73D9E600941254 /* DoggieUI.framework */; };
 		0A9D37261D73D9E600941254 /* DoggieUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A9D37251D73D9E600941254 /* DoggieUITests.swift */; };
 		0A9D37281D73D9E600941254 /* DoggieUI.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A9D371A1D73D9E600941254 /* DoggieUI.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -30,6 +31,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		0A7A0C3B20246CA3003A0962 /* UIShortTapGestureRecognizer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIShortTapGestureRecognizer.swift; sourceTree = "<group>"; };
 		0A9D37171D73D9E600941254 /* DoggieUI.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = DoggieUI.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		0A9D371A1D73D9E600941254 /* DoggieUI.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DoggieUI.h; sourceTree = "<group>"; };
 		0A9D371B1D73D9E600941254 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -74,6 +76,7 @@
 				0A9D37351D73DA3000941254 /* SDSwipeView.swift */,
 				0A9D37361D73DA3000941254 /* SDTextField.swift */,
 				0A9D37371D73DA3000941254 /* UIKitExtension.swift */,
+				0A7A0C3B20246CA3003A0962 /* UIShortTapGestureRecognizer.swift */,
 				0A9D37191D73D9E600941254 /* DoggieUI */,
 				0A9D37241D73D9E600941254 /* DoggieUITests */,
 				0A9D37181D73D9E600941254 /* Products */,
@@ -220,6 +223,7 @@
 			files = (
 				0A9D373D1D73DA3000941254 /* SDTextField.swift in Sources */,
 				0A9D373C1D73DA3000941254 /* SDSwipeView.swift in Sources */,
+				0A7A0C3C20246CA3003A0962 /* UIShortTapGestureRecognizer.swift in Sources */,
 				0A9D373B1D73DA3000941254 /* SDSwappageController.swift in Sources */,
 				0A9D37391D73DA3000941254 /* SDSlideMenuViewController.swift in Sources */,
 				0A9D373E1D73DA3000941254 /* UIKitExtension.swift in Sources */,
