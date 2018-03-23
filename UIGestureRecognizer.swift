@@ -1,5 +1,5 @@
 //
-//  UIShortTapGestureRecognizer.swift
+//  UIGestureRecognizer.swift
 //
 //  The MIT License
 //  Copyright (c) 2015 - 2018 Susan Cheng. All rights reserved.
@@ -25,6 +25,7 @@
 
 import UIKit
 import UIKit.UIGestureRecognizerSubclass
+import SpriteKit
 
 open class UIShortTapGestureRecognizer: UITapGestureRecognizer {
     
@@ -39,5 +40,30 @@ open class UIShortTapGestureRecognizer: UITapGestureRecognizer {
                 self.state = UIGestureRecognizerState.failed
             }
         }
+    }
+}
+
+extension UIGestureRecognizer {
+    
+    open func location(in scene: SKScene) -> CGPoint {
+        guard let view = scene.view else { return CGPoint() }
+        return view.convert(self.location(in: view), to: scene)
+    }
+    
+    open func location(ofTouch touchIndex: Int, in scene: SKScene) -> CGPoint {
+        guard let view = scene.view else { return CGPoint() }
+        return view.convert(self.location(ofTouch: touchIndex, in: view), to: scene)
+    }
+}
+extension UIPanGestureRecognizer {
+    
+    open func translation(in scene: SKScene) -> CGPoint {
+        guard let view = scene.view else { return CGPoint() }
+        return view.convert(self.translation(in: view), to: scene)
+    }
+    
+    open func setTranslation(_ translation: CGPoint, in scene: SKScene) {
+        guard let view = scene.view else { return }
+        self.setTranslation(view.convert(translation, from: scene), in: view)
     }
 }
