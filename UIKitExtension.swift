@@ -49,8 +49,6 @@ extension CALayer {
 
 extension UIView : RandomAccessCollection, MutableCollection {
     
-    public typealias SubSequence = MutableRangeReplaceableRandomAccessSlice<UIView>
-    
     public typealias Indices = CountableRange<Int>
     
     public typealias Index = Int
@@ -68,55 +66,9 @@ extension UIView : RandomAccessCollection, MutableCollection {
             return subviews[position]
         }
         set {
-            self.remove(at: position)
-            self.insert(newValue, at: position)
+            subviews[position].removeFromSuperview()
+            self.insertSubview(newValue, at: position)
         }
-    }
-}
-
-extension UIView : RangeReplaceableCollection {
-    
-    open func replaceSubrange<C : Collection>(_ subrange: Range<Int>, with newElements: C) where C.Iterator.Element == UIView {
-        if !subrange.isEmpty {
-            for view in subviews[subrange] {
-                view.removeFromSuperview()
-            }
-        }
-        if !newElements.isEmpty {
-            self.insert(contentsOf: newElements, at: subrange.lowerBound)
-        }
-    }
-    
-    open func append(_ newElement: UIView) {
-        self.addSubview(newElement)
-    }
-    open func append<S : Sequence>(contentsOf newElements: S) where S.Iterator.Element == UIView {
-        for item in newElements {
-            self.addSubview(item)
-        }
-    }
-    open func insert(_ newElement: UIView, at i: Int) {
-        self.insertSubview(newElement, at: i)
-    }
-    open func insert<C : Collection>(contentsOf newElements: C, at i: Int) where C.Iterator.Element == UIView {
-        for (idx, item) in newElements.enumerated() {
-            self.insertSubview(item, at: idx + i)
-        }
-    }
-    @discardableResult
-    open func remove(at i: Int) -> UIView {
-        let view = subviews[i]
-        view.removeFromSuperview()
-        return view
-    }
-    open func removeFirst(n: Int) {
-        for view in subviews.prefix(n) {
-            view.removeFromSuperview()
-        }
-    }
-    @discardableResult
-    open func removeFirst() -> UIView {
-        return remove(at: 0)
     }
 }
 
