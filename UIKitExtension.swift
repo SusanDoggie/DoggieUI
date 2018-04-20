@@ -74,6 +74,45 @@ extension UIView : RandomAccessCollection, MutableCollection {
 
 extension UIView {
     
+    /// When true, the layer is rendered as a bitmap in its local coordinate
+    /// space ("rasterized"), then the bitmap is composited into the
+    /// destination (with the minificationFilter and magnificationFilter
+    /// properties of the layer applied if the bitmap needs scaling).
+    /// Rasterization occurs after the layer's filters and shadow effects
+    /// are applied, but before the opacity modulation. As an implementation
+    /// detail the rendering engine may attempt to cache and reuse the
+    /// bitmap from one frame to the next. (Whether it does or not will have
+    /// no affect on the rendered output.)
+    ///
+    /// When false the layer is composited directly into the destination
+    /// whenever possible (however, certain features of the compositing
+    /// model may force rasterization, e.g. adding filters).
+    ///
+    /// Defaults to NO. Animatable.
+    @IBInspectable open var shouldRasterize: Bool {
+        get {
+            return layer.shouldRasterize
+        }
+        set {
+            layer.shouldRasterize = newValue
+        }
+    }
+    
+    /// The scale at which the layer will be rasterized (when the
+    /// shouldRasterize property has been set to YES) relative to the
+    /// coordinate space of the layer. Defaults to one. Animatable.
+    @IBInspectable open var rasterizationScale: CGFloat {
+        get {
+            return layer.rasterizationScale
+        }
+        set {
+            layer.rasterizationScale = newValue
+        }
+    }
+}
+
+extension UIView {
+    
     /// The radius to use when drawing rounded corners for the layer’s background. Animatable.
     ///
     /// Setting the radius to a value greater than `0.0` causes the layer to begin drawing rounded corners on its
@@ -88,6 +127,18 @@ extension UIView {
         }
         set {
             layer.cornerRadius = newValue
+        }
+    }
+    
+    /// Defines which of the four corners receives the masking when using
+    /// `cornerRadius' property. Defaults to all four corners.
+    @available(iOS 11.0, *)
+    open var maskedCorners: CACornerMask {
+        get {
+            return layer.maskedCorners
+        }
+        set {
+            layer.maskedCorners = newValue
         }
     }
 }
