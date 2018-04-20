@@ -37,34 +37,33 @@ public protocol SDTextFieldDelegate : UITextFieldDelegate {
     func textFieldDidChanged(_ textField: SDTextField)
 }
 
-public extension SDTextFieldDelegate {
+extension SDTextFieldDelegate {
     
-    func textFieldKeyboardWillShow(_ textField: SDTextField, animationDuration: Double, animationCurve: UIViewAnimationCurve, startFrame: CGRect, endFrame: CGRect) {
+    public func textFieldKeyboardWillShow(_ textField: SDTextField, animationDuration: Double, animationCurve: UIViewAnimationCurve, startFrame: CGRect, endFrame: CGRect) {
         // do nothing
     }
-    func textFieldKeyboardDidShow(_ textField: SDTextField, frame: CGRect) {
+    public func textFieldKeyboardDidShow(_ textField: SDTextField, frame: CGRect) {
         // do nothing
     }
-    func textFieldKeyboardWillHide(_ textField: SDTextField, animationDuration: Double, animationCurve: UIViewAnimationCurve, startFrame: CGRect, endFrame: CGRect) {
+    public func textFieldKeyboardWillHide(_ textField: SDTextField, animationDuration: Double, animationCurve: UIViewAnimationCurve, startFrame: CGRect, endFrame: CGRect) {
         // do nothing
     }
-    func textFieldKeyboardDidHide(_ textField: SDTextField, frame: CGRect) {
+    public func textFieldKeyboardDidHide(_ textField: SDTextField, frame: CGRect) {
         // do nothing
     }
-    func textFieldKeyboardWillChangeFrame(_ textField: SDTextField, animationDuration: Double, animationCurve: UIViewAnimationCurve, startFrame: CGRect, endFrame: CGRect) {
+    public func textFieldKeyboardWillChangeFrame(_ textField: SDTextField, animationDuration: Double, animationCurve: UIViewAnimationCurve, startFrame: CGRect, endFrame: CGRect) {
         // do nothing
     }
-    func textFieldKeyboardDidChangeFrame(_ textField: SDTextField, frame: CGRect) {
+    public func textFieldKeyboardDidChangeFrame(_ textField: SDTextField, frame: CGRect) {
         // do nothing
     }
     
-    func textFieldDidChanged(_ textField: SDTextField) {
+    public func textFieldDidChanged(_ textField: SDTextField) {
         // do nothing
     }
 }
 
-@objc
-open class SDTextField: UITextField {
+@objc open class SDTextField: UITextField {
     
     public override init(frame: CGRect) {
         super.init(frame: frame)

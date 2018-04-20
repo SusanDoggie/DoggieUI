@@ -31,13 +31,24 @@ import QuartzCore
     fileprivate var swipeView: SDSwipeView
     fileprivate var pageControl = UIPageControl()
     
-    open weak var delegate: SDItemSelectorDelegate? {
+    @IBOutlet open weak var dataSource: SDItemSelectorDataSource? {
         didSet {
             reloadData()
         }
     }
     
+    @IBOutlet open weak var delegate: SDItemSelectorDelegate?
+    
     fileprivate var _cache: [UIView?] = []
+    
+    @IBInspectable open var showsPageControl: Bool {
+        get {
+            return !pageControl.isHidden
+        }
+        set {
+            pageControl.isHidden = !newValue
+        }
+    }
     
     @IBInspectable open var bounces: Bool {
         get {
@@ -84,7 +95,7 @@ import QuartzCore
                 pageControl.currentPage = newValue
                 swipeView.reload()
                 if newValue < numberOfPages {
-                    delegate?.itemSelector(self, didDisplayingView: self.itemForIndex(newValue), forIndex: newValue)
+                    delegate?.itemSelector?(self, didDisplayingView: self.itemForIndex(newValue), forIndex: newValue)
                 }
             }
         }
@@ -112,10 +123,10 @@ import QuartzCore
         }
     }
     
-    public func viewForIndex(_ index: Int) -> UIView? {
+    open func viewForIndex(_ index: Int) -> UIView? {
         if index < numberOfPages {
             if _cache[index] == nil {
-                _cache[index] = delegate?.itemSelector(self, viewForItemInIndex: index)
+                _cache[index] = dataSource?.itemSelector(self, viewForItemInIndex: index)
             }
             return _cache[index]
         }
@@ -126,8 +137,8 @@ import QuartzCore
         return self.viewForIndex(index) ?? UIView()
     }
     
-    public func reloadData() {
-        numberOfPages = delegate?.numberOfPagesInItemSelector(self) ?? 0
+    open func reloadData() {
+        numberOfPages = dataSource?.numberOfPagesInItemSelector(self) ?? 0
         self.cleanCache()
         swipeView.reload()
     }
@@ -146,6 +157,7 @@ import QuartzCore
     
     fileprivate func constructView() {
         
+        swipeView.dataSource = self
         swipeView.delegate = self
         
         self.addSubview(swipeView)
@@ -159,9 +171,20 @@ import QuartzCore
         NSLayoutConstraint.activate(NSLayoutConstraint.constraints(withVisualFormat: "V:|[content]|", options: [], metrics: nil, views: ["content": swipeView]))
         NSLayoutConstraint.activate(NSLayoutConstraint.constraints(withVisualFormat: "H:|[content]|", options: [], metrics: nil, views: ["content": swipeView]))
     }
+    
+    open func swapToLeft(_ animated: Bool) {
+        if currentPage != 0 {
+            swipeView.swapToLeft(animated)
+        }
+    }
+    open func swapToRight(_ animated: Bool) {
+        if currentPage + 1 < numberOfPages {
+            swipeView.swapToRight(animated)
+        }
+    }
 }
 
-extension SDItemSelector : SDSwipeViewDelegate {
+extension SDItemSelector : SDSwipeViewDataSource, SDSwipeViewDelegate {
     
     public func swipeView(_ swipeView: SDSwipeView, viewForItemInIndex index: Int) -> UIView? {
         
@@ -177,23 +200,19 @@ extension SDItemSelector : SDSwipeViewDelegate {
         
         if swipeView === self.swipeView {
             pageControl.currentPage = swipeView.index
-            delegate?.itemSelector(self, didDisplayingView: view, forIndex: swipeView.index)
+            delegate?.itemSelector?(self, didDisplayingView: view, forIndex: swipeView.index)
         }
     }
 }
 
-public protocol SDItemSelectorDelegate : class {
+@objc public protocol SDItemSelectorDataSource : class {
     
     func numberOfPagesInItemSelector(_ itemSelector: SDItemSelector) -> Int
     
     func itemSelector(_ itemSelector: SDItemSelector, viewForItemInIndex index: Int) -> UIView?
-    
-    func itemSelector(_ itemSelector: SDItemSelector, didDisplayingView view: UIView, forIndex index: Int)
 }
 
-public extension SDItemSelectorDelegate {
+@objc public protocol SDItemSelectorDelegate : class {
     
-    func itemSelector(_ itemSelector: SDItemSelector, didDisplayingView view: UIView, forIndex index: Int) {
-        // do nothing
-    }
+    @objc optional func itemSelector(_ itemSelector: SDItemSelector, didDisplayingView view: UIView, forIndex index: Int)
 }

@@ -25,18 +25,14 @@
 
 import UIKit
 
-public protocol SDSwipeViewDelegate : class {
+@objc public protocol SDSwipeViewDataSource : class {
     
     func swipeView(_ swipeView: SDSwipeView, viewForItemInIndex index: Int) -> UIView?
-    
-    func swipeView(_ swipeView: SDSwipeView, didDisplayingView view: UIView)
 }
 
-public extension SDSwipeViewDelegate {
+@objc public protocol SDSwipeViewDelegate : class {
     
-    func swipeView(_ swipeView: SDSwipeView, didDisplayingView view: UIView) {
-        // do nothing
-    }
+    @objc optional func swipeView(_ swipeView: SDSwipeView, didDisplayingView view: UIView)
 }
 
 open class SDSwipeView: UIView, UIScrollViewDelegate {
@@ -57,11 +53,13 @@ open class SDSwipeView: UIView, UIScrollViewDelegate {
     fileprivate var scrolling = false
     fileprivate var jumpSwap : Int?
     
-    open weak var delegate : SDSwipeViewDelegate? {
+    @IBOutlet open weak var dataSource : SDSwipeViewDataSource? {
         didSet {
             reload()
         }
     }
+    
+    @IBOutlet open weak var delegate : SDSwipeViewDelegate?
     
     public override init(frame: CGRect) {
         super.init(frame: frame)
@@ -113,19 +111,19 @@ open class SDSwipeView: UIView, UIScrollViewDelegate {
         page_3.translatesAutoresizingMaskIntoConstraints = false
     }
     
-    public func reload() {
+    open func reload() {
         
-        current = delegate?.swipeView(self, viewForItemInIndex: index)
+        current = dataSource?.swipeView(self, viewForItemInIndex: index)
         if current != nil {
-            left = delegate?.swipeView(self, viewForItemInIndex: index - 1)
-            right = delegate?.swipeView(self, viewForItemInIndex: index + 1)
+            left = dataSource?.swipeView(self, viewForItemInIndex: index - 1)
+            right = dataSource?.swipeView(self, viewForItemInIndex: index + 1)
         } else {
             left = nil
             right = nil
         }
         _layoutSubviews()
         if current != nil {
-            delegate?.swipeView(self, didDisplayingView: current!)
+            delegate?.swipeView?(self, didDisplayingView: current!)
         }
     }
     
@@ -198,8 +196,8 @@ open class SDSwipeView: UIView, UIScrollViewDelegate {
             return
         }
         
-        left = left ?? delegate?.swipeView(self, viewForItemInIndex: index - 1)
-        right = right ?? delegate?.swipeView(self, viewForItemInIndex: index + 1)
+        left = left ?? dataSource?.swipeView(self, viewForItemInIndex: index - 1)
+        right = right ?? dataSource?.swipeView(self, viewForItemInIndex: index + 1)
         
         if left == nil && right == nil {
             _layoutOnePage()
@@ -248,13 +246,13 @@ open class SDSwipeView: UIView, UIScrollViewDelegate {
         }
     }
     
-    public func swapToView(_ index: Int, animated: Bool) {
+    open func swapToView(_ index: Int, animated: Bool) {
         
         if self.index == index {
             return
         }
         
-        if let jumpView = delegate?.swipeView(self, viewForItemInIndex: index) {
+        if let jumpView = dataSource?.swipeView(self, viewForItemInIndex: index) {
             if animated {
                 if !scrolling && !scrollView.isDecelerating {
                     jumpSwap = index
@@ -281,12 +279,12 @@ open class SDSwipeView: UIView, UIScrollViewDelegate {
                 left = nil
                 self.index = index
                 _layoutSubviews()
-                delegate?.swipeView(self, didDisplayingView: current!)
+                delegate?.swipeView?(self, didDisplayingView: current!)
             }
         }
     }
     
-    public func swapToLeft(_ animated: Bool) {
+    open func swapToLeft(_ animated: Bool) {
         
         if left != nil {
             if animated {
@@ -303,11 +301,11 @@ open class SDSwipeView: UIView, UIScrollViewDelegate {
                 left = nil
                 index -= 1
                 _layoutSubviews()
-                delegate?.swipeView(self, didDisplayingView: current!)
+                delegate?.swipeView?(self, didDisplayingView: current!)
             }
         }
     }
-    public func swapToRight(_ animated: Bool) {
+    open func swapToRight(_ animated: Bool) {
         
         if right != nil {
             if animated {
@@ -328,7 +326,7 @@ open class SDSwipeView: UIView, UIScrollViewDelegate {
                 right = nil
                 index += 1
                 _layoutSubviews()
-                delegate?.swipeView(self, didDisplayingView: current!)
+                delegate?.swipeView?(self, didDisplayingView: current!)
             }
         }
     }
@@ -360,7 +358,7 @@ open class SDSwipeView: UIView, UIScrollViewDelegate {
                 index = jumpSwap!
             }
             _layoutSubviews()
-            delegate?.swipeView(self, didDisplayingView: current!)
+            delegate?.swipeView?(self, didDisplayingView: current!)
         } else if ((left == nil && shift == 1) || (left != nil && shift == 2)) && right != nil {
             left = jumpSwap == nil ? current : nil
             current = right
@@ -371,7 +369,7 @@ open class SDSwipeView: UIView, UIScrollViewDelegate {
                 index = jumpSwap!
             }
             _layoutSubviews()
-            delegate?.swipeView(self, didDisplayingView: current!)
+            delegate?.swipeView?(self, didDisplayingView: current!)
         }
     }
 }
