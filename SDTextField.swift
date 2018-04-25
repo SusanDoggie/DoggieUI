@@ -65,6 +65,12 @@ extension SDTextFieldDelegate {
 
 @objc open class SDTextField: UITextField {
     
+    @IBInspectable open var isSelectionEnabled: Bool = true
+    @IBInspectable open var isCutEnabled: Bool = true
+    @IBInspectable open var isCopyEnabled: Bool = true
+    @IBInspectable open var isPasteEnabled: Bool = true
+    @IBInspectable open var isDeleteEnabled: Bool = true
+    
     public override init(frame: CGRect) {
         super.init(frame: frame)
         setup()
@@ -83,6 +89,38 @@ extension SDTextFieldDelegate {
         NotificationCenter.default.addObserver(self, selector: #selector(_textFieldKeyboardWillChangeFrame), name: .UIKeyboardWillChangeFrame, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(_textFieldKeyboardDidChangeFrame), name: .UIKeyboardDidChangeFrame, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(_textFieldDidChanged), name: .UITextFieldTextDidChange, object: nil)
+    }
+    
+    open override func caretRect(for position: UITextPosition) -> CGRect {
+        return isSelectionEnabled ? super.caretRect(for: position) : CGRect()
+    }
+    
+    open override func selectionRects(for range: UITextRange) -> [Any] {
+        return isSelectionEnabled ? super.selectionRects(for: range) : []
+    }
+    
+    open override func canPerformAction(_ action: Selector, withSender sender: Any?) -> Bool {
+        
+        if !isSelectionEnabled && action == #selector(select(_:)) {
+            return false
+        }
+        if !isSelectionEnabled && action == #selector(selectAll(_:)) {
+            return false
+        }
+        if !isCutEnabled && action == #selector(cut(_:)) {
+            return false
+        }
+        if !isCopyEnabled && action == #selector(copy(_:)) {
+            return false
+        }
+        if !isPasteEnabled && action == #selector(paste(_:)) {
+            return false
+        }
+        if !isDeleteEnabled && action == #selector(delete(_:)) {
+            return false
+        }
+        
+        return super.canPerformAction(action, withSender: sender)
     }
 }
 
