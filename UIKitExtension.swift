@@ -27,6 +27,43 @@ import UIKit
 
 extension UIView {
     
+    open var collectionCell : UICollectionViewCell? {
+        return self as? UICollectionViewCell ?? self.superview?.collectionCell
+    }
+}
+
+extension UIView {
+    
+    open var tableCell : UITableViewCell? {
+        return self as? UITableViewCell ?? self.superview?.tableCell
+    }
+}
+
+extension UIView {
+    
+    open var firstResponder: UIView? {
+        
+        guard !isFirstResponder else { return self }
+        
+        for subview in subviews {
+            if let firstResponder = subview.firstResponder {
+                return firstResponder
+            }
+        }
+        
+        return nil
+    }
+}
+
+extension UIViewController {
+    
+    open var firstResponder: UIView? {
+        return self.view?.firstResponder
+    }
+}
+
+extension UIView {
+    
     open class func loadNib(name: String, bundle: Bundle? = nil, owner: Any? = nil, options: [AnyHashable : Any]? = nil) -> UIView? {
         
         return UINib(nibName: name, bundle: bundle).instantiate(withOwner: owner, options: options)[0] as? UIView
