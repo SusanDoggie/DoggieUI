@@ -190,3 +190,10 @@ extension SDTextField {
         }
     }
 }
+
+extension UIViewController {
+    
+    @IBAction public func dismissKeyboard(_ sender: UITextField) {
+        sender.resignFirstResponder()
+    }
+}

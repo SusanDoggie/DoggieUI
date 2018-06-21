@@ -277,7 +277,7 @@ open class SDSlideMenuViewController: UIViewController, UIGestureRecognizerDeleg
         }
     }
     
-    fileprivate func _menuToggle(_ sender: AnyObject?) {
+    fileprivate func _menuToggle(_ sender: Any) {
         
         switch toggleState {
         case 0:
@@ -420,7 +420,7 @@ open class SDSlideMenuViewController: UIViewController, UIGestureRecognizerDeleg
 
 extension UIViewController {
     
-    @IBAction public func menuToggle(_ sender: AnyObject?) {
+    @IBAction public func menuToggle(_ sender: Any) {
         
         self.slideMenu?._menuToggle(sender)
     }
