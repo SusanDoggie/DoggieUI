@@ -85,7 +85,6 @@ open class SDSlideMenuViewController: UIViewController, UIGestureRecognizerDeleg
     
     open override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
         
         contentContainerView = UIView(frame: view.frame)
         if self.shadowWidth > 0 {
@@ -135,11 +134,6 @@ open class SDSlideMenuViewController: UIViewController, UIGestureRecognizerDeleg
         tapRecongnizer.delegate = self
         view.addGestureRecognizer(panRecongnizer)
         view.addGestureRecognizer(tapRecongnizer)
-    }
-    
-    open override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
     }
     
     fileprivate func addmenuRoot(rootViewController: UIViewController) {

@@ -38,7 +38,6 @@ open class SDSwappageController: UIViewController {
     
     open override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
         
         self.performSegue(withIdentifier: SDSwappageController.rootViewControllerIdentifier, sender: self)
         self.view.addSubview(self.rootView)
@@ -46,11 +45,6 @@ open class SDSwappageController: UIViewController {
         self.rootView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate(NSLayoutConstraint.constraints(withVisualFormat: "V:|[content]|", options: [], metrics: nil, views: ["content": self.rootView]))
         NSLayoutConstraint.activate(NSLayoutConstraint.constraints(withVisualFormat: "H:|[content]|", options: [], metrics: nil, views: ["content": self.rootView]))
-    }
-    
-    open override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
     }
 }
 
@@ -126,61 +120,93 @@ extension SDSwappageController {
         return rootViewController?.view
     }
     
-    fileprivate func push(_ fromViewController: UIViewController, toViewController: UIViewController, animated: Bool) {
-        
-        self.view.addSubview(toViewController.view)
-        toViewController.view.frame = self.view.frame
-        toViewController.view.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate(NSLayoutConstraint.constraints(withVisualFormat: "V:|[content]|", options: [], metrics: nil, views: ["content": toViewController.view]))
-        NSLayoutConstraint.activate(NSLayoutConstraint.constraints(withVisualFormat: "H:|[content]|", options: [], metrics: nil, views: ["content": toViewController.view]))
-        
-        if animated {
-            toViewController.swappagePushViewAnimateBegin(from: fromViewController, to: toViewController)
-            UIView.animate(
-                withDuration: springDampingTransformDuration,
-                delay: springDampingTransformDelay,
-                usingSpringWithDamping: springDampingRatio,
-                initialSpringVelocity: springDampingVelocity,
-                options: transitionAnimateOptions,
-                animations: {
-                    toViewController.swappagePushViewAnimate(from: fromViewController, to: toViewController)
-                },
-                completion: { _ in
-                    fromViewController.view.removeFromSuperview()
-                    toViewController.swappagePushViewCompletion(from: fromViewController, to: toViewController)
-            })
+    private static var _animation_stack: [() -> Void]?
+    
+    private static func doAnimation(_ body: @escaping () -> Void) {
+        if _animation_stack != nil {
+            _animation_stack!.append(body)
         } else {
-            fromViewController.view.removeFromSuperview()
-            toViewController.swappagePushViewCompletion(from: fromViewController, to: toViewController)
+            _animation_stack = []
+            body()
         }
     }
     
-    fileprivate func pop(_ fromViewController: UIViewController, toViewController: UIViewController, animated: Bool) {
+    private static func completeAnimation() {
+        if _animation_stack != nil && _animation_stack!.count > 0 {
+            _animation_stack!.remove(at: 0)()
+        }
+        if _animation_stack?.count == 0 {
+            _animation_stack = nil
+        }
+    }
+    
+    fileprivate func push(_ fromViewController: UIViewController, toViewController: UIViewController, animated: Bool) {
         
-        self.view.addSubview(toViewController.view)
-        toViewController.view.frame = self.view.frame
-        toViewController.view.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate(NSLayoutConstraint.constraints(withVisualFormat: "V:|[content]|", options: [], metrics: nil, views: ["content": toViewController.view]))
-        NSLayoutConstraint.activate(NSLayoutConstraint.constraints(withVisualFormat: "H:|[content]|", options: [], metrics: nil, views: ["content": toViewController.view]))
+        DispatchQueue.main.async {
+            SDSwappageController.doAnimation {
+                
+                self.view.addSubview(toViewController.view)
+                toViewController.view.frame = self.view.frame
+                toViewController.view.translatesAutoresizingMaskIntoConstraints = false
+                NSLayoutConstraint.activate(NSLayoutConstraint.constraints(withVisualFormat: "V:|[content]|", options: [], metrics: nil, views: ["content": toViewController.view]))
+                NSLayoutConstraint.activate(NSLayoutConstraint.constraints(withVisualFormat: "H:|[content]|", options: [], metrics: nil, views: ["content": toViewController.view]))
+                
+                if animated {
+                    toViewController.swappagePushViewAnimateBegin(from: fromViewController, to: toViewController)
+                    UIView.animate(
+                        withDuration: self.springDampingTransformDuration,
+                        delay: self.springDampingTransformDelay,
+                        usingSpringWithDamping: self.springDampingRatio,
+                        initialSpringVelocity: self.springDampingVelocity,
+                        options: self.transitionAnimateOptions,
+                        animations: { toViewController.swappagePushViewAnimate(from: fromViewController, to: toViewController) },
+                        completion: { _ in
+                            fromViewController.view.removeFromSuperview()
+                            toViewController.swappagePushViewCompletion(from: fromViewController, to: toViewController)
+                            SDSwappageController.completeAnimation()
+                    })
+                } else {
+                    SDSwappageController._animation_stack = nil
+                    fromViewController.view.removeFromSuperview()
+                    toViewController.swappagePushViewCompletion(from: fromViewController, to: toViewController)
+                }
+            }
+        }
+    }
+    
+    fileprivate func pop(_ fromViewController: UIViewController, toViewController: UIViewController, animated: Bool, completion: @escaping () -> Void) {
         
-        if animated {
-            fromViewController.swappagePopViewAnimateBegin(from: fromViewController, to: toViewController)
-            UIView.animate(
-                withDuration: springDampingTransformDuration,
-                delay: springDampingTransformDelay,
-                usingSpringWithDamping: springDampingRatio,
-                initialSpringVelocity: springDampingVelocity,
-                options: transitionAnimateOptions,
-                animations: {
-                    fromViewController.swappagePopViewAnimate(from: fromViewController, to: toViewController)
-                },
-                completion: { _ in
+        DispatchQueue.main.async {
+            SDSwappageController.doAnimation {
+                
+                self.view.addSubview(toViewController.view)
+                toViewController.view.frame = self.view.frame
+                toViewController.view.translatesAutoresizingMaskIntoConstraints = false
+                NSLayoutConstraint.activate(NSLayoutConstraint.constraints(withVisualFormat: "V:|[content]|", options: [], metrics: nil, views: ["content": toViewController.view]))
+                NSLayoutConstraint.activate(NSLayoutConstraint.constraints(withVisualFormat: "H:|[content]|", options: [], metrics: nil, views: ["content": toViewController.view]))
+                
+                if animated {
+                    fromViewController.swappagePopViewAnimateBegin(from: fromViewController, to: toViewController)
+                    UIView.animate(
+                        withDuration: self.springDampingTransformDuration,
+                        delay: self.springDampingTransformDelay,
+                        usingSpringWithDamping: self.springDampingRatio,
+                        initialSpringVelocity: self.springDampingVelocity,
+                        options: self.transitionAnimateOptions,
+                        animations: { fromViewController.swappagePopViewAnimate(from: fromViewController, to: toViewController) },
+                        completion: { _ in
+                            fromViewController.view.removeFromSuperview()
+                            fromViewController.swappagePopViewCompletion(from: fromViewController, to: toViewController)
+                            completion()
+                            SDSwappageController.completeAnimation()
+                    })
+                } else {
+                    SDSwappageController._animation_stack = nil
                     fromViewController.view.removeFromSuperview()
                     fromViewController.swappagePopViewCompletion(from: fromViewController, to: toViewController)
-            })
-        } else {
-            fromViewController.view.removeFromSuperview()
-            fromViewController.swappagePopViewCompletion(from: fromViewController, to: toViewController)
+                    completion()
+                }
+            }
         }
     }
     
@@ -199,8 +225,9 @@ extension SDSwappageController {
         
         if self.childViewControllers.count > 1, let viewControllerToPop = self.childViewControllers.last {
             viewControllerToPop.willMove(toParentViewController: nil)
-            self.pop(viewControllerToPop, toViewController: self.childViewControllers[self.childViewControllers.endIndex - 2], animated: animated)
-            viewControllerToPop.removeFromParentViewController()
+            self.pop(viewControllerToPop, toViewController: self.childViewControllers[self.childViewControllers.endIndex - 2], animated: animated) {
+                viewControllerToPop.removeFromParentViewController()
+            }
             return viewControllerToPop
         }
         return nil
@@ -214,9 +241,10 @@ extension SDSwappageController {
             for item in viewControllersToPop {
                 item.willMove(toParentViewController: nil)
             }
-            self.pop(self.childViewControllers.last!, toViewController: viewController, animated: animated)
-            for item in viewControllersToPop {
-                item.removeFromParentViewController()
+            self.pop(self.childViewControllers.last!, toViewController: viewController, animated: animated) {
+                for item in viewControllersToPop {
+                    item.removeFromParentViewController()
+                }
             }
             return viewControllersToPop
         }
@@ -231,9 +259,10 @@ extension SDSwappageController {
             for item in viewControllersToPop {
                 item.willMove(toParentViewController: nil)
             }
-            self.pop(self.childViewControllers.last!, toViewController: self.childViewControllers.first!, animated: animated)
-            for item in viewControllersToPop {
-                item.removeFromParentViewController()
+            self.pop(self.childViewControllers.last!, toViewController: self.childViewControllers.first!, animated: animated) {
+                for item in viewControllersToPop {
+                    item.removeFromParentViewController()
+                }
             }
             return viewControllersToPop
         }
@@ -282,7 +311,10 @@ extension UIViewController {
 open class SDSwappageSegue: UIStoryboardSegue {
     
     open override func perform() {
-        
-        source.swappage?.pushViewController(destination, animated: true)
+        if let swappage = source as? SDSwappageController, swappage.childViewControllers.count == 0 && identifier == SDSwappageController.rootViewControllerIdentifier {
+            swappage.addChildViewController(destination)
+        } else {
+            source.swappage?.pushViewController(destination, animated: true)
+        }
     }
 }
