@@ -120,30 +120,10 @@ extension SDSwappageController {
         return rootViewController?.view
     }
     
-    private static var _animation_stack: [() -> Void]?
-    
-    private static func doAnimation(_ body: @escaping () -> Void) {
-        if _animation_stack != nil {
-            _animation_stack!.append(body)
-        } else {
-            _animation_stack = []
-            body()
-        }
-    }
-    
-    private static func completeAnimation() {
-        if _animation_stack != nil && _animation_stack!.count > 0 {
-            _animation_stack!.remove(at: 0)()
-        }
-        if _animation_stack?.count == 0 {
-            _animation_stack = nil
-        }
-    }
-    
     fileprivate func push(_ fromViewController: UIViewController, toViewController: UIViewController, animated: Bool) {
         
         DispatchQueue.main.async {
-            SDSwappageController.doAnimation {
+            self.view.doAnimation { completeAnimation in
                 
                 self.view.addSubview(toViewController.view)
                 toViewController.view.frame = self.view.frame
@@ -163,12 +143,12 @@ extension SDSwappageController {
                         completion: { _ in
                             fromViewController.view.removeFromSuperview()
                             toViewController.swappagePushViewCompletion(from: fromViewController, to: toViewController)
-                            SDSwappageController.completeAnimation()
+                            completeAnimation()
                     })
                 } else {
-                    SDSwappageController._animation_stack = nil
                     fromViewController.view.removeFromSuperview()
                     toViewController.swappagePushViewCompletion(from: fromViewController, to: toViewController)
+                    completeAnimation()
                 }
             }
         }
@@ -177,7 +157,7 @@ extension SDSwappageController {
     fileprivate func pop(_ fromViewController: UIViewController, toViewController: UIViewController, animated: Bool, completion: @escaping () -> Void) {
         
         DispatchQueue.main.async {
-            SDSwappageController.doAnimation {
+            self.view.doAnimation { completeAnimation in
                 
                 self.view.addSubview(toViewController.view)
                 toViewController.view.frame = self.view.frame
@@ -198,13 +178,13 @@ extension SDSwappageController {
                             fromViewController.view.removeFromSuperview()
                             fromViewController.swappagePopViewCompletion(from: fromViewController, to: toViewController)
                             completion()
-                            SDSwappageController.completeAnimation()
+                            completeAnimation()
                     })
                 } else {
-                    SDSwappageController._animation_stack = nil
                     fromViewController.view.removeFromSuperview()
                     fromViewController.swappagePopViewCompletion(from: fromViewController, to: toViewController)
                     completion()
+                    completeAnimation()
                 }
             }
         }
