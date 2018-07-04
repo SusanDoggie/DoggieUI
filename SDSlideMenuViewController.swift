@@ -136,6 +136,26 @@ open class SDSlideMenuViewController: UIViewController, UIGestureRecognizerDeleg
         view.addGestureRecognizer(tapRecongnizer)
     }
     
+    open override var prefersStatusBarHidden: Bool {
+        return content?.prefersStatusBarHidden ?? super.prefersStatusBarHidden
+    }
+    
+    open override var preferredStatusBarStyle: UIStatusBarStyle {
+        return content?.preferredStatusBarStyle ?? super.preferredStatusBarStyle
+    }
+    
+    open override var preferredStatusBarUpdateAnimation: UIStatusBarAnimation {
+        return content?.preferredStatusBarUpdateAnimation ?? super.preferredStatusBarUpdateAnimation
+    }
+    
+    open override var childViewControllerForStatusBarHidden: UIViewController? {
+        return content?.childViewControllerForStatusBarHidden
+    }
+    
+    open override var childViewControllerForStatusBarStyle: UIViewController? {
+        return content?.childViewControllerForStatusBarStyle
+    }
+    
     fileprivate func addmenuRoot(rootViewController: UIViewController) {
         
         var hidden = true
@@ -182,6 +202,8 @@ open class SDSlideMenuViewController: UIViewController, UIGestureRecognizerDeleg
         content.view.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate(NSLayoutConstraint.constraints(withVisualFormat: "V:|[content]|", options: [], metrics: nil, views: ["content": content.view]))
         NSLayoutConstraint.activate(NSLayoutConstraint.constraints(withVisualFormat: "H:|[content]|", options: [], metrics: nil, views: ["content": content.view]))
+        
+        self.setNeedsStatusBarAppearanceUpdate()
     }
     
     fileprivate func addContentViewController(contentViewController: UIViewController) {

@@ -46,6 +46,26 @@ open class SDSwappageController: UIViewController {
         NSLayoutConstraint.activate(NSLayoutConstraint.constraints(withVisualFormat: "V:|[content]|", options: [], metrics: nil, views: ["content": self.rootView]))
         NSLayoutConstraint.activate(NSLayoutConstraint.constraints(withVisualFormat: "H:|[content]|", options: [], metrics: nil, views: ["content": self.rootView]))
     }
+    
+    open override var prefersStatusBarHidden: Bool {
+        return childViewControllers.last?.prefersStatusBarHidden ?? super.prefersStatusBarHidden
+    }
+    
+    open override var preferredStatusBarStyle: UIStatusBarStyle {
+        return childViewControllers.last?.preferredStatusBarStyle ?? super.preferredStatusBarStyle
+    }
+    
+    open override var preferredStatusBarUpdateAnimation: UIStatusBarAnimation {
+        return childViewControllers.last?.preferredStatusBarUpdateAnimation ?? super.preferredStatusBarUpdateAnimation
+    }
+    
+    open override var childViewControllerForStatusBarHidden: UIViewController? {
+        return childViewControllers.last?.childViewControllerForStatusBarHidden
+    }
+    
+    open override var childViewControllerForStatusBarStyle: UIViewController? {
+        return childViewControllers.last?.childViewControllerForStatusBarStyle
+    }
 }
 
 extension UIViewController {
@@ -194,6 +214,7 @@ extension SDSwappageController {
         
         let currentViewController = self.childViewControllers.last
         self.addChildViewController(viewController)
+        self.setNeedsStatusBarAppearanceUpdate()
         if currentViewController != nil {
             self.push(currentViewController!, toViewController: viewController, animated: animated)
         }
@@ -207,6 +228,7 @@ extension SDSwappageController {
             viewControllerToPop.willMove(toParentViewController: nil)
             self.pop(viewControllerToPop, toViewController: self.childViewControllers[self.childViewControllers.endIndex - 2], animated: animated) {
                 viewControllerToPop.removeFromParentViewController()
+                self.setNeedsStatusBarAppearanceUpdate()
             }
             return viewControllerToPop
         }
@@ -225,6 +247,7 @@ extension SDSwappageController {
                 for item in viewControllersToPop {
                     item.removeFromParentViewController()
                 }
+                self.setNeedsStatusBarAppearanceUpdate()
             }
             return viewControllersToPop
         }
@@ -243,6 +266,7 @@ extension SDSwappageController {
                 for item in viewControllersToPop {
                     item.removeFromParentViewController()
                 }
+                self.setNeedsStatusBarAppearanceUpdate()
             }
             return viewControllersToPop
         }
@@ -293,6 +317,7 @@ open class SDSwappageSegue: UIStoryboardSegue {
     open override func perform() {
         if let swappage = source as? SDSwappageController, swappage.childViewControllers.count == 0 && identifier == SDSwappageController.rootViewControllerIdentifier {
             swappage.addChildViewController(destination)
+            swappage.setNeedsStatusBarAppearanceUpdate()
         } else {
             source.swappage?.pushViewController(destination, animated: true)
         }
