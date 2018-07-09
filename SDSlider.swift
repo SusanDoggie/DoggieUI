@@ -272,18 +272,18 @@ import QuartzCore
     private func locateAndUpdateValue(location: CGPoint) {
         if isHorizontal {
             if minTrackImage == nil && maxTrackImage == nil {
-                let s = (location.x + 0.5 * thumbWidth) / (trackWidth - thumbWidth)
+                let s = location.x / (trackWidth - thumbWidth)
                 self.value = Double(s) * (maxValue - minValue) + minValue
             } else {
-                let s = (location.x - minTrackImage!.size.width) / trackWidth
+                let s = (location.x + 0.5 * thumbWidth - minTrackImage!.size.width) / trackWidth
                 self.value = Double(s) * (maxValue - minValue) + minValue
             }
         } else {
             if minTrackImage == nil && maxTrackImage == nil {
-                let s = (location.y + 0.5 * thumbHeight) / (trackHeight - thumbHeight)
+                let s = location.y / (trackHeight - thumbHeight)
                 self.value = Double(1 - s) * (maxValue - minValue) + minValue
             } else {
-                let s = (location.y - minTrackImage!.size.height) / trackHeight
+                let s = (location.y + 0.5 * thumbHeight - minTrackImage!.size.height) / trackHeight
                 self.value = Double(1 - s) * (maxValue - minValue) + minValue
             }
         }
