@@ -47,24 +47,28 @@ open class SDSwappageController: UIViewController {
         NSLayoutConstraint.activate(NSLayoutConstraint.constraints(withVisualFormat: "H:|[content]|", options: [], metrics: nil, views: ["content": self.rootView]))
     }
     
+    open override var presentedViewController: UIViewController? {
+        return childViewControllers.last
+    }
+    
     open override var prefersStatusBarHidden: Bool {
-        return childViewControllers.last?.prefersStatusBarHidden ?? super.prefersStatusBarHidden
+        return presentedViewController?.prefersStatusBarHidden ?? super.prefersStatusBarHidden
     }
     
     open override var preferredStatusBarStyle: UIStatusBarStyle {
-        return childViewControllers.last?.preferredStatusBarStyle ?? super.preferredStatusBarStyle
+        return presentedViewController?.preferredStatusBarStyle ?? super.preferredStatusBarStyle
     }
     
     open override var preferredStatusBarUpdateAnimation: UIStatusBarAnimation {
-        return childViewControllers.last?.preferredStatusBarUpdateAnimation ?? super.preferredStatusBarUpdateAnimation
+        return presentedViewController?.preferredStatusBarUpdateAnimation ?? super.preferredStatusBarUpdateAnimation
     }
     
     open override var childViewControllerForStatusBarHidden: UIViewController? {
-        return childViewControllers.last?.childViewControllerForStatusBarHidden
+        return presentedViewController?.childViewControllerForStatusBarHidden
     }
     
     open override var childViewControllerForStatusBarStyle: UIViewController? {
-        return childViewControllers.last?.childViewControllerForStatusBarStyle
+        return presentedViewController?.childViewControllerForStatusBarStyle
     }
 }
 
