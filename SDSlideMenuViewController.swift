@@ -136,10 +136,6 @@ open class SDSlideMenuViewController: UIViewController, UIGestureRecognizerDeleg
         view.addGestureRecognizer(tapRecongnizer)
     }
     
-    open override var presentedViewController: UIViewController? {
-        return content
-    }
-    
     open override var prefersStatusBarHidden: Bool {
         return content?.prefersStatusBarHidden ?? super.prefersStatusBarHidden
     }
