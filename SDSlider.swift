@@ -272,7 +272,7 @@ import QuartzCore
     private func locateAndUpdateValue(location: CGPoint) {
         if isHorizontal {
             if minTrackImage == nil && maxTrackImage == nil {
-                let s = location.x / (trackWidth - thumbWidth)
+                let s = (location.x - 0.5 * thumbWidth) / (trackWidth - thumbWidth)
                 self.value = Double(s) * (maxValue - minValue) + minValue
             } else {
                 let s = (location.x + 0.5 * thumbWidth - minTrackImage!.size.width) / trackWidth
@@ -280,7 +280,7 @@ import QuartzCore
             }
         } else {
             if minTrackImage == nil && maxTrackImage == nil {
-                let s = location.y / (trackHeight - thumbHeight)
+                let s = (location.y - 0.5 * thumbHeight) / (trackHeight - thumbHeight)
                 self.value = Double(1 - s) * (maxValue - minValue) + minValue
             } else {
                 let s = (location.y + 0.5 * thumbHeight - minTrackImage!.size.height) / trackHeight
@@ -297,17 +297,17 @@ import QuartzCore
         let hitTestMinSize = CGSize(width: minSize, height: minSize)
         
         let thumbViewHitBox = thumbView.frame.union(CGRect(origin: thumbView.frame.origin, size: hitTestMinSize))
-        let thumbViewHitBoxCenterOffsetX = thumbViewHitBox.midX - thumbView.frame.midX
-        let thumbViewHitBoxCenterOffsetY = thumbViewHitBox.midY - thumbView.frame.midY
+        let thumbViewHitBoxCenterOffsetX = thumbView.frame.midX - thumbViewHitBox.midX
+        let thumbViewHitBoxCenterOffsetY = thumbView.frame.midY - thumbViewHitBox.midY
         
-        if thumbViewHitBox.offsetBy(dx: -thumbViewHitBoxCenterOffsetX, dy: -thumbViewHitBoxCenterOffsetY).contains(location) {
+        if thumbViewHitBox.offsetBy(dx: thumbViewHitBoxCenterOffsetX, dy: thumbViewHitBoxCenterOffsetY).contains(location) {
             thumbView.isHighlighted = true
             locateAndUpdateValue(location: location)
         } else if trackTouchRespond {
             let trackViewHitBox = trackView.frame.union(CGRect(origin: trackView.frame.origin, size: hitTestMinSize))
-            let trackViewHitBoxCenterOffsetX = trackViewHitBox.midX - trackView.frame.midX
-            let trackViewHitBoxCenterOffsetY = trackViewHitBox.midY - trackView.frame.midY
-            if trackViewHitBox.offsetBy(dx: -trackViewHitBoxCenterOffsetX, dy: -trackViewHitBoxCenterOffsetY).contains(location) {
+            let trackViewHitBoxCenterOffsetX = trackView.frame.midX - trackViewHitBox.midX
+            let trackViewHitBoxCenterOffsetY = trackView.frame.midY - trackViewHitBox.midY
+            if trackViewHitBox.offsetBy(dx: trackViewHitBoxCenterOffsetX, dy: trackViewHitBoxCenterOffsetY).contains(location) {
                 thumbView.isHighlighted = true
                 locateAndUpdateValue(location: location)
             }
@@ -320,9 +320,9 @@ import QuartzCore
         return true
     }
     public override func endTracking(_ touch: UITouch?, with event: UIEvent?) {
-        if touch != nil {
-            locateAndUpdateValue(location: touch!.location(in: self))
-            thumbView.isHighlighted = false
+        if let touch = touch {
+            locateAndUpdateValue(location: touch.location(in: self))
         }
+        thumbView.isHighlighted = false
     }
 }
