@@ -36,8 +36,8 @@ open class UIShortTapGestureRecognizer: UITapGestureRecognizer {
         super.touchesBegan(touches, with: event)
         DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + Double(Int64(delay * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC)) {
             // Enough time has passed and the gesture was not recognized -> It has failed.
-            if  self.state != UIGestureRecognizerState.ended {
-                self.state = UIGestureRecognizerState.failed
+            if  self.state != UIGestureRecognizer.State.ended {
+                self.state = UIGestureRecognizer.State.failed
             }
         }
     }

@@ -148,12 +148,12 @@ open class SDSlideMenuViewController: UIViewController, UIGestureRecognizerDeleg
         return content?.preferredStatusBarUpdateAnimation ?? super.preferredStatusBarUpdateAnimation
     }
     
-    open override var childViewControllerForStatusBarHidden: UIViewController? {
-        return content?.childViewControllerForStatusBarHidden
+    open override var childForStatusBarHidden: UIViewController? {
+        return content?.childForStatusBarHidden
     }
     
-    open override var childViewControllerForStatusBarStyle: UIViewController? {
-        return content?.childViewControllerForStatusBarStyle
+    open override var childForStatusBarStyle: UIViewController? {
+        return content?.childForStatusBarStyle
     }
     
     fileprivate func addmenuRoot(rootViewController: UIViewController) {
@@ -161,20 +161,20 @@ open class SDSlideMenuViewController: UIViewController, UIGestureRecognizerDeleg
         var hidden = true
         if let menuRoot = menuRoot {
             hidden = menuRoot.view.isHidden
-            menuRoot.willMove(toParentViewController: nil)
-            menuRoot.removeFromParentViewController()
+            menuRoot.willMove(toParent: nil)
+            menuRoot.removeFromParent()
             menuRoot.view.removeFromSuperview()
         }
         
         shadowLayer.alpha = hidden ? CGFloat(shadowLayerOpacity) : 0
-        view.sendSubview(toBack: shadowLayer)
+        view.sendSubviewToBack(shadowLayer)
         
         menuRoot = rootViewController
-        addChildViewController(menuRoot)
-        menuRoot.didMove(toParentViewController: self)
+        addChild(menuRoot)
+        menuRoot.didMove(toParent: self)
         
         view.addSubview(menuRoot.view)
-        view.sendSubview(toBack: menuRoot.view)
+        view.sendSubviewToBack(menuRoot.view)
         
         menuRoot.view.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate(NSLayoutConstraint.constraints(withVisualFormat: "V:|[menu]|", options: [], metrics: nil, views: ["menu": menuRoot.view]))
@@ -187,17 +187,17 @@ open class SDSlideMenuViewController: UIViewController, UIGestureRecognizerDeleg
     private func _addContentViewController(contentViewController: UIViewController) {
         
         if let ContentViewController = content {
-            ContentViewController.willMove(toParentViewController: nil)
-            ContentViewController.removeFromParentViewController()
+            ContentViewController.willMove(toParent: nil)
+            ContentViewController.removeFromParent()
             ContentViewController.view.removeFromSuperview()
         }
         
         content = contentViewController
-        addChildViewController(content)
-        content.didMove(toParentViewController: self)
+        addChild(content)
+        content.didMove(toParent: self)
         
         contentMaskView.addSubview(content.view)
-        view.bringSubview(toFront: contentContainerView)
+        view.bringSubviewToFront(contentContainerView)
         
         content.view.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate(NSLayoutConstraint.constraints(withVisualFormat: "V:|[content]|", options: [], metrics: nil, views: ["content": content.view]))
@@ -238,10 +238,10 @@ open class SDSlideMenuViewController: UIViewController, UIGestureRecognizerDeleg
                 _shadowLayer.alpha = 0
                 _shadowLayer.isUserInteractionEnabled = false
                 view.addSubview(_shadowLayer)
-                view.bringSubview(toFront: _shadowLayer)
+                view.bringSubviewToFront(_shadowLayer)
                 
                 view.addSubview(contentViewController.view)
-                view.bringSubview(toFront: contentViewController.view)
+                view.bringSubviewToFront(contentViewController.view)
                 contentViewController.view.transform.tx = rightPosition
                 
                 let translatesAutoresizingMaskIntoConstraints = contentViewController.view.translatesAutoresizingMaskIntoConstraints
@@ -370,13 +370,13 @@ open class SDSlideMenuViewController: UIViewController, UIGestureRecognizerDeleg
         let velocity = sender.velocity(in: view)
         
         switch sender.state {
-        case UIGestureRecognizerState.began:
+        case UIGestureRecognizer.State.began:
             
             menuRoot.view.isHidden = false
             shadowLayer.isHidden = false
             contentMaskView.isUserInteractionEnabled = false
             sender.setTranslation(CGPoint(x: contentContainerView.transform.tx, y: 0), in: view)
-        case UIGestureRecognizerState.changed:
+        case UIGestureRecognizer.State.changed:
             
             var position = translation.x
             
@@ -399,7 +399,7 @@ open class SDSlideMenuViewController: UIViewController, UIGestureRecognizerDeleg
                 contentContainerView.transform.tx = position
             }
             
-        case UIGestureRecognizerState.ended:
+        case UIGestureRecognizer.State.ended:
             
             if velocity.x > 0 {
                 slideDampingAnimation(position: self.transformTrailing)

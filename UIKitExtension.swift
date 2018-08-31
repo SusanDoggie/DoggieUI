@@ -64,7 +64,7 @@ extension UIViewController {
 
 extension UIView {
     
-    open class func loadNib(name: String, bundle: Bundle? = nil, owner: Any? = nil, options: [AnyHashable : Any]? = nil) -> UIView? {
+    open class func loadNib(name: String, bundle: Bundle? = nil, owner: Any? = nil, options: [UINib.OptionsKey : Any]? = nil) -> UIView? {
         
         return UINib(nibName: name, bundle: bundle).instantiate(withOwner: owner, options: options)[0] as? UIView
     }
