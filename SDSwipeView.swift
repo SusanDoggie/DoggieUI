@@ -27,6 +27,8 @@ import UIKit
 
 @objc public protocol SDSwipeViewDataSource : class {
     
+    @objc optional func numberOfPagesInSwipeView(_ swipeView: SDSwipeView) -> Int
+    
     func swipeView(_ swipeView: SDSwipeView, viewForItemInIndex index: Int) -> UIView?
 }
 
@@ -38,6 +40,7 @@ import UIKit
 open class SDSwipeView: UIView, UIScrollViewDelegate {
     
     fileprivate let scrollView = UIScrollView()
+    fileprivate var pageControl = UIPageControl()
     
     fileprivate let page_1 = UIView()
     fileprivate let page_2 = UIView()
@@ -55,7 +58,7 @@ open class SDSwipeView: UIView, UIScrollViewDelegate {
     
     @IBOutlet open weak var dataSource : SDSwipeViewDataSource? {
         didSet {
-            reload()
+            reloadData()
         }
     }
     
@@ -89,6 +92,39 @@ open class SDSwipeView: UIView, UIScrollViewDelegate {
         }
     }
     
+    @IBInspectable open var pageControlEnabled: Bool {
+        get {
+            return !pageControl.isHidden
+        }
+        set {
+            pageControl.isHidden = !newValue
+        }
+    }
+    
+    @IBInspectable open var pageControlBottomSpacing: CGFloat = 0.0 {
+        didSet {
+            _layoutPageControl()
+        }
+    }
+    
+    @IBInspectable open var pageIndicatorTintColor: UIColor? {
+        get {
+            return pageControl.pageIndicatorTintColor
+        }
+        set {
+            pageControl.pageIndicatorTintColor = newValue
+        }
+    }
+    
+    @IBInspectable open var currentPageIndicatorTintColor: UIColor? {
+        get {
+            return pageControl.currentPageIndicatorTintColor
+        }
+        set {
+            pageControl.currentPageIndicatorTintColor = newValue
+        }
+    }
+    
     fileprivate func constructView() {
         
         scrollView.isPagingEnabled = true
@@ -98,7 +134,6 @@ open class SDSwipeView: UIView, UIScrollViewDelegate {
         scrollView.scrollsToTop = false
         
         scrollView.delegate = self
-        
         self.addSubview(scrollView)
         
         page_1.clipsToBounds = true
@@ -109,9 +144,14 @@ open class SDSwipeView: UIView, UIScrollViewDelegate {
         page_1.translatesAutoresizingMaskIntoConstraints = false
         page_2.translatesAutoresizingMaskIntoConstraints = false
         page_3.translatesAutoresizingMaskIntoConstraints = false
+        
+        pageControl.isHidden = true
+        self.addSubview(pageControl)
+        
+        _layoutPageControl()
     }
     
-    open func reload() {
+    open func reloadData() {
         
         current = dataSource?.swipeView(self, viewForItemInIndex: index)
         if current != nil {
@@ -123,7 +163,7 @@ open class SDSwipeView: UIView, UIScrollViewDelegate {
         }
         _layoutSubviews()
         if current != nil {
-            delegate?.swipeView?(self, didDisplayingView: current!)
+            _didDisplayingView(view: current!)
         }
     }
     
@@ -246,6 +286,34 @@ open class SDSwipeView: UIView, UIScrollViewDelegate {
         }
     }
     
+    fileprivate func _layoutPageControl() {
+        pageControl.translatesAutoresizingMaskIntoConstraints = false
+        if pageControl.constraints.count != 0 {
+            pageControl.removeConstraints(pageControl.constraints)
+        }
+        if #available(iOS 11.0, *) {
+            NSLayoutConstraint.activate([
+                NSLayoutConstraint(item: pageControl, attribute: .bottom, relatedBy: .equal, toItem: self.safeAreaLayoutGuide, attribute: .bottom, multiplier: 1, constant: pageControlBottomSpacing),
+                NSLayoutConstraint(item: pageControl, attribute: .centerX, relatedBy: .equal, toItem: self, attribute: .centerX, multiplier: 1, constant: 0)])
+        } else {
+            NSLayoutConstraint.activate([
+                NSLayoutConstraint(item: pageControl, attribute: .bottom, relatedBy: .equal, toItem: self, attribute: .bottom, multiplier: 1, constant: pageControlBottomSpacing),
+                NSLayoutConstraint(item: pageControl, attribute: .centerX, relatedBy: .equal, toItem: self, attribute: .centerX, multiplier: 1, constant: 0)])
+        }
+    }
+    
+    fileprivate func _didDisplayingView(view: UIView) {
+        
+        if let numberOfPages = dataSource?.numberOfPagesInSwipeView?(self) {
+            pageControl.numberOfPages = numberOfPages
+            pageControl.currentPage = index
+        } else {
+            pageControl.isHidden = true
+        }
+        
+        delegate?.swipeView?(self, didDisplayingView: view)
+    }
+    
     open func swapToView(_ index: Int, animated: Bool) {
         
         if self.index == index {
@@ -279,7 +347,7 @@ open class SDSwipeView: UIView, UIScrollViewDelegate {
                 left = nil
                 self.index = index
                 _layoutSubviews()
-                delegate?.swipeView?(self, didDisplayingView: current!)
+                _didDisplayingView(view: current!)
             }
         }
     }
@@ -301,7 +369,7 @@ open class SDSwipeView: UIView, UIScrollViewDelegate {
                 left = nil
                 index -= 1
                 _layoutSubviews()
-                delegate?.swipeView?(self, didDisplayingView: current!)
+                _didDisplayingView(view: current!)
             }
         }
     }
@@ -326,7 +394,7 @@ open class SDSwipeView: UIView, UIScrollViewDelegate {
                 right = nil
                 index += 1
                 _layoutSubviews()
-                delegate?.swipeView?(self, didDisplayingView: current!)
+                _didDisplayingView(view: current!)
             }
         }
     }
@@ -358,7 +426,7 @@ open class SDSwipeView: UIView, UIScrollViewDelegate {
                 index = jumpSwap!
             }
             _layoutSubviews()
-            delegate?.swipeView?(self, didDisplayingView: current!)
+            _didDisplayingView(view: current!)
         } else if ((left == nil && shift == 1) || (left != nil && shift == 2)) && right != nil {
             left = jumpSwap == nil ? current : nil
             current = right
@@ -369,7 +437,7 @@ open class SDSwipeView: UIView, UIScrollViewDelegate {
                 index = jumpSwap!
             }
             _layoutSubviews()
-            delegate?.swipeView?(self, didDisplayingView: current!)
+            _didDisplayingView(view: current!)
         }
     }
 }

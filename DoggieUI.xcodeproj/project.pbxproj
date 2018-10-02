@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		0A7A0C3C20246CA3003A0962 /* UIGestureRecognizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A7A0C3B20246CA3003A0962 /* UIGestureRecognizer.swift */; };
 		0A8F91DE20E0D5ED00F34157 /* UIViewAnimation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A8F91DD20E0D5ED00F34157 /* UIViewAnimation.swift */; };
-		0A9D37381D73DA3000941254 /* SDItemSelector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A9D37311D73DA3000941254 /* SDItemSelector.swift */; };
 		0A9D37391D73DA3000941254 /* SDSlideMenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A9D37321D73DA3000941254 /* SDSlideMenuViewController.swift */; };
 		0A9D373A1D73DA3000941254 /* SDSlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A9D37331D73DA3000941254 /* SDSlider.swift */; };
 		0A9D373B1D73DA3000941254 /* SDSwappageController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A9D37341D73DA3000941254 /* SDSwappageController.swift */; };
@@ -22,7 +21,6 @@
 		0A7A0C3B20246CA3003A0962 /* UIGestureRecognizer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIGestureRecognizer.swift; sourceTree = "<group>"; };
 		0A8F91DD20E0D5ED00F34157 /* UIViewAnimation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIViewAnimation.swift; sourceTree = "<group>"; };
 		0A9D37171D73D9E600941254 /* DoggieUI.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = DoggieUI.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		0A9D37311D73DA3000941254 /* SDItemSelector.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SDItemSelector.swift; sourceTree = "<group>"; };
 		0A9D37321D73DA3000941254 /* SDSlideMenuViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SDSlideMenuViewController.swift; sourceTree = "<group>"; };
 		0A9D37331D73DA3000941254 /* SDSlider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SDSlider.swift; sourceTree = "<group>"; };
 		0A9D37341D73DA3000941254 /* SDSwappageController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SDSwappageController.swift; sourceTree = "<group>"; };
@@ -45,7 +43,6 @@
 		0A9D370D1D73D9E600941254 = {
 			isa = PBXGroup;
 			children = (
-				0A9D37311D73DA3000941254 /* SDItemSelector.swift */,
 				0A9D37321D73DA3000941254 /* SDSlideMenuViewController.swift */,
 				0A9D37331D73DA3000941254 /* SDSlider.swift */,
 				0A9D37341D73DA3000941254 /* SDSwappageController.swift */,
@@ -154,7 +151,6 @@
 				0A9D373E1D73DA3000941254 /* UIKitExtension.swift in Sources */,
 				0A8F91DE20E0D5ED00F34157 /* UIViewAnimation.swift in Sources */,
 				0A9D373A1D73DA3000941254 /* SDSlider.swift in Sources */,
-				0A9D37381D73DA3000941254 /* SDItemSelector.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
