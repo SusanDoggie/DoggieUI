@@ -1,5 +1,5 @@
 //
-//  SDSwipeView.swift
+//  SDPageView.swift
 //
 //  The MIT License
 //  Copyright (c) 2015 - 2018 Susan Cheng. All rights reserved.
@@ -25,19 +25,19 @@
 
 import UIKit
 
-@objc public protocol SDSwipeViewDataSource : class {
+@objc public protocol SDPageViewDataSource : AnyObject {
     
-    @objc optional func numberOfPagesInSwipeView(_ swipeView: SDSwipeView) -> Int
+    @objc optional func numberOfPagesInPageView(_ pageView: SDPageView) -> Int
     
-    func swipeView(_ swipeView: SDSwipeView, viewForItemInIndex index: Int) -> UIView?
+    func pageView(_ pageView: SDPageView, viewForItemInIndex index: Int) -> UIView?
 }
 
-@objc public protocol SDSwipeViewDelegate : class {
+@objc public protocol SDPageViewDelegate : AnyObject {
     
-    @objc optional func swipeView(_ swipeView: SDSwipeView, didDisplayingView view: UIView)
+    @objc optional func pageView(_ pageView: SDPageView, didDisplayingView view: UIView)
 }
 
-open class SDSwipeView: UIView, UIScrollViewDelegate {
+open class SDPageView: UIView, UIScrollViewDelegate {
     
     fileprivate let scrollView = UIScrollView()
     fileprivate var pageControl = UIPageControl()
@@ -56,13 +56,13 @@ open class SDSwipeView: UIView, UIScrollViewDelegate {
     fileprivate var scrolling = false
     fileprivate var jumpSwap : Int?
     
-    @IBOutlet open weak var dataSource : SDSwipeViewDataSource? {
+    @IBOutlet open weak var dataSource : SDPageViewDataSource? {
         didSet {
             reloadData()
         }
     }
     
-    @IBOutlet open weak var delegate : SDSwipeViewDelegate?
+    @IBOutlet open weak var delegate : SDPageViewDelegate?
     
     public override init(frame: CGRect) {
         super.init(frame: frame)
@@ -151,17 +151,30 @@ open class SDSwipeView: UIView, UIScrollViewDelegate {
         _layoutPageControl()
     }
     
+    fileprivate func _fetchPage(_ index: Int, numberOfPages: Int?) -> UIView? {
+        if let numberOfPages = numberOfPages {
+            return index >= 0 && index < numberOfPages ? dataSource?.pageView(self, viewForItemInIndex: index) : nil
+        } else {
+            return index >= 0 ? dataSource?.pageView(self, viewForItemInIndex: index) : nil
+        }
+    }
+    
     open func reloadData() {
         
-        current = dataSource?.swipeView(self, viewForItemInIndex: index)
+        let numberOfPages = dataSource?.numberOfPagesInPageView?(self)
+        
+        current = _fetchPage(index, numberOfPages: numberOfPages)
+        
         if current != nil {
-            left = dataSource?.swipeView(self, viewForItemInIndex: index - 1)
-            right = dataSource?.swipeView(self, viewForItemInIndex: index + 1)
+            left = _fetchPage(index - 1, numberOfPages: numberOfPages)
+            right = _fetchPage(index + 1, numberOfPages: numberOfPages)
         } else {
             left = nil
             right = nil
         }
+        
         _layoutSubviews()
+        
         if current != nil {
             _didDisplayingView(view: current!)
         }
@@ -236,8 +249,9 @@ open class SDSwipeView: UIView, UIScrollViewDelegate {
             return
         }
         
-        left = left ?? dataSource?.swipeView(self, viewForItemInIndex: index - 1)
-        right = right ?? dataSource?.swipeView(self, viewForItemInIndex: index + 1)
+        let numberOfPages = dataSource?.numberOfPagesInPageView?(self)
+        left = left ?? _fetchPage(index - 1, numberOfPages: numberOfPages)
+        right = right ?? _fetchPage(index + 1, numberOfPages: numberOfPages)
         
         if left == nil && right == nil {
             _layoutOnePage()
@@ -304,14 +318,14 @@ open class SDSwipeView: UIView, UIScrollViewDelegate {
     
     fileprivate func _didDisplayingView(view: UIView) {
         
-        if let numberOfPages = dataSource?.numberOfPagesInSwipeView?(self) {
+        if let numberOfPages = dataSource?.numberOfPagesInPageView?(self) {
             pageControl.numberOfPages = numberOfPages
             pageControl.currentPage = index
         } else {
             pageControl.isHidden = true
         }
         
-        delegate?.swipeView?(self, didDisplayingView: view)
+        delegate?.pageView?(self, didDisplayingView: view)
     }
     
     open func swapToView(_ index: Int, animated: Bool) {
@@ -320,7 +334,7 @@ open class SDSwipeView: UIView, UIScrollViewDelegate {
             return
         }
         
-        if let jumpView = dataSource?.swipeView(self, viewForItemInIndex: index) {
+        if let jumpView = dataSource?.pageView(self, viewForItemInIndex: index) {
             if animated {
                 if !scrolling && !scrollView.isDecelerating {
                     jumpSwap = index
