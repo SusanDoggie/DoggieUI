@@ -149,6 +149,7 @@ open class SDPageView: UIView, UIScrollViewDelegate {
         self.addSubview(pageControl)
         
         _layoutPageControl()
+        pageControl.addTarget(self, action: #selector(pageControlValueChanged), for: .valueChanged)
     }
     
     fileprivate func _fetchPage(_ index: Int, numberOfPages: Int?) -> UIView? {
@@ -326,6 +327,10 @@ open class SDPageView: UIView, UIScrollViewDelegate {
         }
         
         delegate?.pageView?(self, didDisplayingView: view)
+    }
+    
+    @objc func pageControlValueChanged(_ sender: UIPageControl) {
+        self.swapToView(pageControl.currentPage, animated: true)
     }
     
     open func swapToView(_ index: Int, animated: Bool) {
