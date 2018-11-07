@@ -27,20 +27,6 @@ import UIKit
 
 extension UIView {
     
-    open var collectionCell : UICollectionViewCell? {
-        return self as? UICollectionViewCell ?? self.superview?.collectionCell
-    }
-}
-
-extension UIView {
-    
-    open var tableCell : UITableViewCell? {
-        return self as? UITableViewCell ?? self.superview?.tableCell
-    }
-}
-
-extension UIView {
-    
     open var firstResponder: UIView? {
         
         guard !isFirstResponder else { return self }
