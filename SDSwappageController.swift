@@ -43,8 +43,8 @@ open class SDSwappageController: UIViewController {
         self.view.addSubview(self.rootView)
         
         self.rootView.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate(NSLayoutConstraint.constraints(withVisualFormat: "V:|[content]|", options: [], metrics: nil, views: ["content": self.rootView]))
-        NSLayoutConstraint.activate(NSLayoutConstraint.constraints(withVisualFormat: "H:|[content]|", options: [], metrics: nil, views: ["content": self.rootView]))
+        NSLayoutConstraint.activate(NSLayoutConstraint.constraints(withVisualFormat: "V:|[content]|", options: [], metrics: nil, views: ["content": self.rootView!]))
+        NSLayoutConstraint.activate(NSLayoutConstraint.constraints(withVisualFormat: "H:|[content]|", options: [], metrics: nil, views: ["content": self.rootView!]))
     }
     
     open override var prefersStatusBarHidden: Bool {
@@ -148,8 +148,8 @@ extension SDSwappageController {
                 self.view.addSubview(toViewController.view)
                 toViewController.view.frame = self.view.frame
                 toViewController.view.translatesAutoresizingMaskIntoConstraints = false
-                NSLayoutConstraint.activate(NSLayoutConstraint.constraints(withVisualFormat: "V:|[content]|", options: [], metrics: nil, views: ["content": toViewController.view]))
-                NSLayoutConstraint.activate(NSLayoutConstraint.constraints(withVisualFormat: "H:|[content]|", options: [], metrics: nil, views: ["content": toViewController.view]))
+                NSLayoutConstraint.activate(NSLayoutConstraint.constraints(withVisualFormat: "V:|[content]|", options: [], metrics: nil, views: ["content": toViewController.view!]))
+                NSLayoutConstraint.activate(NSLayoutConstraint.constraints(withVisualFormat: "H:|[content]|", options: [], metrics: nil, views: ["content": toViewController.view!]))
                 
                 if animated {
                     toViewController.swappagePushViewAnimateBegin(from: fromViewController, to: toViewController)
@@ -182,8 +182,8 @@ extension SDSwappageController {
                 self.view.addSubview(toViewController.view)
                 toViewController.view.frame = self.view.frame
                 toViewController.view.translatesAutoresizingMaskIntoConstraints = false
-                NSLayoutConstraint.activate(NSLayoutConstraint.constraints(withVisualFormat: "V:|[content]|", options: [], metrics: nil, views: ["content": toViewController.view]))
-                NSLayoutConstraint.activate(NSLayoutConstraint.constraints(withVisualFormat: "H:|[content]|", options: [], metrics: nil, views: ["content": toViewController.view]))
+                NSLayoutConstraint.activate(NSLayoutConstraint.constraints(withVisualFormat: "V:|[content]|", options: [], metrics: nil, views: ["content": toViewController.view!]))
+                NSLayoutConstraint.activate(NSLayoutConstraint.constraints(withVisualFormat: "H:|[content]|", options: [], metrics: nil, views: ["content": toViewController.view!]))
                 
                 if animated {
                     fromViewController.swappagePopViewAnimateBegin(from: fromViewController, to: toViewController)
@@ -238,7 +238,7 @@ extension SDSwappageController {
     @discardableResult
     public func popToViewController(_ viewController: UIViewController, animated: Bool) -> [UIViewController]? {
         
-        if let idx = self.children.index(of: viewController), idx + 1 != self.children.endIndex {
+        if let idx = self.children.firstIndex(of: viewController), idx + 1 != self.children.endIndex {
             let viewControllersToPop = Array(self.children.dropFirst(idx + 1))
             for item in viewControllersToPop {
                 item.willMove(toParent: nil)
