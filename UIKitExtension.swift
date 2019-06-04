@@ -376,3 +376,16 @@ extension UIView {
         return layer.contentsAreFlipped()
     }
 }
+
+extension UIView {
+    
+    @available(iOS 11.0, *)
+    @IBInspectable open var ignoresInvertColors: Bool {
+        get {
+            return accessibilityIgnoresInvertColors
+        }
+        set {
+            accessibilityIgnoresInvertColors = newValue
+        }
+    }
+}
