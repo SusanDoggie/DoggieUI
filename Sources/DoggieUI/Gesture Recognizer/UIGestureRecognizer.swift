@@ -24,24 +24,7 @@
 //
 
 import UIKit
-import UIKit.UIGestureRecognizerSubclass
 import SpriteKit
-
-open class UIShortTapGestureRecognizer: UITapGestureRecognizer {
-    
-    open var delay = 0.3
-    
-    open override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent) {
-        
-        super.touchesBegan(touches, with: event)
-        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + Double(Int64(delay * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC)) {
-            // Enough time has passed and the gesture was not recognized -> It has failed.
-            if  self.state != UIGestureRecognizer.State.ended {
-                self.state = UIGestureRecognizer.State.failed
-            }
-        }
-    }
-}
 
 extension UIGestureRecognizer {
     

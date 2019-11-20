@@ -7,30 +7,38 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		0A2E5FC42192B7C200C7B4CD /* UITableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A2E5FC32192B7C200C7B4CD /* UITableView.swift */; };
-		0A2E5FC62192B7D800C7B4CD /* UICollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A2E5FC52192B7D800C7B4CD /* UICollectionView.swift */; };
-		0A7A0C3C20246CA3003A0962 /* UIGestureRecognizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A7A0C3B20246CA3003A0962 /* UIGestureRecognizer.swift */; };
-		0A8F91DE20E0D5ED00F34157 /* UIViewAnimation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A8F91DD20E0D5ED00F34157 /* UIViewAnimation.swift */; };
-		0A9D37391D73DA3000941254 /* SDSlideMenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A9D37321D73DA3000941254 /* SDSlideMenuViewController.swift */; };
-		0A9D373A1D73DA3000941254 /* SDSlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A9D37331D73DA3000941254 /* SDSlider.swift */; };
-		0A9D373B1D73DA3000941254 /* SDSwappageController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A9D37341D73DA3000941254 /* SDSwappageController.swift */; };
-		0A9D373C1D73DA3000941254 /* SDPageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A9D37351D73DA3000941254 /* SDPageView.swift */; };
-		0A9D373D1D73DA3000941254 /* SDTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A9D37361D73DA3000941254 /* SDTextField.swift */; };
-		0A9D373E1D73DA3000941254 /* UIKitExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A9D37371D73DA3000941254 /* UIKitExtension.swift */; };
+		088D9671238524910031DB95 /* UICollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 088D9663238524910031DB95 /* UICollectionView.swift */; };
+		088D9672238524910031DB95 /* UITableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 088D9664238524910031DB95 /* UITableView.swift */; };
+		088D9673238524910031DB95 /* UIKitExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 088D9665238524910031DB95 /* UIKitExtension.swift */; };
+		088D9674238524910031DB95 /* UIViewAnimation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 088D9666238524910031DB95 /* UIViewAnimation.swift */; };
+		088D9675238524910031DB95 /* SDSwappageController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 088D9668238524910031DB95 /* SDSwappageController.swift */; };
+		088D9676238524910031DB95 /* SDSlideMenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 088D9669238524910031DB95 /* SDSlideMenuViewController.swift */; };
+		088D9677238524910031DB95 /* UIGestureRecognizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 088D966B238524910031DB95 /* UIGestureRecognizer.swift */; };
+		088D9678238524910031DB95 /* UIShortTapGestureRecognizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 088D966C238524910031DB95 /* UIShortTapGestureRecognizer.swift */; };
+		088D9679238524910031DB95 /* SDSlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 088D966E238524910031DB95 /* SDSlider.swift */; };
+		088D967A238524910031DB95 /* SDTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 088D966F238524910031DB95 /* SDTextField.swift */; };
+		088D967B238524910031DB95 /* SDPageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 088D9670238524910031DB95 /* SDPageView.swift */; };
+		088D9684238524C40031DB95 /* TouchCaptureGesture.swift in Sources */ = {isa = PBXBuildFile; fileRef = 088D9682238524C40031DB95 /* TouchCaptureGesture.swift */; };
+		088D9685238524C40031DB95 /* UITouchGestureRecognizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 088D9683238524C40031DB95 /* UITouchGestureRecognizer.swift */; };
+		088D96882385278D0031DB95 /* CGPoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 088D96872385278D0031DB95 /* CGPoint.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		0A2E5FC32192B7C200C7B4CD /* UITableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UITableView.swift; sourceTree = "<group>"; };
-		0A2E5FC52192B7D800C7B4CD /* UICollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UICollectionView.swift; sourceTree = "<group>"; };
-		0A7A0C3B20246CA3003A0962 /* UIGestureRecognizer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIGestureRecognizer.swift; sourceTree = "<group>"; };
-		0A8F91DD20E0D5ED00F34157 /* UIViewAnimation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIViewAnimation.swift; sourceTree = "<group>"; };
+		088D9663238524910031DB95 /* UICollectionView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UICollectionView.swift; sourceTree = "<group>"; };
+		088D9664238524910031DB95 /* UITableView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UITableView.swift; sourceTree = "<group>"; };
+		088D9665238524910031DB95 /* UIKitExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIKitExtension.swift; sourceTree = "<group>"; };
+		088D9666238524910031DB95 /* UIViewAnimation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIViewAnimation.swift; sourceTree = "<group>"; };
+		088D9668238524910031DB95 /* SDSwappageController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SDSwappageController.swift; sourceTree = "<group>"; };
+		088D9669238524910031DB95 /* SDSlideMenuViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SDSlideMenuViewController.swift; sourceTree = "<group>"; };
+		088D966B238524910031DB95 /* UIGestureRecognizer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIGestureRecognizer.swift; sourceTree = "<group>"; };
+		088D966C238524910031DB95 /* UIShortTapGestureRecognizer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIShortTapGestureRecognizer.swift; sourceTree = "<group>"; };
+		088D966E238524910031DB95 /* SDSlider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SDSlider.swift; sourceTree = "<group>"; };
+		088D966F238524910031DB95 /* SDTextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SDTextField.swift; sourceTree = "<group>"; };
+		088D9670238524910031DB95 /* SDPageView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SDPageView.swift; sourceTree = "<group>"; };
+		088D9682238524C40031DB95 /* TouchCaptureGesture.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TouchCaptureGesture.swift; sourceTree = "<group>"; };
+		088D9683238524C40031DB95 /* UITouchGestureRecognizer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UITouchGestureRecognizer.swift; sourceTree = "<group>"; };
+		088D96872385278D0031DB95 /* CGPoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CGPoint.swift; sourceTree = "<group>"; };
 		0A9D37171D73D9E600941254 /* DoggieUI.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = DoggieUI.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		0A9D37321D73DA3000941254 /* SDSlideMenuViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SDSlideMenuViewController.swift; sourceTree = "<group>"; };
-		0A9D37331D73DA3000941254 /* SDSlider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SDSlider.swift; sourceTree = "<group>"; };
-		0A9D37341D73DA3000941254 /* SDSwappageController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SDSwappageController.swift; sourceTree = "<group>"; };
-		0A9D37351D73DA3000941254 /* SDPageView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SDPageView.swift; sourceTree = "<group>"; };
-		0A9D37361D73DA3000941254 /* SDTextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SDTextField.swift; sourceTree = "<group>"; };
-		0A9D37371D73DA3000941254 /* UIKitExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIKitExtension.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -44,19 +52,64 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		088D9661238524910031DB95 /* DoggieUI */ = {
+			isa = PBXGroup;
+			children = (
+				088D9662238524910031DB95 /* Extension */,
+				088D9667238524910031DB95 /* ViewControllers */,
+				088D966A238524910031DB95 /* Gesture Recognizer */,
+				088D966D238524910031DB95 /* Views */,
+			);
+			name = DoggieUI;
+			path = Sources/DoggieUI;
+			sourceTree = "<group>";
+		};
+		088D9662238524910031DB95 /* Extension */ = {
+			isa = PBXGroup;
+			children = (
+				088D96872385278D0031DB95 /* CGPoint.swift */,
+				088D9663238524910031DB95 /* UICollectionView.swift */,
+				088D9664238524910031DB95 /* UITableView.swift */,
+				088D9665238524910031DB95 /* UIKitExtension.swift */,
+				088D9666238524910031DB95 /* UIViewAnimation.swift */,
+			);
+			path = Extension;
+			sourceTree = "<group>";
+		};
+		088D9667238524910031DB95 /* ViewControllers */ = {
+			isa = PBXGroup;
+			children = (
+				088D9668238524910031DB95 /* SDSwappageController.swift */,
+				088D9669238524910031DB95 /* SDSlideMenuViewController.swift */,
+			);
+			path = ViewControllers;
+			sourceTree = "<group>";
+		};
+		088D966A238524910031DB95 /* Gesture Recognizer */ = {
+			isa = PBXGroup;
+			children = (
+				088D9682238524C40031DB95 /* TouchCaptureGesture.swift */,
+				088D9683238524C40031DB95 /* UITouchGestureRecognizer.swift */,
+				088D966B238524910031DB95 /* UIGestureRecognizer.swift */,
+				088D966C238524910031DB95 /* UIShortTapGestureRecognizer.swift */,
+			);
+			path = "Gesture Recognizer";
+			sourceTree = "<group>";
+		};
+		088D966D238524910031DB95 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				088D966E238524910031DB95 /* SDSlider.swift */,
+				088D966F238524910031DB95 /* SDTextField.swift */,
+				088D9670238524910031DB95 /* SDPageView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
 		0A9D370D1D73D9E600941254 = {
 			isa = PBXGroup;
 			children = (
-				0A9D37321D73DA3000941254 /* SDSlideMenuViewController.swift */,
-				0A9D37331D73DA3000941254 /* SDSlider.swift */,
-				0A9D37341D73DA3000941254 /* SDSwappageController.swift */,
-				0A9D37351D73DA3000941254 /* SDPageView.swift */,
-				0A9D37361D73DA3000941254 /* SDTextField.swift */,
-				0A9D37371D73DA3000941254 /* UIKitExtension.swift */,
-				0A2E5FC52192B7D800C7B4CD /* UICollectionView.swift */,
-				0A2E5FC32192B7C200C7B4CD /* UITableView.swift */,
-				0A8F91DD20E0D5ED00F34157 /* UIViewAnimation.swift */,
-				0A7A0C3B20246CA3003A0962 /* UIGestureRecognizer.swift */,
+				088D9661238524910031DB95 /* DoggieUI */,
 				0A9D37181D73D9E600941254 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -149,16 +202,20 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0A2E5FC62192B7D800C7B4CD /* UICollectionView.swift in Sources */,
-				0A9D373D1D73DA3000941254 /* SDTextField.swift in Sources */,
-				0A9D373C1D73DA3000941254 /* SDPageView.swift in Sources */,
-				0A7A0C3C20246CA3003A0962 /* UIGestureRecognizer.swift in Sources */,
-				0A9D373B1D73DA3000941254 /* SDSwappageController.swift in Sources */,
-				0A9D37391D73DA3000941254 /* SDSlideMenuViewController.swift in Sources */,
-				0A2E5FC42192B7C200C7B4CD /* UITableView.swift in Sources */,
-				0A9D373E1D73DA3000941254 /* UIKitExtension.swift in Sources */,
-				0A8F91DE20E0D5ED00F34157 /* UIViewAnimation.swift in Sources */,
-				0A9D373A1D73DA3000941254 /* SDSlider.swift in Sources */,
+				088D967A238524910031DB95 /* SDTextField.swift in Sources */,
+				088D9673238524910031DB95 /* UIKitExtension.swift in Sources */,
+				088D9674238524910031DB95 /* UIViewAnimation.swift in Sources */,
+				088D9678238524910031DB95 /* UIShortTapGestureRecognizer.swift in Sources */,
+				088D9676238524910031DB95 /* SDSlideMenuViewController.swift in Sources */,
+				088D9677238524910031DB95 /* UIGestureRecognizer.swift in Sources */,
+				088D9671238524910031DB95 /* UICollectionView.swift in Sources */,
+				088D967B238524910031DB95 /* SDPageView.swift in Sources */,
+				088D9685238524C40031DB95 /* UITouchGestureRecognizer.swift in Sources */,
+				088D9672238524910031DB95 /* UITableView.swift in Sources */,
+				088D96882385278D0031DB95 /* CGPoint.swift in Sources */,
+				088D9679238524910031DB95 /* SDSlider.swift in Sources */,
+				088D9684238524C40031DB95 /* TouchCaptureGesture.swift in Sources */,
+				088D9675238524910031DB95 /* SDSwappageController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
