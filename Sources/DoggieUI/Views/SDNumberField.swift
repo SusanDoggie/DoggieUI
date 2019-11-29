@@ -173,6 +173,7 @@ private class SDNumberFieldKeyboard : UIViewController, UIPopoverPresentationCon
         func _set_button(_ button: UIButton) {
             button.backgroundColor = delegate?.keyboardButtonBackgroundColor
             button.setTitleColor(delegate?.keyboardLabelColor, for: .normal)
+            button.tintColor = delegate?.keyboardLabelColor
             button.cornerRadius = delegate?.keyboardButtonCornerRadius ?? 0
             button.borderWidth = delegate?.keyboardButtonBorderWidth ?? 0
             button.borderColor = delegate?.keyboardButtonBorderColor
