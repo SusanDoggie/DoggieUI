@@ -255,7 +255,10 @@ private class SDNumberFieldKeyboard : UIViewController, UIPopoverPresentationCon
         }
         
         switch sender.tag {
-        case 10: delegate._text += "."
+        case 10:
+            if !delegate._text.contains(".") {
+                delegate._text += "."
+            }
         case 11:
             if !delegate._text.isEmpty {
                 delegate._text.removeLast()
