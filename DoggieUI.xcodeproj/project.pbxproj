@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		086CE76A2391345300B196D7 /* SDNumberField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 086CE7692391345300B196D7 /* SDNumberField.swift */; };
 		088D9671238524910031DB95 /* UICollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 088D9663238524910031DB95 /* UICollectionView.swift */; };
 		088D9672238524910031DB95 /* UITableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 088D9664238524910031DB95 /* UITableView.swift */; };
 		088D9673238524910031DB95 /* UIKitExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 088D9665238524910031DB95 /* UIKitExtension.swift */; };
@@ -24,6 +25,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		086CE7692391345300B196D7 /* SDNumberField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SDNumberField.swift; sourceTree = "<group>"; };
 		088D9663238524910031DB95 /* UICollectionView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UICollectionView.swift; sourceTree = "<group>"; };
 		088D9664238524910031DB95 /* UITableView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UITableView.swift; sourceTree = "<group>"; };
 		088D9665238524910031DB95 /* UIKitExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIKitExtension.swift; sourceTree = "<group>"; };
@@ -102,6 +104,7 @@
 				088D966E238524910031DB95 /* SDSlider.swift */,
 				088D966F238524910031DB95 /* SDTextField.swift */,
 				088D9670238524910031DB95 /* SDPageView.swift */,
+				086CE7692391345300B196D7 /* SDNumberField.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -205,6 +208,7 @@
 				088D967A238524910031DB95 /* SDTextField.swift in Sources */,
 				088D9673238524910031DB95 /* UIKitExtension.swift in Sources */,
 				088D9674238524910031DB95 /* UIViewAnimation.swift in Sources */,
+				086CE76A2391345300B196D7 /* SDNumberField.swift in Sources */,
 				088D9678238524910031DB95 /* UIShortTapGestureRecognizer.swift in Sources */,
 				088D9676238524910031DB95 /* SDSlideMenuViewController.swift in Sources */,
 				088D9677238524910031DB95 /* UIGestureRecognizer.swift in Sources */,
