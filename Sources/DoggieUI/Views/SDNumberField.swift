@@ -86,6 +86,24 @@ import UIKit
         }
     }
     
+    open override var contentHorizontalAlignment: UIControl.ContentHorizontalAlignment {
+        get {
+            return button.contentHorizontalAlignment
+        }
+        set {
+            button.contentHorizontalAlignment = newValue
+        }
+    }
+    
+    open override var contentVerticalAlignment: UIControl.ContentVerticalAlignment {
+        get {
+            return button.contentVerticalAlignment
+        }
+        set {
+            button.contentVerticalAlignment = newValue
+        }
+    }
+    
     public override init(frame: CGRect) {
         super.init(frame: frame)
         self._init()
@@ -177,7 +195,6 @@ private class SDNumberFieldKeyboard : UIViewController, UIPopoverPresentationCon
             button.cornerRadius = delegate?.keyboardButtonCornerRadius ?? 0
             button.borderWidth = delegate?.keyboardButtonBorderWidth ?? 0
             button.borderColor = delegate?.keyboardButtonBorderColor
-            button.contentHorizontalAlignment = .center
             button.addTarget(self, action: #selector(buttonAction), for: .touchUpInside)
         }
         
