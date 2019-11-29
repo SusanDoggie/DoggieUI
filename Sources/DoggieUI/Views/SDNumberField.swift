@@ -243,18 +243,23 @@ private class SDNumberFieldKeyboard : UIViewController, UIPopoverPresentationCon
     
     @objc func buttonAction(_ sender: UIButton) {
         
+        guard let delegate = self.delegate else { return }
+        
         if clear_flag {
-            delegate?._text = ""
+            delegate._text = ""
             clear_flag = false
         }
         
         switch sender.tag {
-        case 10: delegate?._text += "."
-        case 11: delegate?._text.removeLast()
-        default: delegate?._text += "\(sender.tag)"
+        case 10: delegate._text += "."
+        case 11:
+            if !delegate._text.isEmpty {
+                delegate._text.removeLast()
+            }
+        default: delegate._text += "\(sender.tag)"
         }
         
-        delegate?.sendActions(for: .valueChanged)
+        delegate.sendActions(for: .valueChanged)
     }
     
     func adaptivePresentationStyle(for controller: UIPresentationController, traitCollection: UITraitCollection) -> UIModalPresentationStyle {
