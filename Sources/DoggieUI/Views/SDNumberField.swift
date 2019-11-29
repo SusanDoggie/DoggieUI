@@ -203,7 +203,11 @@ private class SDNumberFieldKeyboard : UIViewController, UIPopoverPresentationCon
         do {
             let button = UIButton(type: .custom)
             button.tag = 11
-            button.setTitle("􀆛", for: .normal)
+            if #available(iOS 13.0, *) {
+                button.setImage(UIImage(systemName: "delete.left"), for: .normal)
+            } else {
+                button.setTitle("DEL", for: .normal)
+            }
             _set_button(button)
             buttons.append(button)
             container.addSubview(button)
