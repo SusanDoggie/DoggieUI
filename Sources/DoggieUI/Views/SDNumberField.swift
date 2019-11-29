@@ -55,7 +55,7 @@ import UIKit
         }
     }()
     
-    @IBInspectable open var keyboardButtonBackgroundColor: UIColor? = {
+    @IBInspectable open var keyButtonBackgroundColor: UIColor? = {
         if #available(iOS 13.0, *) {
             return UIColor.systemBackground
         } else {
@@ -63,7 +63,7 @@ import UIKit
         }
     }()
     
-    @IBInspectable open var keyboardLabelColor: UIColor? = {
+    @IBInspectable open var keyLabelColor: UIColor? = {
         if #available(iOS 13.0, *) {
             return UIColor.label
         } else {
@@ -71,11 +71,11 @@ import UIKit
         }
     }()
     
-    @IBInspectable open var keyboardButtonCornerRadius: CGFloat = 0
+    @IBInspectable open var keyButtonCornerRadius: CGFloat = 0
     
-    @IBInspectable open var keyboardButtonBorderWidth: CGFloat = 0
+    @IBInspectable open var keyButtonBorderWidth: CGFloat = 0
     
-    @IBInspectable open var keyboardButtonBorderColor: UIColor?
+    @IBInspectable open var keyButtonBorderColor: UIColor?
     
     open override var isEnabled: Bool  {
         get {
@@ -189,12 +189,12 @@ private class SDNumberFieldKeyboard : UIViewController, UIPopoverPresentationCon
         var buttons: [UIButton] = []
         
         func _set_button(_ button: UIButton) {
-            button.backgroundColor = delegate?.keyboardButtonBackgroundColor
-            button.setTitleColor(delegate?.keyboardLabelColor, for: .normal)
-            button.tintColor = delegate?.keyboardLabelColor
-            button.cornerRadius = delegate?.keyboardButtonCornerRadius ?? 0
-            button.borderWidth = delegate?.keyboardButtonBorderWidth ?? 0
-            button.borderColor = delegate?.keyboardButtonBorderColor
+            button.backgroundColor = delegate?.keyButtonBackgroundColor
+            button.tintColor = delegate?.keyLabelColor
+            button.setTitleColor(delegate?.keyLabelColor, for: .normal)
+            button.cornerRadius = delegate?.keyButtonCornerRadius ?? 0
+            button.borderWidth = delegate?.keyButtonBorderWidth ?? 0
+            button.borderColor = delegate?.keyButtonBorderColor
             button.addTarget(self, action: #selector(buttonAction), for: .touchUpInside)
         }
         
