@@ -157,7 +157,7 @@ private class SDNumberFieldKeyboard : UIViewController, UIPopoverPresentationCon
     
     weak var delegate: SDNumberField?
     
-    var clear_flag = true
+    var old_value: String?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -245,9 +245,9 @@ private class SDNumberFieldKeyboard : UIViewController, UIPopoverPresentationCon
         
         guard let delegate = self.delegate else { return }
         
-        if clear_flag {
+        if old_value == nil {
+            old_value = delegate._text
             delegate._text = ""
-            clear_flag = false
         }
         
         switch sender.tag {
@@ -264,5 +264,21 @@ private class SDNumberFieldKeyboard : UIViewController, UIPopoverPresentationCon
     
     func adaptivePresentationStyle(for controller: UIPresentationController, traitCollection: UITraitCollection) -> UIModalPresentationStyle {
         return .none
+    }
+    
+    func popoverPresentationControllerDidDismissPopover(_ popoverPresentationController: UIPopoverPresentationController) {
+        
+        guard let delegate = self.delegate else { return }
+        
+        if delegate._text.isEmpty {
+            
+            delegate._text = old_value ?? "0"
+            delegate.sendActions(for: .valueChanged)
+            
+        } else if let decimal = Decimal(string: delegate._text), delegate._text != "\(decimal)" {
+            
+            delegate._text = "\(decimal)"
+            delegate.sendActions(for: .valueChanged)
+        }
     }
 }
