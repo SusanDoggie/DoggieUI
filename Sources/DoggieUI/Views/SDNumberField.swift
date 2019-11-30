@@ -248,7 +248,7 @@ private class SDNumberFieldKeyboard : UIViewController, UIPopoverPresentationCon
         
         if delegate?.isDecimal == true {
             
-            NSLayoutConstraint.activate(NSLayoutConstraint.constraints(withVisualFormat: "H:|-16-[button1]-16-[button2]-16-[button3]-16-|", options: [], metrics: nil, views: ["button1": buttons[0], "button2": buttons[10], "button3": buttons[11]]))
+            NSLayoutConstraint.activate(NSLayoutConstraint.constraints(withVisualFormat: "H:|-16-[button1]-16-[button2]-16-[button3]-16-|", options: [], metrics: nil, views: ["button1": buttons[10], "button2": buttons[0], "button3": buttons[11]]))
             NSLayoutConstraint.activate(NSLayoutConstraint.constraints(withVisualFormat: "V:|-16-[button1]-16-[button2]-16-[button3]-16-[button4]-16-|", options: [], metrics: nil, views: ["button1": buttons[7], "button2": buttons[4], "button3": buttons[1], "button4": buttons[0]]))
             NSLayoutConstraint.activate(NSLayoutConstraint.constraints(withVisualFormat: "V:|-16-[button1]-16-[button2]-16-[button3]-16-[button4]-16-|", options: [], metrics: nil, views: ["button1": buttons[8], "button2": buttons[5], "button3": buttons[2], "button4": buttons[10]]))
             NSLayoutConstraint.activate(NSLayoutConstraint.constraints(withVisualFormat: "V:|-16-[button1]-16-[button2]-16-[button3]-16-[button4]-16-|", options: [], metrics: nil, views: ["button1": buttons[9], "button2": buttons[6], "button3": buttons[3], "button4": buttons[11]]))
