@@ -71,6 +71,8 @@ import UIKit
         }
     }()
     
+    @IBInspectable open var keyButtonSpacing: CGFloat = 16
+    
     @IBInspectable open var keyButtonCornerRadius: CGFloat = 0
     
     @IBInspectable open var keyButtonBorderWidth: CGFloat = 0
@@ -182,15 +184,10 @@ private class SDNumberFieldKeyboard : UIViewController, UIPopoverPresentationCon
         
         view.backgroundColor = delegate?.keyboardBackgroundColor
         
-        let container = UIView()
-        self.view.addSubview(container)
-        container.translatesAutoresizingMaskIntoConstraints = false
-        
         var buttons: [UIButton] = []
         
         func _set_button(_ button: UIButton) {
             button.backgroundColor = delegate?.keyButtonBackgroundColor
-            button.tintColor = delegate?.keyLabelColor
             button.setTitleColor(delegate?.keyLabelColor, for: .normal)
             button.cornerRadius = delegate?.keyButtonCornerRadius ?? 0
             button.borderWidth = delegate?.keyButtonBorderWidth ?? 0
@@ -204,8 +201,6 @@ private class SDNumberFieldKeyboard : UIViewController, UIPopoverPresentationCon
             button.setTitle("\(i)", for: .normal)
             _set_button(button)
             buttons.append(button)
-            container.addSubview(button)
-            button.translatesAutoresizingMaskIntoConstraints = false
         }
         
         if delegate?.isDecimal == true {
@@ -214,53 +209,44 @@ private class SDNumberFieldKeyboard : UIViewController, UIPopoverPresentationCon
             button.setTitle(".", for: .normal)
             _set_button(button)
             buttons.append(button)
-            container.addSubview(button)
-            button.translatesAutoresizingMaskIntoConstraints = false
         }
         
         do {
             let button = UIButton(type: .custom)
             button.tag = 11
-            if #available(iOS 13.0, *) {
-                button.setImage(UIImage(systemName: "delete.left"), for: .normal)
-            } else {
-                button.setTitle("DEL", for: .normal)
-            }
+            button.setTitle("⌫", for: .normal)
             _set_button(button)
             buttons.append(button)
-            container.addSubview(button)
-            button.translatesAutoresizingMaskIntoConstraints = false
         }
         
+        let h_stack_1 = UIStackView(arrangedSubviews: [buttons[7], buttons[8], buttons[9]])
+        let h_stack_2 = UIStackView(arrangedSubviews: [buttons[4], buttons[5], buttons[6]])
+        let h_stack_3 = UIStackView(arrangedSubviews: [buttons[1], buttons[2], buttons[3]])
+        let h_stack_4 = UIStackView(arrangedSubviews: delegate?.isDecimal == true ? [buttons[10], buttons[0], buttons[11]] : [buttons[0], buttons[10]])
+        
+        h_stack_1.spacing = delegate?.keyButtonSpacing ?? 0
+        h_stack_2.spacing = delegate?.keyButtonSpacing ?? 0
+        h_stack_3.spacing = delegate?.keyButtonSpacing ?? 0
+        h_stack_4.spacing = delegate?.keyButtonSpacing ?? 0
+        
+        let stack = UIStackView(arrangedSubviews: [h_stack_1, h_stack_2, h_stack_3, h_stack_4])
+        
+        stack.spacing = delegate?.keyButtonSpacing ?? 0
+        stack.axis = .vertical
+        
+        self.view.addSubview(stack)
+        stack.translatesAutoresizingMaskIntoConstraints = false
+        
         NSLayoutConstraint.activate([
-            self.view.safeAreaLayoutGuide.leadingAnchor.constraint(equalTo: container.leadingAnchor, constant: 0),
-            self.view.safeAreaLayoutGuide.trailingAnchor.constraint(equalTo: container.trailingAnchor, constant: 0),
-            self.view.safeAreaLayoutGuide.topAnchor.constraint(equalTo: container.topAnchor, constant: 0),
-            self.view.safeAreaLayoutGuide.bottomAnchor.constraint(equalTo: container.bottomAnchor, constant: 0),
+            stack.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor, constant: delegate?.keyButtonSpacing ?? 0),
+            stack.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor, constant: delegate?.keyButtonSpacing ?? 0),
+            self.view.safeAreaLayoutGuide.trailingAnchor.constraint(equalTo: stack.trailingAnchor, constant: delegate?.keyButtonSpacing ?? 0),
+            self.view.safeAreaLayoutGuide.bottomAnchor.constraint(equalTo: stack.bottomAnchor, constant: delegate?.keyButtonSpacing ?? 0),
         ])
         
         NSLayoutConstraint.activate(buttons.dropFirst(2).map { NSLayoutConstraint(item: buttons[1], attribute: .width, relatedBy: .equal, toItem: $0, attribute: .width, multiplier: 1, constant: 0) })
         NSLayoutConstraint.activate(buttons.dropFirst().map { NSLayoutConstraint(item: buttons[0], attribute: .height, relatedBy: .equal, toItem: $0, attribute: .height, multiplier: 1, constant: 0) })
-        
-        NSLayoutConstraint.activate(NSLayoutConstraint.constraints(withVisualFormat: "H:|-16-[button1]-16-[button2]-16-[button3]-16-|", options: [], metrics: nil, views: ["button1": buttons[1], "button2": buttons[2], "button3": buttons[3]]))
-        NSLayoutConstraint.activate(NSLayoutConstraint.constraints(withVisualFormat: "H:|-16-[button1]-16-[button2]-16-[button3]-16-|", options: [], metrics: nil, views: ["button1": buttons[4], "button2": buttons[5], "button3": buttons[6]]))
-        NSLayoutConstraint.activate(NSLayoutConstraint.constraints(withVisualFormat: "H:|-16-[button1]-16-[button2]-16-[button3]-16-|", options: [], metrics: nil, views: ["button1": buttons[7], "button2": buttons[8], "button3": buttons[9]]))
-        
-        if delegate?.isDecimal == true {
-            
-            NSLayoutConstraint.activate(NSLayoutConstraint.constraints(withVisualFormat: "H:|-16-[button1]-16-[button2]-16-[button3]-16-|", options: [], metrics: nil, views: ["button1": buttons[10], "button2": buttons[0], "button3": buttons[11]]))
-            NSLayoutConstraint.activate(NSLayoutConstraint.constraints(withVisualFormat: "V:|-16-[button1]-16-[button2]-16-[button3]-16-[button4]-16-|", options: [], metrics: nil, views: ["button1": buttons[7], "button2": buttons[4], "button3": buttons[1], "button4": buttons[0]]))
-            NSLayoutConstraint.activate(NSLayoutConstraint.constraints(withVisualFormat: "V:|-16-[button1]-16-[button2]-16-[button3]-16-[button4]-16-|", options: [], metrics: nil, views: ["button1": buttons[8], "button2": buttons[5], "button3": buttons[2], "button4": buttons[10]]))
-            NSLayoutConstraint.activate(NSLayoutConstraint.constraints(withVisualFormat: "V:|-16-[button1]-16-[button2]-16-[button3]-16-[button4]-16-|", options: [], metrics: nil, views: ["button1": buttons[9], "button2": buttons[6], "button3": buttons[3], "button4": buttons[11]]))
-            
-        } else {
-            
-            NSLayoutConstraint.activate(NSLayoutConstraint.constraints(withVisualFormat: "H:|-16-[button1]-16-[button2]-16-|", options: [], metrics: nil, views: ["button1": buttons[0], "button2": buttons[10]]))
-            NSLayoutConstraint.activate(NSLayoutConstraint.constraints(withVisualFormat: "V:|-16-[button1]-16-[button2]-16-[button3]-16-[button4]-16-|", options: [], metrics: nil, views: ["button1": buttons[7], "button2": buttons[4], "button3": buttons[1], "button4": buttons[0]]))
-            NSLayoutConstraint.activate(NSLayoutConstraint.constraints(withVisualFormat: "V:|-16-[button1]-16-[button2]-16-[button3]-16-[button4]-16-|", options: [], metrics: nil, views: ["button1": buttons[8], "button2": buttons[5], "button3": buttons[2], "button4": buttons[0]]))
-            NSLayoutConstraint.activate(NSLayoutConstraint.constraints(withVisualFormat: "V:|-16-[button1]-16-[button2]-16-[button3]-16-[button4]-16-|", options: [], metrics: nil, views: ["button1": buttons[9], "button2": buttons[6], "button3": buttons[3], "button4": buttons[10]]))
-            
-        }
+
     }
     
     @objc func buttonAction(_ sender: UIButton) {
