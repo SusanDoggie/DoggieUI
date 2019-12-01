@@ -47,6 +47,8 @@ import UIKit
     
     @IBInspectable open var isDecimal: Bool = true
     
+    @IBInspectable open var keyboardSize: CGSize = CGSize(width: 214, height: 280)
+    
     @IBInspectable open var keyboardBackgroundColor: UIColor? = {
         if #available(iOS 13.0, *) {
             return UIColor.systemBackground
@@ -71,7 +73,7 @@ import UIKit
         }
     }()
     
-    @IBInspectable open var keyButtonSpacing: CGFloat = 16
+    @IBInspectable open var keyButtonSpacing: CGFloat = 8
     
     @IBInspectable open var keyButtonCornerRadius: CGFloat = 0
     
@@ -137,7 +139,7 @@ import UIKit
         let keyboard = SDNumberFieldKeyboard()
         keyboard.delegate = self
         
-        keyboard.preferredContentSize = CGSize(width: 214, height: 280)
+        keyboard.preferredContentSize = keyboardSize
         keyboard.modalPresentationStyle = .popover
         keyboard.popoverPresentationController?.sourceView = self
         keyboard.popoverPresentationController?.delegate = keyboard
