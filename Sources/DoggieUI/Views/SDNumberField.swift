@@ -47,31 +47,19 @@ import UIKit
     
     @IBInspectable open var isDecimal: Bool = true
     
+    @IBInspectable open var labelColor: UIColor? = DEFAULT_LABEL_COLOR {
+        didSet {
+            button.setTitleColor(labelColor, for: .normal)
+        }
+    }
+    
     @IBInspectable open var keyboardSize: CGSize = CGSize(width: 214, height: 280)
     
-    @IBInspectable open var keyboardBackgroundColor: UIColor? = {
-        if #available(iOS 13.0, *) {
-            return UIColor.systemBackground
-        } else {
-            return UIColor.white
-        }
-    }()
+    @IBInspectable open var keyboardBackgroundColor: UIColor? = DEFAULT_BACKGROUND_COLOR
     
-    @IBInspectable open var keyButtonBackgroundColor: UIColor? = {
-        if #available(iOS 13.0, *) {
-            return UIColor.systemBackground
-        } else {
-            return UIColor.white
-        }
-    }()
+    @IBInspectable open var keyButtonBackgroundColor: UIColor? = DEFAULT_BACKGROUND_COLOR
     
-    @IBInspectable open var keyLabelColor: UIColor? = {
-        if #available(iOS 13.0, *) {
-            return UIColor.label
-        } else {
-            return UIColor.black
-        }
-    }()
+    @IBInspectable open var keyLabelColor: UIColor? = DEFAULT_LABEL_COLOR
     
     @IBInspectable open var keyButtonSpacing: CGFloat = 8
     
@@ -118,7 +106,7 @@ import UIKit
         self._init()
     }
     
-    func _init() {
+    private func _init() {
         
         self.addSubview(button)
         button.translatesAutoresizingMaskIntoConstraints = false
@@ -126,11 +114,7 @@ import UIKit
         NSLayoutConstraint.activate(NSLayoutConstraint.constraints(withVisualFormat: "H:|[button]|", options: [], metrics: nil, views: ["button": button]))
         
         button.setTitle(_text, for: .normal)
-        if #available(iOS 13.0, *) {
-            button.setTitleColor(UIColor.label, for: .normal)
-        } else {
-            button.setTitleColor(UIColor.black, for: .normal)
-        }
+        button.setTitleColor(labelColor, for: .normal)
         button.addTarget(self, action: #selector(buttonAction), for: .touchUpInside)
     }
     

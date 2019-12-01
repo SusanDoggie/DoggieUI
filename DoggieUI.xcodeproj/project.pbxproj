@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		086CE76A2391345300B196D7 /* SDNumberField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 086CE7692391345300B196D7 /* SDNumberField.swift */; };
+		08772DD92393C9D6000DF066 /* SDPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08772DD82393C9D6000DF066 /* SDPickerView.swift */; };
+		08772DE32393DC5B000DF066 /* UIColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08772DE22393DC5B000DF066 /* UIColor.swift */; };
 		088D9671238524910031DB95 /* UICollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 088D9663238524910031DB95 /* UICollectionView.swift */; };
 		088D9672238524910031DB95 /* UITableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 088D9664238524910031DB95 /* UITableView.swift */; };
 		088D9673238524910031DB95 /* UIKitExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 088D9665238524910031DB95 /* UIKitExtension.swift */; };
@@ -26,6 +28,8 @@
 
 /* Begin PBXFileReference section */
 		086CE7692391345300B196D7 /* SDNumberField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SDNumberField.swift; sourceTree = "<group>"; };
+		08772DD82393C9D6000DF066 /* SDPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SDPickerView.swift; sourceTree = "<group>"; };
+		08772DE22393DC5B000DF066 /* UIColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIColor.swift; sourceTree = "<group>"; };
 		088D9663238524910031DB95 /* UICollectionView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UICollectionView.swift; sourceTree = "<group>"; };
 		088D9664238524910031DB95 /* UITableView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UITableView.swift; sourceTree = "<group>"; };
 		088D9665238524910031DB95 /* UIKitExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIKitExtension.swift; sourceTree = "<group>"; };
@@ -69,6 +73,7 @@
 		088D9662238524910031DB95 /* Extension */ = {
 			isa = PBXGroup;
 			children = (
+				08772DE22393DC5B000DF066 /* UIColor.swift */,
 				088D96872385278D0031DB95 /* CGPoint.swift */,
 				088D9663238524910031DB95 /* UICollectionView.swift */,
 				088D9664238524910031DB95 /* UITableView.swift */,
@@ -105,6 +110,7 @@
 				088D966F238524910031DB95 /* SDTextField.swift */,
 				088D9670238524910031DB95 /* SDPageView.swift */,
 				086CE7692391345300B196D7 /* SDNumberField.swift */,
+				08772DD82393C9D6000DF066 /* SDPickerView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -208,6 +214,7 @@
 				088D967A238524910031DB95 /* SDTextField.swift in Sources */,
 				088D9673238524910031DB95 /* UIKitExtension.swift in Sources */,
 				088D9674238524910031DB95 /* UIViewAnimation.swift in Sources */,
+				08772DE32393DC5B000DF066 /* UIColor.swift in Sources */,
 				086CE76A2391345300B196D7 /* SDNumberField.swift in Sources */,
 				088D9678238524910031DB95 /* UIShortTapGestureRecognizer.swift in Sources */,
 				088D9676238524910031DB95 /* SDSlideMenuViewController.swift in Sources */,
@@ -218,6 +225,7 @@
 				088D9672238524910031DB95 /* UITableView.swift in Sources */,
 				088D96882385278D0031DB95 /* CGPoint.swift in Sources */,
 				088D9679238524910031DB95 /* SDSlider.swift in Sources */,
+				08772DD92393C9D6000DF066 /* SDPickerView.swift in Sources */,
 				088D9684238524C40031DB95 /* TouchCaptureGesture.swift in Sources */,
 				088D9675238524910031DB95 /* SDSwappageController.swift in Sources */,
 			);
