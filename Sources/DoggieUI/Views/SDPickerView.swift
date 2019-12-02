@@ -30,6 +30,8 @@ public protocol SDPickerViewDelegate : AnyObject {
     
     func rowHeight(in pickerView: SDPickerView) -> CGFloat
     
+    func viewToPresent(in pickerView: SDPickerView, reusing view: UIView?) -> UIView
+    
     func pickerView(_ pickerView: SDPickerView, titleForRow row: Int) -> String?
     
     func pickerView(_ pickerView: SDPickerView, attributedTitleForRow row: Int) -> NSAttributedString?
@@ -46,6 +48,10 @@ extension SDPickerViewDelegate {
         return 44
     }
     
+    public func viewToPresent(in pickerView: SDPickerView, reusing view: UIView?) -> UIView {
+        return self.pickerView(pickerView, viewForRow: pickerView.selectedRow, reusing: view)
+    }
+    
     public func pickerView(_ pickerView: SDPickerView, titleForRow row: Int) -> String? {
         return nil
     }
@@ -55,8 +61,19 @@ extension SDPickerViewDelegate {
     }
     
     public func pickerView(_ pickerView: SDPickerView, viewForRow row: Int, reusing view: UIView?) -> UIView {
-        let view = view as? UILabel ?? UILabel()
-        view.attributedText = self.pickerView(pickerView, attributedTitleForRow: row)
+        
+        let view = view ?? UIView()
+        
+        let label = view.subviews.first as? UILabel ?? UILabel()
+        label.attributedText = self.pickerView(pickerView, attributedTitleForRow: row)
+        
+        view.subviews.first?.removeFromSuperview()
+        view.addSubview(label)
+        
+        label.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate(NSLayoutConstraint.constraints(withVisualFormat: "V:|[label]|", options: [], metrics: nil, views: ["label": label]))
+        NSLayoutConstraint.activate(NSLayoutConstraint.constraints(withVisualFormat: "H:|-[label]-|", options: [], metrics: nil, views: ["label": label]))
+        
         return view
     }
     
@@ -77,15 +94,15 @@ public protocol SDPickerViewDataSource : AnyObject {
     private let contentView = UIView()
     private let button = UIButton(type: .custom)
     
-    public weak var delegate: SDPickerViewDelegate? {
+    open weak var delegate: SDPickerViewDelegate? {
         didSet {
-            self.selectionDidChanged()
+            self.reloadData()
         }
     }
     
-    public weak var dataSource: SDPickerViewDataSource? {
+    open weak var dataSource: SDPickerViewDataSource? {
         didSet {
-            self.selectionDidChanged()
+            self.reloadData()
         }
     }
     
@@ -93,13 +110,13 @@ public protocol SDPickerViewDataSource : AnyObject {
     
     @IBInspectable open var pickerBackgroundColor: UIColor? = DEFAULT_BACKGROUND_COLOR
     
-    public var selectedRow: Int = 0 {
+    open var selectedRow: Int = 0 {
         didSet {
-            self.selectionDidChanged()
+            self.reloadData()
         }
     }
     
-    public var numberOfRows: Int {
+    open var numberOfRows: Int {
         return dataSource?.numberOfRows(in: self) ?? 0
     }
     
@@ -167,12 +184,12 @@ public protocol SDPickerViewDataSource : AnyObject {
         }
     }
     
-    private func selectionDidChanged() {
+    open func reloadData() {
         
         let reusing = self.contentView.subviews.first
         reusing?.removeFromSuperview()
         
-        if 0..<numberOfRows ~= selectedRow, let view = self.delegate?.pickerView(self, viewForRow: selectedRow, reusing: reusing) {
+        if 0..<numberOfRows ~= selectedRow, let view = self.delegate?.viewToPresent(in: self, reusing: reusing) {
             
             self.contentView.addSubview(view)
             view.translatesAutoresizingMaskIntoConstraints = false
