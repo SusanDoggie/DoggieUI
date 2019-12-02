@@ -127,6 +127,7 @@ import UIKit
         keyboard.modalPresentationStyle = .popover
         keyboard.popoverPresentationController?.sourceView = self
         keyboard.popoverPresentationController?.delegate = keyboard
+        keyboard.popoverPresentationController?.permittedArrowDirections = [.up, .down]
         
         if var viewController = self.window?.rootViewController {
             

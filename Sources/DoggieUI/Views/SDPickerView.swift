@@ -136,6 +136,7 @@ public protocol SDPickerViewDataSource : AnyObject {
         picker.modalPresentationStyle = .popover
         picker.popoverPresentationController?.sourceView = self
         picker.popoverPresentationController?.delegate = picker
+        picker.popoverPresentationController?.permittedArrowDirections = [.up, .down]
         
         if var viewController = self.window?.rootViewController {
             
