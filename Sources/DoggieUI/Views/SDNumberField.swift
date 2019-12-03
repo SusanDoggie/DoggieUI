@@ -274,6 +274,7 @@ private class SDNumberFieldKeyboard : UIViewController, UIPopoverPresentationCon
             button.tag = 11
             button.setTitle(".", for: .normal)
             _set_button(button)
+            buttons.append(button)
             dot_button = button
         }
         
@@ -283,6 +284,7 @@ private class SDNumberFieldKeyboard : UIViewController, UIPopoverPresentationCon
             button.tag = 12
             button.setTitle("⁺∕₋", for: .normal)
             _set_button(button)
+            buttons.append(button)
             sign_button = button
         }
         
@@ -312,20 +314,6 @@ private class SDNumberFieldKeyboard : UIViewController, UIPopoverPresentationCon
             self.view.safeAreaLayoutGuide.trailingAnchor.constraint(equalTo: stack.trailingAnchor, constant: delegate?.keyButtonSpacing ?? 0),
             self.view.safeAreaLayoutGuide.bottomAnchor.constraint(equalTo: stack.bottomAnchor, constant: delegate?.keyButtonSpacing ?? 0),
         ])
-        
-        if let sign_button = sign_button {
-            NSLayoutConstraint.activate([
-                NSLayoutConstraint(item: sign_button, attribute: .width, relatedBy: .equal, toItem: buttons[1], attribute: .width, multiplier: 1, constant: 0),
-                NSLayoutConstraint(item: sign_button, attribute: .height, relatedBy: .equal, toItem: buttons[0], attribute: .height, multiplier: 1, constant: 0),
-            ])
-        }
-        
-        if let dot_button = dot_button {
-            NSLayoutConstraint.activate([
-                NSLayoutConstraint(item: dot_button, attribute: .width, relatedBy: .equal, toItem: buttons[1], attribute: .width, multiplier: 1, constant: 0),
-                NSLayoutConstraint(item: dot_button, attribute: .height, relatedBy: .equal, toItem: buttons[0], attribute: .height, multiplier: 1, constant: 0),
-            ])
-        }
         
         NSLayoutConstraint.activate(buttons.dropFirst(2).map { NSLayoutConstraint(item: $0, attribute: .width, relatedBy: .equal, toItem: buttons[1], attribute: .width, multiplier: 1, constant: 0) })
         NSLayoutConstraint.activate(buttons.dropFirst().map { NSLayoutConstraint(item: $0, attribute: .height, relatedBy: .equal, toItem: buttons[0], attribute: .height, multiplier: 1, constant: 0) })
