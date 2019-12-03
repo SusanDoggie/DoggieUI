@@ -152,6 +152,7 @@ import UIKit
                 } else {
                     
                     viewController.present(keyboard, animated: true, completion: nil)
+                    self.sendActions(for: .editingDidBegin)
                     return
                 }
             }
@@ -257,7 +258,7 @@ private class SDNumberFieldKeyboard : UIViewController, UIPopoverPresentationCon
         default: delegate._text += "\(sender.tag)"
         }
         
-        delegate.sendActions(for: .valueChanged)
+        delegate.sendActions(for: .editingChanged)
     }
     
     func adaptivePresentationStyle(for controller: UIPresentationController, traitCollection: UITraitCollection) -> UIModalPresentationStyle {
@@ -271,12 +272,14 @@ private class SDNumberFieldKeyboard : UIViewController, UIPopoverPresentationCon
         if delegate._text.isEmpty {
             
             delegate._text = old_value ?? "0"
-            delegate.sendActions(for: .valueChanged)
+            delegate.sendActions(for: .editingChanged)
             
         } else if let decimal = Decimal(string: delegate._text), delegate._text != "\(decimal)" {
             
             delegate._text = "\(decimal)"
-            delegate.sendActions(for: .valueChanged)
+            delegate.sendActions(for: .editingChanged)
         }
+        
+        delegate.sendActions(for: .editingDidEnd)
     }
 }
