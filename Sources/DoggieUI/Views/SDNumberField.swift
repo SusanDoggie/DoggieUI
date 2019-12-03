@@ -187,17 +187,13 @@ extension Decimal {
                     
                     viewController = presentedViewController
                     
-                } else if let navigationController = viewController as? UINavigationController {
+                } else if let navigationController = viewController as? UINavigationController, let visibleViewController = navigationController.visibleViewController {
                     
-                    viewController = navigationController.visibleViewController ?? navigationController
+                    viewController = visibleViewController
                     
-                } else if let tabBarController = viewController as? UITabBarController {
+                } else if let tabBarController = viewController as? UITabBarController, let selectedViewController = tabBarController.selectedViewController {
                     
-                    viewController = tabBarController.selectedViewController ?? tabBarController
-                    
-                } else if let childViewControllers = viewController.children.last {
-                    
-                    viewController = childViewControllers
+                    viewController = selectedViewController
                     
                 } else {
                     
