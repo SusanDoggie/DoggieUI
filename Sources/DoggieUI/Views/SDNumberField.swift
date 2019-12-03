@@ -25,6 +25,16 @@
 
 import UIKit
 
+extension Decimal {
+    
+    fileprivate func rounded(scale: Int = 0, roundingMode: NSDecimalNumber.RoundingMode = .plain) -> Decimal {
+        var x = self
+        var result = Decimal()
+        NSDecimalRound(&result, &x, scale, roundingMode)
+        return result
+    }
+}
+
 @available(iOS 11.0, *)
 @IBDesignable open class SDNumberField : UIControl {
     
@@ -41,9 +51,13 @@ import UIKit
             return Decimal(string: _text).map { CGFloat(NSDecimalNumber(decimal: $0).doubleValue) } ?? 0
         }
         set {
-            _text = "\(Decimal(Double(newValue)))"
+            _text = "\(Decimal(Double(newValue)).rounded(scale: decimalRoundingPlaces))"
         }
     }
+    
+    @IBInspectable open var decimalRoundingPlaces: Int = 9
+    
+    @IBInspectable open var isSigned: Bool = true
     
     @IBInspectable open var isDecimal: Bool = true
     
@@ -53,7 +67,7 @@ import UIKit
         }
     }
     
-    @IBInspectable open var keyboardSize: CGSize = CGSize(width: 214, height: 280)
+    @IBInspectable open var keyboardSize: CGSize = CGSize(width: 214, height: 346)
     
     @IBInspectable open var keyboardBackgroundColor: UIColor? = DEFAULT_BACKGROUND_COLOR
     
@@ -68,6 +82,42 @@ import UIKit
     @IBInspectable open var keyButtonBorderWidth: CGFloat = 0
     
     @IBInspectable open var keyButtonBorderColor: UIColor?
+    
+    open var lineBreakMode: NSLineBreakMode {
+        get {
+            return button.titleLabel?.lineBreakMode ?? .byTruncatingTail
+        }
+        set {
+            button.titleLabel?.lineBreakMode = newValue
+        }
+    }
+    
+    @IBInspectable open var adjustsFontSizeToFitWidth: Bool {
+        get {
+            return button.titleLabel?.adjustsFontSizeToFitWidth ?? false
+        }
+        set {
+            button.titleLabel?.adjustsFontSizeToFitWidth = newValue
+        }
+    }
+    
+    @IBInspectable open var minimumScaleFactor: CGFloat {
+        get {
+            return button.titleLabel?.minimumScaleFactor ?? 0
+        }
+        set {
+            button.titleLabel?.minimumScaleFactor = newValue
+        }
+    }
+    
+    @IBInspectable open var allowsDefaultTighteningForTruncation: Bool {
+        get {
+            return button.titleLabel?.allowsDefaultTighteningForTruncation ?? false
+        }
+        set {
+            button.titleLabel?.allowsDefaultTighteningForTruncation = newValue
+        }
+    }
     
     open override var isEnabled: Bool  {
         get {
@@ -165,12 +215,18 @@ private class SDNumberFieldKeyboard : UIViewController, UIPopoverPresentationCon
     
     weak var delegate: SDNumberField?
     
+    let label = UILabel()
+    
     var old_value: String?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         view.backgroundColor = delegate?.keyboardBackgroundColor
+        
+        label.text = delegate?._text
+        label.textAlignment = .right
+        label.adjustsFontSizeToFitWidth = true
         
         var buttons: [UIButton] = []
         
@@ -191,33 +247,45 @@ private class SDNumberFieldKeyboard : UIViewController, UIPopoverPresentationCon
             buttons.append(button)
         }
         
-        if delegate?.isDecimal == true {
-            let button = UIButton(type: .custom)
-            button.tag = 10
-            button.setTitle(".", for: .normal)
-            _set_button(button)
-            buttons.append(button)
-        }
-        
         do {
             let button = UIButton(type: .custom)
-            button.tag = 11
+            button.tag = 10
             button.setTitle("⌫", for: .normal)
             _set_button(button)
             buttons.append(button)
         }
         
+        var dot_button: UIButton?
+        if delegate?.isDecimal == true {
+            let button = UIButton(type: .custom)
+            button.tag = 11
+            button.setTitle(".", for: .normal)
+            _set_button(button)
+            dot_button = button
+        }
+        
+        var sign_button: UIButton?
+        if delegate?.isDecimal == true {
+            let button = UIButton(type: .custom)
+            button.tag = 12
+            button.setTitle("⁺∕₋", for: .normal)
+            _set_button(button)
+            sign_button = button
+        }
+        
+        let h_stack_0 = UIStackView(arrangedSubviews: sign_button.map { [$0, label] } ?? [label])
         let h_stack_1 = UIStackView(arrangedSubviews: [buttons[7], buttons[8], buttons[9]])
         let h_stack_2 = UIStackView(arrangedSubviews: [buttons[4], buttons[5], buttons[6]])
         let h_stack_3 = UIStackView(arrangedSubviews: [buttons[1], buttons[2], buttons[3]])
-        let h_stack_4 = UIStackView(arrangedSubviews: delegate?.isDecimal == true ? [buttons[10], buttons[0], buttons[11]] : [buttons[0], buttons[10]])
+        let h_stack_4 = UIStackView(arrangedSubviews: dot_button.map { [$0, buttons[0], buttons[10]] } ?? [buttons[0], buttons[10]])
         
+        h_stack_0.spacing = delegate?.keyButtonSpacing ?? 0
         h_stack_1.spacing = delegate?.keyButtonSpacing ?? 0
         h_stack_2.spacing = delegate?.keyButtonSpacing ?? 0
         h_stack_3.spacing = delegate?.keyButtonSpacing ?? 0
         h_stack_4.spacing = delegate?.keyButtonSpacing ?? 0
         
-        let stack = UIStackView(arrangedSubviews: [h_stack_1, h_stack_2, h_stack_3, h_stack_4])
+        let stack = UIStackView(arrangedSubviews: [h_stack_0, h_stack_1, h_stack_2, h_stack_3, h_stack_4])
         
         stack.spacing = delegate?.keyButtonSpacing ?? 0
         stack.axis = .vertical
@@ -232,9 +300,22 @@ private class SDNumberFieldKeyboard : UIViewController, UIPopoverPresentationCon
             self.view.safeAreaLayoutGuide.bottomAnchor.constraint(equalTo: stack.bottomAnchor, constant: delegate?.keyButtonSpacing ?? 0),
         ])
         
-        NSLayoutConstraint.activate(buttons.dropFirst(2).map { NSLayoutConstraint(item: buttons[1], attribute: .width, relatedBy: .equal, toItem: $0, attribute: .width, multiplier: 1, constant: 0) })
-        NSLayoutConstraint.activate(buttons.dropFirst().map { NSLayoutConstraint(item: buttons[0], attribute: .height, relatedBy: .equal, toItem: $0, attribute: .height, multiplier: 1, constant: 0) })
-
+        if let sign_button = sign_button {
+            NSLayoutConstraint.activate([
+                NSLayoutConstraint(item: sign_button, attribute: .width, relatedBy: .equal, toItem: buttons[1], attribute: .width, multiplier: 1, constant: 0),
+                NSLayoutConstraint(item: sign_button, attribute: .height, relatedBy: .equal, toItem: buttons[0], attribute: .height, multiplier: 1, constant: 0),
+            ])
+        }
+        
+        if let dot_button = dot_button {
+            NSLayoutConstraint.activate([
+                NSLayoutConstraint(item: dot_button, attribute: .width, relatedBy: .equal, toItem: buttons[1], attribute: .width, multiplier: 1, constant: 0),
+                NSLayoutConstraint(item: dot_button, attribute: .height, relatedBy: .equal, toItem: buttons[0], attribute: .height, multiplier: 1, constant: 0),
+            ])
+        }
+        
+        NSLayoutConstraint.activate(buttons.dropFirst(2).map { NSLayoutConstraint(item: $0, attribute: .width, relatedBy: .equal, toItem: buttons[1], attribute: .width, multiplier: 1, constant: 0) })
+        NSLayoutConstraint.activate(buttons.dropFirst().map { NSLayoutConstraint(item: $0, attribute: .height, relatedBy: .equal, toItem: buttons[0], attribute: .height, multiplier: 1, constant: 0) })
     }
     
     @objc func buttonAction(_ sender: UIButton) {
@@ -243,21 +324,32 @@ private class SDNumberFieldKeyboard : UIViewController, UIPopoverPresentationCon
         
         if old_value == nil {
             old_value = delegate._text
-            delegate._text = ""
+            if sender.tag != 12 {
+                delegate._text = ""
+            }
         }
         
         switch sender.tag {
         case 10:
-            if !delegate._text.contains(".") {
-                delegate._text += "."
-            }
-        case 11:
             if !delegate._text.isEmpty {
                 delegate._text.removeLast()
+            }
+        case 11:
+            if delegate._text.isEmpty {
+                delegate._text = "0."
+            } else if !delegate._text.contains(".") {
+                delegate._text += "."
+            }
+        case 12:
+            if delegate._text.first == "-" {
+                delegate._text.removeFirst()
+            } else {
+                delegate._text = "-" + delegate._text
             }
         default: delegate._text += "\(sender.tag)"
         }
         
+        label.text = delegate._text
         delegate.sendActions(for: .editingChanged)
     }
     
@@ -280,6 +372,7 @@ private class SDNumberFieldKeyboard : UIViewController, UIPopoverPresentationCon
             delegate.sendActions(for: .editingChanged)
         }
         
+        label.text = delegate._text
         delegate.sendActions(for: .editingDidEnd)
     }
 }
