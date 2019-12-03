@@ -228,6 +228,19 @@ private class SDNumberFieldKeyboard : UIViewController, UIPopoverPresentationCon
         label.textAlignment = .right
         label.adjustsFontSizeToFitWidth = true
         
+        let label_container = UIView()
+        
+        label.textColor = delegate?.keyLabelColor
+        label_container.backgroundColor = delegate?.keyButtonBackgroundColor
+        label_container.cornerRadius = delegate?.keyButtonCornerRadius ?? 0
+        label_container.borderWidth = delegate?.keyButtonBorderWidth ?? 0
+        label_container.borderColor = delegate?.keyButtonBorderColor
+        
+        label_container.addSubview(label)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate(NSLayoutConstraint.constraints(withVisualFormat: "V:|[label]|", options: [], metrics: nil, views: ["label": label]))
+        NSLayoutConstraint.activate(NSLayoutConstraint.constraints(withVisualFormat: "H:|-[label]-|", options: [], metrics: nil, views: ["label": label]))
+        
         var buttons: [UIButton] = []
         
         func _set_button(_ button: UIButton) {
@@ -273,7 +286,7 @@ private class SDNumberFieldKeyboard : UIViewController, UIPopoverPresentationCon
             sign_button = button
         }
         
-        let h_stack_0 = UIStackView(arrangedSubviews: sign_button.map { [$0, label] } ?? [label])
+        let h_stack_0 = UIStackView(arrangedSubviews: sign_button.map { [$0, label_container] } ?? [label_container])
         let h_stack_1 = UIStackView(arrangedSubviews: [buttons[7], buttons[8], buttons[9]])
         let h_stack_2 = UIStackView(arrangedSubviews: [buttons[4], buttons[5], buttons[6]])
         let h_stack_3 = UIStackView(arrangedSubviews: [buttons[1], buttons[2], buttons[3]])
