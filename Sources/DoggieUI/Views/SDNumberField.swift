@@ -300,6 +300,7 @@ private class SDNumberFieldKeyboard : UIViewController, UIPopoverPresentationCon
         
         stack.spacing = delegate?.keyButtonSpacing ?? 0
         stack.axis = .vertical
+        stack.distribution = .fillEqually
         
         self.view.addSubview(stack)
         stack.translatesAutoresizingMaskIntoConstraints = false
@@ -311,10 +312,7 @@ private class SDNumberFieldKeyboard : UIViewController, UIPopoverPresentationCon
             self.view.safeAreaLayoutGuide.bottomAnchor.constraint(equalTo: stack.bottomAnchor, constant: delegate?.keyButtonSpacing ?? 0),
         ])
         
-        NSLayoutConstraint.activate([NSLayoutConstraint(item: label_container, attribute: .height, relatedBy: .equal, toItem: buttons[0], attribute: .height, multiplier: 1, constant: 0)])
-        
         NSLayoutConstraint.activate(buttons.dropFirst(2).map { NSLayoutConstraint(item: $0, attribute: .width, relatedBy: .equal, toItem: buttons[1], attribute: .width, multiplier: 1, constant: 0) })
-        NSLayoutConstraint.activate(buttons.dropFirst().map { NSLayoutConstraint(item: $0, attribute: .height, relatedBy: .equal, toItem: buttons[0], attribute: .height, multiplier: 1, constant: 0) })
     }
     
     @objc func buttonAction(_ sender: UIButton) {
