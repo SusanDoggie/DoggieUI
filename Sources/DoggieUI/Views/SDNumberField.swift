@@ -275,7 +275,7 @@ private class SDNumberFieldKeyboard : UIViewController, UIPopoverPresentationCon
         }
         
         var sign_button: UIButton?
-        if delegate?.isDecimal == true {
+        if delegate?.isSigned == true {
             let button = UIButton(type: .custom)
             button.tag = 12
             button.setTitle("⁺∕₋", for: .normal)
