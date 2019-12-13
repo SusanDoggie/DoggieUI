@@ -26,54 +26,45 @@
 import UIKit
 
 @available(iOS 11.0, *)
-public protocol SDPickerViewDelegate : AnyObject {
+@objc public protocol SDPickerViewDelegate : AnyObject {
     
-    func rowHeight(in pickerView: SDPickerView) -> CGFloat
+    @objc optional func rowHeight(in pickerView: SDPickerView) -> CGFloat
     
-    func pickerView(_ pickerView: SDPickerView, titleForHeaderInSection section: Int) -> String?
+    @objc optional func pickerView(_ pickerView: SDPickerView, titleForHeaderInSection section: Int) -> String?
     
-    func pickerView(_ pickerView: SDPickerView, titleForFooterInSection section: Int) -> String?
+    @objc optional func pickerView(_ pickerView: SDPickerView, titleForFooterInSection section: Int) -> String?
     
-    func pickerView(_ pickerView: SDPickerView, titleForRow indexPath: IndexPath) -> String?
+    @objc optional func pickerView(_ pickerView: SDPickerView, titleForRow indexPath: IndexPath) -> String?
     
-    func pickerView(_ pickerView: SDPickerView, attributedTitleForRow indexPath: IndexPath) -> NSAttributedString?
+    @objc optional func pickerView(_ pickerView: SDPickerView, attributedTitleForRow indexPath: IndexPath) -> NSAttributedString?
     
-    func pickerView(_ pickerView: SDPickerView, viewForRow indexPath: IndexPath, reusing view: UIView?) -> UIView
+    @objc optional func pickerView(_ pickerView: SDPickerView, viewForRow indexPath: IndexPath, reusing view: UIView?) -> UIView
     
-    func pickerView(_ pickerView: SDPickerView, viewForPresentInRow indexPath: IndexPath, reusing view: UIView?) -> UIView
+    @objc optional func pickerView(_ pickerView: SDPickerView, viewForPresentInRow indexPath: IndexPath, reusing view: UIView?) -> UIView
     
-    func pickerView(_ pickerView: SDPickerView, didSelectRow indexPath: IndexPath)
+    @objc optional func pickerView(_ pickerView: SDPickerView, didSelectRow indexPath: IndexPath)
 }
 
 @available(iOS 11.0, *)
 extension SDPickerViewDelegate {
     
-    public func rowHeight(in pickerView: SDPickerView) -> CGFloat {
-        return 44
+    fileprivate func _pickerView(_ pickerView: SDPickerView, attributedTitleForRow indexPath: IndexPath) -> NSAttributedString? {
+        if let function = self.pickerView(_:attributedTitleForRow:) {
+            return function(pickerView, indexPath)
+        }
+        return self.pickerView?(pickerView, titleForRow: indexPath).map { NSAttributedString(string: $0) }
     }
     
-    public func pickerView(_ pickerView: SDPickerView, titleForHeaderInSection section: Int) -> String? {
-        return nil
-    }
-    
-    public func pickerView(_ pickerView: SDPickerView, titleForFooterInSection section: Int) -> String? {
-        return nil
-    }
-    
-    public func pickerView(_ pickerView: SDPickerView, titleForRow indexPath: IndexPath) -> String? {
-        return nil
-    }
-    
-    public func pickerView(_ pickerView: SDPickerView, attributedTitleForRow indexPath: IndexPath) -> NSAttributedString? {
-        return self.pickerView(pickerView, titleForRow: indexPath).map { NSAttributedString(string: $0) }
-    }
-    
-    public func pickerView(_ pickerView: SDPickerView, viewForRow indexPath: IndexPath, reusing view: UIView?) -> UIView {
+    fileprivate func _pickerView(_ pickerView: SDPickerView, viewForRow indexPath: IndexPath, reusing view: UIView?) -> UIView {
+        
+        if let function = self.pickerView(_:viewForRow:reusing:) {
+            return function(pickerView, indexPath, view)
+        }
         
         let view = view ?? UIView()
         
         let label = view.subviews.first as? UILabel ?? UILabel()
-        label.attributedText = self.pickerView(pickerView, attributedTitleForRow: indexPath)
+        label.attributedText = self._pickerView(pickerView, attributedTitleForRow: indexPath)
         
         view.subviews.first?.removeFromSuperview()
         view.addSubview(label)
@@ -85,29 +76,20 @@ extension SDPickerViewDelegate {
         return view
     }
     
-    public func pickerView(_ pickerView: SDPickerView, viewForPresentInRow indexPath: IndexPath, reusing view: UIView?) -> UIView {
-        return self.pickerView(pickerView, viewForRow: indexPath, reusing: view)
-    }
-    
-    public func pickerView(_ pickerView: SDPickerView, didSelectRow indexPath: IndexPath) {
-        
+    fileprivate func _pickerView(_ pickerView: SDPickerView, viewForPresentInRow indexPath: IndexPath, reusing view: UIView?) -> UIView {
+        if let function = self.pickerView(_:viewForPresentInRow:reusing:) {
+            return function(pickerView, indexPath, view)
+        }
+        return self._pickerView(pickerView, viewForRow: indexPath, reusing: view)
     }
 }
 
 @available(iOS 11.0, *)
-public protocol SDPickerViewDataSource : AnyObject {
+@objc public protocol SDPickerViewDataSource : AnyObject {
     
-    func numberOfSections(in pickerView: SDPickerView) -> Int
+    @objc optional func numberOfSections(in pickerView: SDPickerView) -> Int
     
     func pickerView(_ pickerView: SDPickerView, numberOfRowsInSection section: Int) -> Int
-}
-
-@available(iOS 11.0, *)
-extension SDPickerViewDataSource {
-    
-    public func numberOfSections(in pickerView: SDPickerView) -> Int {
-        return 1
-    }
 }
 
 @available(iOS 11.0, *)
@@ -116,13 +98,13 @@ extension SDPickerViewDataSource {
     private let contentView = UIView()
     private let button = UIButton(type: .custom)
     
-    open weak var delegate: SDPickerViewDelegate? {
+    @IBOutlet open weak var delegate: SDPickerViewDelegate? {
         didSet {
             self.reloadData()
         }
     }
     
-    open weak var dataSource: SDPickerViewDataSource? {
+    @IBOutlet open weak var dataSource: SDPickerViewDataSource? {
         didSet {
             self.reloadData()
         }
@@ -147,7 +129,7 @@ extension SDPickerViewDataSource {
     }
     
     open var numberOfSections: Int {
-        return dataSource?.numberOfSections(in: self) ?? 0
+        return dataSource?.numberOfSections?(in: self) ?? 1
     }
     
     open func numberOfRows(in section: Int) -> Int {
@@ -223,7 +205,7 @@ extension SDPickerViewDataSource {
         guard 0..<numberOfSections ~= selectedIndex.section else { return }
         guard 0..<numberOfRows(in: selectedIndex.section) ~= selectedIndex.row else { return }
         
-        if let view = self.delegate?.pickerView(self, viewForPresentInRow: selectedIndex, reusing: reusing) {
+        if let view = self.delegate?._pickerView(self, viewForPresentInRow: selectedIndex, reusing: reusing) {
             
             self.contentView.addSubview(view)
             view.translatesAutoresizingMaskIntoConstraints = false
@@ -265,12 +247,12 @@ private class SDPickerController : UITableViewController, UIPopoverPresentationC
     
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         guard let delegate = self.delegate else { return nil }
-        return delegate.delegate?.pickerView(delegate, titleForHeaderInSection: section)
+        return delegate.delegate?.pickerView?(delegate, titleForHeaderInSection: section)
     }
     
     override func tableView(_ tableView: UITableView, titleForFooterInSection section: Int) -> String? {
         guard let delegate = self.delegate else { return nil }
-        return delegate.delegate?.pickerView(delegate, titleForFooterInSection: section)
+        return delegate.delegate?.pickerView?(delegate, titleForFooterInSection: section)
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -278,7 +260,7 @@ private class SDPickerController : UITableViewController, UIPopoverPresentationC
     }
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return self.delegate.flatMap { $0.delegate?.rowHeight(in: $0) } ?? 44
+        return self.delegate.flatMap { $0.delegate?.rowHeight?(in: $0) } ?? 44
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -292,7 +274,7 @@ private class SDPickerController : UITableViewController, UIPopoverPresentationC
             let reusing = cell.contentView.subviews.first
             reusing?.removeFromSuperview()
             
-            if let view = picker.delegate?.pickerView(picker, viewForRow: indexPath, reusing: reusing) {
+            if let view = picker.delegate?._pickerView(picker, viewForRow: indexPath, reusing: reusing) {
                 
                 cell.contentView.addSubview(view)
                 view.translatesAutoresizingMaskIntoConstraints = false
