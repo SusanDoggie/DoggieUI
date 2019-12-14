@@ -40,6 +40,8 @@ extension Decimal {
     
     private let button = UIButton(type: .custom)
     
+    private weak var keyboard: SDNumberFieldKeyboard?
+    
     fileprivate var _text: String = "0" {
         didSet {
             button.setTitle(_text, for: .normal)
@@ -179,6 +181,8 @@ extension Decimal {
         keyboard.popoverPresentationController?.delegate = keyboard
         keyboard.popoverPresentationController?.permittedArrowDirections = [.up, .down]
         
+        self.keyboard = keyboard
+        
         if var viewController = self.window?.rootViewController {
             
             while true {
@@ -203,6 +207,10 @@ extension Decimal {
                 }
             }
         }
+    }
+    
+    open func endEditing() {
+        self.keyboard?.dismiss(animated: true, completion: nil)
     }
 }
 

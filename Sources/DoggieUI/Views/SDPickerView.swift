@@ -98,6 +98,8 @@ extension SDPickerViewDelegate {
     private let contentView = UIView()
     private let button = UIButton(type: .custom)
     
+    private weak var picker: SDPickerController?
+    
     @IBOutlet open weak var delegate: SDPickerViewDelegate? {
         didSet {
             self.reloadData()
@@ -171,6 +173,8 @@ extension SDPickerViewDelegate {
         picker.popoverPresentationController?.delegate = picker
         picker.popoverPresentationController?.permittedArrowDirections = [.up, .down]
         
+        self.picker = picker
+        
         if var viewController = self.window?.rootViewController {
             
             while true {
@@ -194,6 +198,10 @@ extension SDPickerViewDelegate {
                 }
             }
         }
+    }
+    
+    open func endEditing() {
+        self.picker?.dismiss(animated: true, completion: nil)
     }
     
     open func reloadData() {
