@@ -59,11 +59,11 @@ extension UITouchGestureRecognizer {
     open var scale: CGFloat {
         get {
             let diff = tracked[1].location(in: nil) - tracked[0].location(in: nil)
-            return diff.magnitude / _magnitude / UIScreen.main.scale
+            return diff.magnitude / _magnitude
         }
         set {
             let diff = tracked[1].location(in: nil) - tracked[0].location(in: nil)
-            _magnitude = diff.magnitude / newValue / UIScreen.main.scale
+            _magnitude = diff.magnitude / newValue
         }
     }
     
@@ -76,6 +76,13 @@ extension UITouchGestureRecognizer {
             let diff = tracked[1].location(in: nil) - tracked[0].location(in: nil)
             _phase = diff.phase - newValue
         }
+    }
+}
+
+extension UITouchGestureRecognizer {
+    
+    open override func location(ofTouch touchIndex: Int, in view: UIView?) -> CGPoint {
+        return tracked[touchIndex].location(in: view)
     }
 }
 
