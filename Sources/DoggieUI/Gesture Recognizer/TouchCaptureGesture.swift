@@ -182,14 +182,6 @@ extension TouchCaptureGesture {
             self.estimationUpdateIndex = touch.estimationUpdateIndex
         }
         
-        public var perpendicularForce: CGFloat {
-            if type == .pencil {
-                return force / sin(altitudeAngle)
-            } else {
-                return force
-            }
-        }
-        
         public func location(in view: UIView?) -> CGPoint {
             return view?.convert(_location, from: nil) ?? _location
         }
