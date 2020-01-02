@@ -28,7 +28,7 @@ import UIKit.UIGestureRecognizerSubclass
 
 open class UIShortTapGestureRecognizer: UITapGestureRecognizer {
     
-    open var delay = 0.3
+    open var delay = 0.1
     
     open override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent) {
         
