@@ -58,10 +58,12 @@ extension UITouchGestureRecognizer {
     
     open var scale: CGFloat {
         get {
+            guard tracked.count == 2 else { return 0 }
             let diff = tracked[1].location(in: nil) - tracked[0].location(in: nil)
             return diff.magnitude / _magnitude
         }
         set {
+            guard tracked.count == 2 else { return }
             let diff = tracked[1].location(in: nil) - tracked[0].location(in: nil)
             _magnitude = diff.magnitude / newValue
         }
@@ -69,10 +71,12 @@ extension UITouchGestureRecognizer {
     
     open var rotation: CGFloat {
         get {
+            guard tracked.count == 2 else { return 0 }
             let diff = tracked[1].location(in: nil) - tracked[0].location(in: nil)
             return diff.phase - _phase
         }
         set {
+            guard tracked.count == 2 else { return }
             let diff = tracked[1].location(in: nil) - tracked[0].location(in: nil)
             _phase = diff.phase - newValue
         }
@@ -91,30 +95,36 @@ extension UITouchGestureRecognizer {
     open override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent) {
         
         tracked.append(contentsOf: touches.subtracting(tracked))
+        tracked = Array(tracked.prefix(2))
         
-        if state == .possible && touches.count >= 2 {
+        if state == .possible && tracked.count == 2 {
             scale = 1
             rotation = 0
             state = .began
         }
+        
+        for touch in touches where !tracked.contains(touch) {
+            self.ignore(touch, for: event)
+        }
     }
     
     open override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent) {
-        guard self.tracked.count >= 2 else { return }
+        guard tracked.count == 2 else { return }
         state = .changed
     }
     
     open override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent) {
-        guard self.tracked.count >= 2 else { return }
+        guard tracked.count == 2 else { return }
         state = .ended
     }
     
     open override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent) {
+        guard tracked.count == 2 else { return }
         state = .cancelled
     }
     
     open override func reset() {
-        self.tracked.removeAll()
+        tracked.removeAll()
     }
 }
 
