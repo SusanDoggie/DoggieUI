@@ -25,7 +25,7 @@
 
 import UIKit
 
-public protocol SDTextFieldDelegate : UITextFieldDelegate {
+public protocol SDTextFieldDelegate: UITextFieldDelegate {
     
     func textFieldKeyboardWillShow(_ textField: SDTextField, animationDuration: Double, animationCurve: UIView.AnimationCurve, startFrame: CGRect, endFrame: CGRect)
     func textFieldKeyboardDidShow(_ textField: SDTextField, frame: CGRect)
@@ -126,7 +126,7 @@ extension SDTextFieldDelegate {
 
 extension SDTextField {
     
-    private var _delegate : SDTextFieldDelegate? {
+    private var _delegate: SDTextFieldDelegate? {
         return self.delegate as? SDTextFieldDelegate
     }
     

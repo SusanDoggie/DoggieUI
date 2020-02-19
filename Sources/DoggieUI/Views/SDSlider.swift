@@ -26,7 +26,7 @@
 import UIKit
 import QuartzCore
 
-@IBDesignable public class SDSlider : UIControl {
+@IBDesignable public class SDSlider: UIControl {
     
     @IBInspectable public var minValue: Double = 0.0 {
         didSet {
@@ -152,7 +152,7 @@ import QuartzCore
         return bounds.height < bounds.width
     }
     
-    private var thumbWidth : CGFloat {
+    private var thumbWidth: CGFloat {
         if thumbImage == nil {
             if isHorizontal {
                 return thumbThickness
@@ -161,7 +161,7 @@ import QuartzCore
         }
         return thumbImage!.size.width
     }
-    private var thumbHeight : CGFloat {
+    private var thumbHeight: CGFloat {
         if thumbImage == nil {
             if isHorizontal {
                 return thumbLength
@@ -170,7 +170,7 @@ import QuartzCore
         }
         return thumbImage!.size.height
     }
-    private var trackWidth : CGFloat {
+    private var trackWidth: CGFloat {
         if isHorizontal {
             return bounds.width - (minTrackImage?.size.width ?? 0) - (maxTrackImage?.size.width ?? 0)
         }
@@ -179,7 +179,7 @@ import QuartzCore
         }
         return trackImage!.size.width
     }
-    private var trackHeight : CGFloat {
+    private var trackHeight: CGFloat {
         if !isHorizontal {
             return bounds.height - (minTrackImage?.size.height ?? 0) - (maxTrackImage?.size.height ?? 0)
         }

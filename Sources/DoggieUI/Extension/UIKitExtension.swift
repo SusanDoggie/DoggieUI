@@ -57,7 +57,7 @@ extension UIViewController {
 
 extension UIView {
     
-    open class func loadNib(name: String, bundle: Bundle? = nil, owner: Any? = nil, options: [UINib.OptionsKey : Any]? = nil) -> UIView? {
+    open class func loadNib(name: String, bundle: Bundle? = nil, owner: Any? = nil, options: [UINib.OptionsKey: Any]? = nil) -> UIView? {
         
         return UINib(nibName: name, bundle: bundle).instantiate(withOwner: owner, options: options)[0] as? UIView
     }
@@ -77,17 +77,17 @@ extension CALayer {
     }
 }
 
-extension UIView : RandomAccessCollection, MutableCollection {
+extension UIView: RandomAccessCollection, MutableCollection {
     
     public typealias Indices = CountableRange<Int>
     
     public typealias Index = Int
     
-    open var startIndex : Int {
+    open var startIndex: Int {
         return subviews.startIndex
     }
     
-    open var endIndex : Int {
+    open var endIndex: Int {
         return subviews.endIndex
     }
     

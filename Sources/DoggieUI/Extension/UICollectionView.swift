@@ -27,7 +27,7 @@ import UIKit
 
 extension UIView {
     
-    open var collectionCell : UICollectionViewCell? {
+    open var collectionCell: UICollectionViewCell? {
         return self as? UICollectionViewCell ?? self.superview?.collectionCell
     }
 }

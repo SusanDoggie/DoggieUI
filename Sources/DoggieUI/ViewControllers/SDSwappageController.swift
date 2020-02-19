@@ -132,11 +132,11 @@ extension SDSwappageController {
 
 extension SDSwappageController {
     
-    public var rootViewController : UIViewController! {
+    public var rootViewController: UIViewController! {
         return self.children.first
     }
     
-    public var rootView : UIView! {
+    public var rootView: UIView! {
         return rootViewController?.view
     }
     

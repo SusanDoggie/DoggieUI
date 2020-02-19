@@ -27,7 +27,7 @@ import UIKit
 
 extension UIView {
     
-    open var tableCell : UITableViewCell? {
+    open var tableCell: UITableViewCell? {
         return self as? UITableViewCell ?? self.superview?.tableCell
     }
 }

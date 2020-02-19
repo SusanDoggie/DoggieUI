@@ -25,14 +25,14 @@
 
 import UIKit
 
-@objc public protocol SDPageViewDataSource : AnyObject {
+@objc public protocol SDPageViewDataSource: AnyObject {
     
     @objc optional func numberOfPagesInPageView(_ pageView: SDPageView) -> Int
     
     func pageView(_ pageView: SDPageView, viewForItemInIndex index: Int) -> UIView?
 }
 
-@objc public protocol SDPageViewDelegate : AnyObject {
+@objc public protocol SDPageViewDelegate: AnyObject {
     
     @objc optional func pageView(_ pageView: SDPageView, didDisplayingView view: UIView)
 }
@@ -54,15 +54,15 @@ open class SDPageView: UIView, UIScrollViewDelegate {
     open var current: UIView?
     
     fileprivate var scrolling = false
-    fileprivate var jumpSwap : Int?
+    fileprivate var jumpSwap: Int?
     
-    @IBOutlet open weak var dataSource : SDPageViewDataSource? {
+    @IBOutlet open weak var dataSource: SDPageViewDataSource? {
         didSet {
             reloadData()
         }
     }
     
-    @IBOutlet open weak var delegate : SDPageViewDelegate?
+    @IBOutlet open weak var delegate: SDPageViewDelegate?
     
     public override init(frame: CGRect) {
         super.init(frame: frame)
@@ -83,7 +83,7 @@ open class SDPageView: UIView, UIScrollViewDelegate {
         }
     }
     
-    @IBInspectable open var swapEnabled : Bool {
+    @IBInspectable open var swapEnabled: Bool {
         get {
             return scrollView.isScrollEnabled
         }

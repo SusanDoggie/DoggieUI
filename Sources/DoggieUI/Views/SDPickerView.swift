@@ -26,7 +26,7 @@
 import UIKit
 
 @available(iOS 11.0, *)
-@objc public protocol SDPickerViewDelegate : AnyObject {
+@objc public protocol SDPickerViewDelegate: AnyObject {
     
     @objc optional func rowHeight(in pickerView: SDPickerView) -> CGFloat
     
@@ -85,7 +85,7 @@ extension SDPickerViewDelegate {
 }
 
 @available(iOS 11.0, *)
-@objc public protocol SDPickerViewDataSource : AnyObject {
+@objc public protocol SDPickerViewDataSource: AnyObject {
     
     @objc optional func numberOfSections(in pickerView: SDPickerView) -> Int
     
@@ -93,7 +93,7 @@ extension SDPickerViewDelegate {
 }
 
 @available(iOS 11.0, *)
-@IBDesignable open class SDPickerView : UIControl {
+@IBDesignable open class SDPickerView: UIControl {
     
     private let contentView = UIView()
     private let button = UIButton(type: .custom)
@@ -224,7 +224,7 @@ extension SDPickerViewDelegate {
 }
 
 @available(iOS 11.0, *)
-private class SDPickerController : UITableViewController, UIPopoverPresentationControllerDelegate {
+private class SDPickerController: UITableViewController, UIPopoverPresentationControllerDelegate {
     
     weak var delegate: SDPickerView?
     
