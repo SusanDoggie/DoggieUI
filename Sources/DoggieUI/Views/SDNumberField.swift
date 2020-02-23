@@ -23,6 +23,8 @@
 //  THE SOFTWARE.
 //
 
+#if os(iOS)
+
 import UIKit
 
 extension Decimal {
@@ -381,3 +383,5 @@ private class SDNumberFieldKeyboard: UIViewController, UIPopoverPresentationCont
         delegate.sendActions(for: .editingDidEnd)
     }
 }
+
+#endif

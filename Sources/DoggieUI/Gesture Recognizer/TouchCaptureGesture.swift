@@ -26,7 +26,7 @@
 import UIKit
 import UIKit.UIGestureRecognizerSubclass
 
-@available(iOS 9.1, *)
+@available(iOS 9.1, tvOS 9.1, *)
 open class TouchCaptureGesture: UIGestureRecognizer {
     
     private var tracked: UITouch?
@@ -129,7 +129,7 @@ open class TouchCaptureGesture: UIGestureRecognizer {
     }
 }
 
-@available(iOS 9.1, *)
+@available(iOS 9.1, tvOS 9.1, *)
 extension TouchCaptureGesture {
     
     public struct Touch {

@@ -23,6 +23,8 @@
 //  THE SOFTWARE.
 //
 
+#if os(iOS)
+
 import UIKit
 
 @objc public protocol SDPageViewDataSource: AnyObject {
@@ -460,3 +462,5 @@ open class SDPageView: UIView, UIScrollViewDelegate {
         }
     }
 }
+
+#endif

@@ -23,6 +23,8 @@
 //  THE SOFTWARE.
 //
 
+#if os(iOS)
+
 import UIKit
 
 let DEFAULT_LABEL_COLOR: UIColor = {
@@ -40,3 +42,5 @@ let DEFAULT_BACKGROUND_COLOR: UIColor = {
         return UIColor.white
     }
 }()
+
+#endif

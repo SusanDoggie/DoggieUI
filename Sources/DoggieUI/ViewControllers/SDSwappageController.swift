@@ -23,6 +23,8 @@
 //  THE SOFTWARE.
 //
 
+#if os(iOS)
+
 import UIKit
 
 open class SDSwappageController: UIViewController {
@@ -323,3 +325,5 @@ open class SDSwappageSegue: UIStoryboardSegue {
         }
     }
 }
+
+#endif

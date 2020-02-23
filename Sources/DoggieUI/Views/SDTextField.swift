@@ -23,6 +23,8 @@
 //  THE SOFTWARE.
 //
 
+#if os(iOS)
+
 import UIKit
 
 public protocol SDTextFieldDelegate: UITextFieldDelegate {
@@ -197,3 +199,5 @@ extension UIViewController {
         sender.resignFirstResponder()
     }
 }
+
+#endif

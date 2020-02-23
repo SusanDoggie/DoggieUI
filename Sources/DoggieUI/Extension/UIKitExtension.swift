@@ -162,7 +162,7 @@ extension UIView {
     
     /// Defines which of the four corners receives the masking when using
     /// `cornerRadius' property. Defaults to all four corners.
-    @available(iOS 11.0, *)
+    @available(iOS 11.0, tvOS 11.0, *)
     open var maskedCorners: CACornerMask {
         get {
             return layer.maskedCorners
@@ -386,7 +386,7 @@ extension UIView {
 
 extension UIView {
     
-    @available(iOS 11.0, *)
+    @available(iOS 11.0, tvOS 11.0, *)
     @IBInspectable open var ignoresInvertColors: Bool {
         get {
             return accessibilityIgnoresInvertColors

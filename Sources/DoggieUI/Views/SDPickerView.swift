@@ -23,6 +23,8 @@
 //  THE SOFTWARE.
 //
 
+#if os(iOS)
+
 import UIKit
 
 @available(iOS 11.0, *)
@@ -313,3 +315,5 @@ private class SDPickerController: UITableViewController, UIPopoverPresentationCo
         return .none
     }
 }
+
+#endif

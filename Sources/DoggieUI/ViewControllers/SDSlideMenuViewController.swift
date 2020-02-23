@@ -23,6 +23,8 @@
 //  THE SOFTWARE.
 //
 
+#if os(iOS)
+
 import UIKit
 import QuartzCore
 
@@ -474,3 +476,5 @@ public class SDContentViewControllerSegue: UIStoryboardSegue {
         source.slideMenu?.addContentViewController(contentViewController: destination)
     }
 }
+
+#endif

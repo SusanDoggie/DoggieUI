@@ -23,6 +23,8 @@
 //  THE SOFTWARE.
 //
 
+#if os(iOS)
+
 import UIKit
 
 @available(iOS 11.0, *)
@@ -38,3 +40,5 @@ extension UIContextualAction {
         self.backgroundColor = backgroundColor
     }
 }
+
+#endif
