@@ -116,7 +116,11 @@ extension UITouchGestureRecognizer {
     
     open override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent) {
         guard tracked.contains(where: { touches.contains($0) }) else { return }
-        state = state == .possible ? .cancelled : .failed
+        if tracked.count < 2 {
+            state = .failed
+        } else {
+            state = state == .possible ? .failed : .ended
+        }
     }
     
     open override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent) {
