@@ -32,6 +32,10 @@ import UIKit
     
     @objc optional func rowHeight(in pickerView: SDPickerView) -> CGFloat
     
+    @objc optional func pickerViewWillShow(_ pickerView: SDPickerView)
+    
+    @objc optional func pickerViewDidShow(_ pickerView: SDPickerView)
+    
     @objc optional func pickerView(_ pickerView: SDPickerView, titleForHeaderInSection section: Int) -> String?
     
     @objc optional func pickerView(_ pickerView: SDPickerView, titleForFooterInSection section: Int) -> String?
@@ -177,6 +181,8 @@ extension SDPickerViewDelegate {
         
         self.picker = picker
         
+        delegate?.pickerViewWillShow?(self)
+        
         if var viewController = self.window?.rootViewController {
             
             while true {
@@ -195,7 +201,7 @@ extension SDPickerViewDelegate {
                     
                 } else {
                     
-                    viewController.present(picker, animated: true, completion: nil)
+                    viewController.present(picker, animated: true) { [weak self] in self.map { $0.delegate?.pickerViewDidShow?($0) } }
                     return
                 }
             }
