@@ -291,6 +291,9 @@ import QuartzCore
     }
     
     public override func beginTracking(_ touch: UITouch, with event: UIEvent?) -> Bool {
+        
+        self.sendActions(for: .touchDown)
+        
         let location = touch.location(in: self)
         
         let minSize = Swift.min(bounds.width, bounds.height)
