@@ -212,6 +212,7 @@ extension Decimal {
     }
     
     open func endEditing() {
+        self.keyboard?._endEditing()
         self.keyboard?.dismiss(animated: true, completion: nil)
     }
 }
@@ -325,46 +326,21 @@ private class SDNumberFieldKeyboard: UIViewController, UIPopoverPresentationCont
         NSLayoutConstraint.activate(buttons.dropFirst(2).map { NSLayoutConstraint(item: $0, attribute: .width, relatedBy: .equal, toItem: buttons[1], attribute: .width, multiplier: 1, constant: 0) })
     }
     
-    @objc func buttonAction(_ sender: UIButton) {
-        
-        guard let delegate = self.delegate else { return }
-        
-        if old_value == nil {
-            old_value = delegate._text
-            if sender.tag != 12 {
-                delegate._text = ""
-            }
-        }
-        
-        switch sender.tag {
-        case 10:
-            if !delegate._text.isEmpty {
-                delegate._text.removeLast()
-            }
-        case 11:
-            if delegate._text.isEmpty {
-                delegate._text = "0."
-            } else if !delegate._text.contains(".") {
-                delegate._text += "."
-            }
-        case 12:
-            if delegate._text.first == "-" {
-                delegate._text.removeFirst()
-            } else {
-                delegate._text = "-" + delegate._text
-            }
-        default: delegate._text += "\(sender.tag)"
-        }
-        
-        label.text = delegate._text
-        delegate.sendActions(for: .editingChanged)
+    override var canBecomeFirstResponder: Bool {
+        return true
     }
     
-    func adaptivePresentationStyle(for controller: UIPresentationController, traitCollection: UITraitCollection) -> UIModalPresentationStyle {
-        return .none
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        self.becomeFirstResponder()
     }
     
-    func popoverPresentationControllerDidDismissPopover(_ popoverPresentationController: UIPopoverPresentationController) {
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        self.resignFirstResponder()
+    }
+    
+    func _endEditing() {
         
         guard let delegate = self.delegate else { return }
         
@@ -379,8 +355,96 @@ private class SDNumberFieldKeyboard: UIViewController, UIPopoverPresentationCont
             delegate.sendActions(for: .editingChanged)
         }
         
-        label.text = delegate._text
         delegate.sendActions(for: .editingDidEnd)
+    }
+    
+    override func pressesBegan(_ presses: Set<UIPress>, with event: UIPressesEvent?) {
+        
+        for press in presses {
+            
+            guard let key = press.key else { continue }
+            
+            let inputs = key.charactersIgnoringModifiers
+            
+            switch inputs {
+                
+            case "\u{8}": self.inputCommandAction(inputs)
+            case "0"..."9": self.inputCommandAction(inputs)
+                
+            case ".":
+                
+                if delegate?.isDecimal == true {
+                    self.inputCommandAction(inputs)
+                }
+                
+            case "-":
+                
+                if delegate?.isSigned == true {
+                    self.inputCommandAction(inputs)
+                }
+                
+            case "\r":
+                
+                self._endEditing()
+                self.dismiss(animated: true, completion: nil)
+                
+            default: break
+            }
+        }
+    }
+    
+    @objc func buttonAction(_ sender: UIButton) {
+        
+        switch sender.tag {
+        case 10: self.inputCommandAction("\u{8}")
+        case 11: self.inputCommandAction(".")
+        case 12: self.inputCommandAction("-")
+        default: self.inputCommandAction("\(sender.tag)")
+        }
+    }
+    
+    func inputCommandAction(_ key: String) {
+        
+        guard let delegate = self.delegate else { return }
+        
+        if old_value == nil {
+            old_value = delegate._text
+            if key != "-" {
+                delegate._text = ""
+            }
+        }
+        
+        switch key {
+        case "\u{8}":
+            if !delegate._text.isEmpty {
+                delegate._text.removeLast()
+            }
+        case ".":
+            if delegate._text.isEmpty {
+                delegate._text = "0."
+            } else if !delegate._text.contains(".") {
+                delegate._text += "."
+            }
+        case "-":
+            if delegate._text.first == "-" {
+                delegate._text.removeFirst()
+            } else {
+                delegate._text = "-" + delegate._text
+            }
+        case "0"..."9": delegate._text += key
+        default: break
+        }
+        
+        label.text = delegate._text
+        delegate.sendActions(for: .editingChanged)
+    }
+    
+    func adaptivePresentationStyle(for controller: UIPresentationController, traitCollection: UITraitCollection) -> UIModalPresentationStyle {
+        return .none
+    }
+    
+    func popoverPresentationControllerDidDismissPopover(_ popoverPresentationController: UIPopoverPresentationController) {
+        self._endEditing()
     }
 }
 
