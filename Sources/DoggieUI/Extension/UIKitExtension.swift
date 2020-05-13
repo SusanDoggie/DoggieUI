@@ -401,7 +401,7 @@ extension UIView {
 
 extension UIButton {
     
-    @available(iOS 13.4, *)
+    @available(iOS 13.4, macCatalyst 13.4, *)
     @IBInspectable open var enablePointerInteraction: Bool {
         get {
             return isPointerInteractionEnabled

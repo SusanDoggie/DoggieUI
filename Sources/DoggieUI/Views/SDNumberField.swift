@@ -93,7 +93,7 @@ extension Decimal {
     
     var _pointerStyleProvider: Any?
     
-    @available(iOS 13.4, *)
+    @available(iOS 13.4, macCatalyst 13.4, *)
     open var pointerStyleProvider: UIButton.PointerStyleProvider? {
         get {
             return _pointerStyleProvider as? UIButton.PointerStyleProvider
@@ -274,7 +274,7 @@ private class SDNumberFieldKeyboard: UIViewController, UIPopoverPresentationCont
             button.cornerRadius = delegate?.keyButtonCornerRadius ?? 0
             button.borderWidth = delegate?.keyButtonBorderWidth ?? 0
             button.borderColor = delegate?.keyButtonBorderColor
-            if #available(iOS 13.4, *) {
+            if #available(iOS 13.4, macCatalyst 13.4, *) {
                 button.isPointerInteractionEnabled = delegate?.enablePointerInteraction ?? false
                 button.pointerStyleProvider = delegate?.pointerStyleProvider
             }
