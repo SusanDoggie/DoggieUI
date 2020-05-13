@@ -397,6 +397,8 @@ extension UIView {
     }
 }
 
+#if os(iOS)
+
 extension UIButton {
     
     @available(iOS 13.4, *)
@@ -409,3 +411,5 @@ extension UIButton {
         }
     }
 }
+
+#endif

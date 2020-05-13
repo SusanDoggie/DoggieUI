@@ -87,6 +87,8 @@ extension Decimal {
     
     @IBInspectable open var keyButtonBorderColor: UIColor?
     
+    #if os(iOS)
+    
     @IBInspectable open var enablePointerInteraction: Bool = false
     
     var _pointerStyleProvider: Any?
@@ -100,6 +102,8 @@ extension Decimal {
             _pointerStyleProvider = newValue
         }
     }
+    
+    #endif
     
     open var lineBreakMode: NSLineBreakMode {
         get {
