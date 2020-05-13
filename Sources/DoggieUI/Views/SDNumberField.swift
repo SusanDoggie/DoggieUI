@@ -87,6 +87,20 @@ extension Decimal {
     
     @IBInspectable open var keyButtonBorderColor: UIColor?
     
+    @IBInspectable open var enablePointerInteraction: Bool = false
+    
+    var _pointerStyleProvider: Any?
+    
+    @available(iOS 13.4, *)
+    open var pointerStyleProvider: UIButton.PointerStyleProvider? {
+        get {
+            return _pointerStyleProvider as? UIButton.PointerStyleProvider
+        }
+        set {
+            _pointerStyleProvider = newValue
+        }
+    }
+    
     open var lineBreakMode: NSLineBreakMode {
         get {
             return button.titleLabel?.lineBreakMode ?? .byTruncatingTail
@@ -256,6 +270,10 @@ private class SDNumberFieldKeyboard: UIViewController, UIPopoverPresentationCont
             button.cornerRadius = delegate?.keyButtonCornerRadius ?? 0
             button.borderWidth = delegate?.keyButtonBorderWidth ?? 0
             button.borderColor = delegate?.keyButtonBorderColor
+            if #available(iOS 13.4, *) {
+                button.isPointerInteractionEnabled = delegate?.enablePointerInteraction ?? false
+                button.pointerStyleProvider = delegate?.pointerStyleProvider
+            }
             button.addTarget(self, action: #selector(buttonAction), for: .touchUpInside)
         }
         
