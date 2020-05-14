@@ -27,16 +27,13 @@ import UIKit
 import UIKit.UIGestureRecognizerSubclass
 
 @available(iOS 9.1, tvOS 9.1, *)
-open class TouchCaptureGesture: UIPanGestureRecognizer {
+open class TouchCaptureGesture: UIGestureRecognizer {
     
     private var tracked: UITouch?
     
     private var _touches: [Touch] = []
     
     public private(set) var predictedTouches: [Touch] = []
-    
-    public override var maximumNumberOfTouches: Int { get { 1 } set { } }
-    public override var minimumNumberOfTouches: Int { get { 1 } set { } }
     
     open var touches: [Touch] {
         
@@ -79,24 +76,22 @@ open class TouchCaptureGesture: UIPanGestureRecognizer {
         for touch in touches where touch != self.tracked {
             self.ignore(touch, for: event)
         }
-        
-        super.touchesBegan(touches, with: event)
     }
     
     open override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent) {
         self.update(touches, with: event)
-        super.touchesMoved(touches, with: event)
+        state = state == .possible ? .began : .changed
     }
     
     open override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent) {
         self.update(touches, with: event)
-        super.touchesEnded(touches, with: event)
+        state = .ended
     }
     
     open override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent) {
         self._touches.removeAll()
         self.tracked = nil
-        super.touchesCancelled(touches, with: event)
+        state = .cancelled
     }
     
     open override func touchesEstimatedPropertiesUpdated(_ touches: Set<UITouch>) {
@@ -126,14 +121,11 @@ open class TouchCaptureGesture: UIPanGestureRecognizer {
             self._touches[index].estimatedProperties = touch.estimatedProperties
             self._touches[index].estimatedPropertiesExpectingUpdates = touch.estimatedPropertiesExpectingUpdates
         }
-        
-        super.touchesEstimatedPropertiesUpdated(touches)
     }
     
     open override func reset() {
         self._touches.removeAll()
         self.tracked = nil
-        super.reset()
     }
 }
 
