@@ -100,7 +100,6 @@ extension UITouchGestureRecognizer {
         if state == .possible && tracked.count == 2 {
             scale = 1
             rotation = 0
-            state = .began
         }
         
         for touch in touches where !tracked.contains(touch) {
@@ -109,9 +108,9 @@ extension UITouchGestureRecognizer {
     }
     
     open override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent) {
-        guard state == .began || state == .changed else { return }
-        guard tracked.contains(where: { touches.contains($0) }) else { return }
-        state = .changed
+        guard state == .possible || state == .began || state == .changed else { return }
+        guard tracked.count == 2, tracked.contains(where: { touches.contains($0) }) else { return }
+        state = state == .possible ? .began : .changed
     }
     
     open override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent) {

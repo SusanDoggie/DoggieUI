@@ -79,13 +79,14 @@ open class TouchCaptureGesture: UIGestureRecognizer {
     }
     
     open override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent) {
+        guard state == .possible || state == .began || state == .changed else { return }
         self.update(touches, with: event)
         state = state == .possible ? .began : .changed
     }
     
     open override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent) {
         self.update(touches, with: event)
-        state = .ended
+        state = state == .possible ? .failed : .ended
     }
     
     open override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent) {
