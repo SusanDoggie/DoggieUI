@@ -35,6 +35,9 @@ open class TouchCaptureGesture: UIPanGestureRecognizer {
     
     public private(set) var predictedTouches: [Touch] = []
     
+    public override var maximumNumberOfTouches: Int { get { 1 } set { } }
+    public override var minimumNumberOfTouches: Int { get { 1 } set { } }
+    
     open var touches: [Touch] {
         
         let min_force = self._touches.lazy.compactMap { $0.force > 0 ? $0.force : nil }.min() ?? 1
