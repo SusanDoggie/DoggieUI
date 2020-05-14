@@ -25,7 +25,7 @@
 
 import UIKit
 
-@available(iOS 13.4, macCatalyst 13.4, *)
+@available(iOS 13.4, macCatalyst 13.4, tvOS 13.4, *)
 open class UIScrollGestureRecognizer: UIPanGestureRecognizer {
     
     open override func shouldReceive(_ event: UIEvent) -> Bool {
