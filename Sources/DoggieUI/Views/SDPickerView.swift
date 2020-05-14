@@ -176,6 +176,7 @@ extension SDPickerViewDelegate {
         picker.preferredContentSize = pickerSize
         picker.modalPresentationStyle = .popover
         picker.popoverPresentationController?.sourceView = self
+        picker.popoverPresentationController?.sourceRect = self.bounds
         picker.popoverPresentationController?.delegate = picker
         picker.popoverPresentationController?.permittedArrowDirections = [.up, .down]
         

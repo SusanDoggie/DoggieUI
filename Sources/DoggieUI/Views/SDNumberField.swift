@@ -198,6 +198,7 @@ extension Decimal {
         keyboard.preferredContentSize = keyboardSize
         keyboard.modalPresentationStyle = .popover
         keyboard.popoverPresentationController?.sourceView = self
+        keyboard.popoverPresentationController?.sourceRect = self.bounds
         keyboard.popoverPresentationController?.delegate = keyboard
         keyboard.popoverPresentationController?.permittedArrowDirections = [.up, .down]
         
