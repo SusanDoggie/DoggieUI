@@ -27,7 +27,7 @@ import UIKit
 import UIKit.UIGestureRecognizerSubclass
 
 @available(iOS 9.1, tvOS 9.1, *)
-open class TouchCaptureGesture: UIGestureRecognizer {
+open class TouchCaptureGesture: UIPanGestureRecognizer {
     
     private var tracked: UITouch?
     
@@ -76,22 +76,24 @@ open class TouchCaptureGesture: UIGestureRecognizer {
         for touch in touches where touch != self.tracked {
             self.ignore(touch, for: event)
         }
+        
+        super.touchesBegan(touches, with: event)
     }
     
     open override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent) {
         self.update(touches, with: event)
-        state = state == .possible ? .began : .changed
+        super.touchesMoved(touches, with: event)
     }
     
     open override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent) {
         self.update(touches, with: event)
-        state = .ended
+        super.touchesEnded(touches, with: event)
     }
     
     open override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent) {
         self._touches.removeAll()
         self.tracked = nil
-        state = .cancelled
+        super.touchesCancelled(touches, with: event)
     }
     
     open override func touchesEstimatedPropertiesUpdated(_ touches: Set<UITouch>) {
@@ -121,11 +123,14 @@ open class TouchCaptureGesture: UIGestureRecognizer {
             self._touches[index].estimatedProperties = touch.estimatedProperties
             self._touches[index].estimatedPropertiesExpectingUpdates = touch.estimatedPropertiesExpectingUpdates
         }
+        
+        super.touchesEstimatedPropertiesUpdated(touches)
     }
     
     open override func reset() {
         self._touches.removeAll()
         self.tracked = nil
+        super.reset()
     }
 }
 
