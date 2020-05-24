@@ -33,6 +33,9 @@ open class UITouchGestureRecognizer: UIGestureRecognizer {
     private var _magnitude: CGFloat = 0
     private var _phase: CGFloat = 0
     
+    open var allowableMovement: CGFloat = 10
+    private var _movement: CGPoint = CGPoint()
+    
 }
 
 extension UITouchGestureRecognizer {
@@ -97,6 +100,10 @@ extension UITouchGestureRecognizer {
         tracked.append(contentsOf: touches.subtracting(tracked))
         tracked = Array(tracked.prefix(2))
         
+        if state == .possible && tracked.count == 1 {
+            _movement = tracked[0].location(in: nil)
+        }
+        
         if state == .possible && tracked.count == 2 {
             scale = 1
             rotation = 0
@@ -109,8 +116,24 @@ extension UITouchGestureRecognizer {
     
     open override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent) {
         guard state == .possible || state == .began || state == .changed else { return }
-        guard tracked.count == 2, tracked.contains(where: { touches.contains($0) }) else { return }
-        state = state == .possible ? .began : .changed
+        guard tracked.contains(where: { touches.contains($0) }) else { return }
+        
+        switch tracked.count {
+        case 1:
+            
+            let diff = tracked[0].location(in: nil) - _movement
+            
+            if diff.magnitude > allowableMovement {
+                state = .failed
+            }
+            
+        case 2:
+            
+            state = state == .possible ? .began : .changed
+            
+        default: return
+        }
+        
     }
     
     open override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent) {
@@ -129,22 +152,5 @@ extension UITouchGestureRecognizer {
     
     open override func reset() {
         tracked.removeAll()
-    }
-}
-
-open class UIShortTouchGestureRecognizer: UITouchGestureRecognizer {
-    
-    open var delay = 0.1
-    
-    open override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent) {
-        
-        super.touchesBegan(touches, with: event)
-        
-        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + Double(Int64(delay * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC)) {
-            
-            if self.state == UIGestureRecognizer.State.possible {
-                self.state = UIGestureRecognizer.State.failed
-            }
-        }
     }
 }
