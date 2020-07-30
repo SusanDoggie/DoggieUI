@@ -27,13 +27,6 @@ import UIKit
 
 extension UIView {
     
-    open var screen: UIScreen? {
-        return window?.screen
-    }
-}
-
-extension UIView {
-    
     open var firstResponder: UIView? {
         
         guard !isFirstResponder else { return self }
