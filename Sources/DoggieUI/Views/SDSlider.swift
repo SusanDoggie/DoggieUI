@@ -139,9 +139,6 @@ import QuartzCore
     private func setup() {
         
         let tap = UITapGestureRecognizer(target: self, action: #selector(handleTapGesture))
-        tap.numberOfTapsRequired = 1
-        tap.numberOfTouchesRequired = 1
-        
         let pan = UIPanGestureRecognizer(target: self, action: #selector(handlePanGesture))
         
         pan.require(toFail: tap)
