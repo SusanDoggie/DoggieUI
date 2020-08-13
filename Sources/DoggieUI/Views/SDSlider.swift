@@ -128,6 +128,27 @@ import QuartzCore
     
     public override init(frame: CGRect) {
         super.init(frame: frame)
+        self.setup()
+    }
+    
+    public required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        self.setup()
+    }
+    
+    private func setup() {
+        
+        let tap = UITapGestureRecognizer(target: self, action: #selector(handleTapGesture))
+        tap.numberOfTapsRequired = 1
+        tap.numberOfTouchesRequired = 1
+        
+        let pan = UIPanGestureRecognizer(target: self, action: #selector(handlePanGesture))
+        
+        pan.require(toFail: tap)
+        
+        addGestureRecognizer(tap)
+        addGestureRecognizer(pan)
+        
         self.addSubview(minTrackView)
         self.addSubview(maxTrackView)
         self.addSubview(trackView)
@@ -135,18 +156,54 @@ import QuartzCore
         self.updateLayerFrames()
     }
     
-    public required init?(coder: NSCoder) {
-        super.init(coder: coder)
-        self.addSubview(minTrackView)
-        self.addSubview(maxTrackView)
-        self.addSubview(trackView)
-        self.addSubview(thumbView)
-        self.updateLayerFrames()
+    private func updateLayerFrames() {
+        updateMinTrackView()
+        updateMaxTrackView()
+        updateTrackView()
+        updateThumbView()
     }
     
     public override func layoutSubviews() {
         self.updateLayerFrames()
     }
+}
+
+extension SDSlider {
+    
+    public override func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+        
+        if let pan = gestureRecognizer as? UIPanGestureRecognizer {
+            let velocity = pan.velocity(in: self)
+            guard isHorizontal ? abs(velocity.x) > abs(velocity.y) : abs(velocity.x) < abs(velocity.y) else { return false }
+        }
+        
+        let location = gestureRecognizer.location(in: self)
+        
+        let minSize = Swift.min(bounds.width, bounds.height)
+        let hitTestMinSize = CGSize(width: minSize, height: minSize)
+        
+        let thumbViewHitBox = thumbView.frame.union(CGRect(origin: thumbView.frame.origin, size: hitTestMinSize))
+        let thumbViewHitBoxCenterOffsetX = thumbView.frame.midX - thumbViewHitBox.midX
+        let thumbViewHitBoxCenterOffsetY = thumbView.frame.midY - thumbViewHitBox.midY
+        
+        if thumbViewHitBox.offsetBy(dx: thumbViewHitBoxCenterOffsetX, dy: thumbViewHitBoxCenterOffsetY).contains(location) {
+            
+            return true
+            
+        } else if trackTouchRespond {
+            
+            let trackViewHitBox = trackView.frame.union(CGRect(origin: trackView.frame.origin, size: hitTestMinSize))
+            let trackViewHitBoxCenterOffsetX = trackView.frame.midX - trackViewHitBox.midX
+            let trackViewHitBoxCenterOffsetY = trackView.frame.midY - trackViewHitBox.midY
+            
+            return trackViewHitBox.offsetBy(dx: trackViewHitBoxCenterOffsetX, dy: trackViewHitBoxCenterOffsetY).contains(location)
+        }
+        
+        return false
+    }
+}
+
+extension SDSlider {
     
     private var isHorizontal: Bool {
         return bounds.height < bounds.width
@@ -188,6 +245,9 @@ import QuartzCore
         }
         return trackImage!.size.height
     }
+}
+
+extension SDSlider {
     
     private func updateMinTrackView() {
         minTrackView.image = minTrackImage
@@ -261,15 +321,32 @@ import QuartzCore
             }
         }
     }
+}
+
+extension SDSlider {
     
-    private func updateLayerFrames() {
-        updateMinTrackView()
-        updateMaxTrackView()
-        updateTrackView()
-        updateThumbView()
+    @objc func handleTapGesture(_ sender: UITapGestureRecognizer) {
+        
+        self.sendActions(for: .touchDown)
+        self.set_location(sender.location(in: self))
     }
     
-    private func locateAndUpdateValue(location: CGPoint) {
+    @objc func handlePanGesture(_ sender: UIPanGestureRecognizer) {
+        
+        if sender.state == .began {
+            self.sendActions(for: .touchDown)
+            thumbView.isHighlighted = true
+        }
+        
+        self.set_location(sender.location(in: self))
+        
+        if sender.state != .began || sender.state != .changed {
+            thumbView.isHighlighted = false
+        }
+    }
+    
+    private func set_location(_ location: CGPoint) {
+        
         if isHorizontal {
             if minTrackImage == nil && maxTrackImage == nil {
                 let s = (location.x - 0.5 * thumbWidth) / (trackWidth - thumbWidth)
@@ -287,45 +364,7 @@ import QuartzCore
                 self.value = Double(1 - s) * (maxValue - minValue) + minValue
             }
         }
+        
         self.sendActions(for: .valueChanged)
-    }
-    
-    public override func beginTracking(_ touch: UITouch, with event: UIEvent?) -> Bool {
-        
-        self.sendActions(for: .touchDown)
-        
-        let location = touch.location(in: self)
-        
-        let minSize = Swift.min(bounds.width, bounds.height)
-        let hitTestMinSize = CGSize(width: minSize, height: minSize)
-        
-        let thumbViewHitBox = thumbView.frame.union(CGRect(origin: thumbView.frame.origin, size: hitTestMinSize))
-        let thumbViewHitBoxCenterOffsetX = thumbView.frame.midX - thumbViewHitBox.midX
-        let thumbViewHitBoxCenterOffsetY = thumbView.frame.midY - thumbViewHitBox.midY
-        
-        if thumbViewHitBox.offsetBy(dx: thumbViewHitBoxCenterOffsetX, dy: thumbViewHitBoxCenterOffsetY).contains(location) {
-            thumbView.isHighlighted = true
-            locateAndUpdateValue(location: location)
-        } else if trackTouchRespond {
-            let trackViewHitBox = trackView.frame.union(CGRect(origin: trackView.frame.origin, size: hitTestMinSize))
-            let trackViewHitBoxCenterOffsetX = trackView.frame.midX - trackViewHitBox.midX
-            let trackViewHitBoxCenterOffsetY = trackView.frame.midY - trackViewHitBox.midY
-            if trackViewHitBox.offsetBy(dx: trackViewHitBoxCenterOffsetX, dy: trackViewHitBoxCenterOffsetY).contains(location) {
-                thumbView.isHighlighted = true
-                locateAndUpdateValue(location: location)
-            }
-        }
-        
-        return thumbView.isHighlighted
-    }
-    public override func continueTracking(_ touch: UITouch, with event: UIEvent?) -> Bool {
-        locateAndUpdateValue(location: touch.location(in: self))
-        return true
-    }
-    public override func endTracking(_ touch: UITouch?, with event: UIEvent?) {
-        if let touch = touch {
-            locateAndUpdateValue(location: touch.location(in: self))
-        }
-        thumbView.isHighlighted = false
     }
 }
