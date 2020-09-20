@@ -420,13 +420,13 @@ open class SDPageView: UIView, UIScrollViewDelegate {
         }
     }
     
-    public func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+    open func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
         
         if scrollView === self.scrollView {
             endMoving()
         }
     }
-    public func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
+    open func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
         
         if scrollView === self.scrollView {
             endMoving()

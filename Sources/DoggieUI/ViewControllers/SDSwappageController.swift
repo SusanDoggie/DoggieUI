@@ -134,11 +134,11 @@ extension SDSwappageController {
 
 extension SDSwappageController {
     
-    public var rootViewController: UIViewController! {
+    open var rootViewController: UIViewController! {
         return self.children.first
     }
     
-    public var rootView: UIView! {
+    open var rootView: UIView! {
         return rootViewController?.view
     }
     
@@ -212,7 +212,7 @@ extension SDSwappageController {
         }
     }
     
-    public func pushViewController(_ viewController: UIViewController, animated: Bool) {
+    open func pushViewController(_ viewController: UIViewController, animated: Bool) {
         
         let currentViewController = self.children.last
         self.addChild(viewController)
@@ -224,7 +224,7 @@ extension SDSwappageController {
     }
     
     @discardableResult
-    public func popViewControllerAnimated(_ animated: Bool) -> UIViewController? {
+    open func popViewControllerAnimated(_ animated: Bool) -> UIViewController? {
         
         if self.children.count > 1, let viewControllerToPop = self.children.last {
             viewControllerToPop.willMove(toParent: nil)
@@ -238,7 +238,7 @@ extension SDSwappageController {
     }
     
     @discardableResult
-    public func popToViewController(_ viewController: UIViewController, animated: Bool) -> [UIViewController]? {
+    open func popToViewController(_ viewController: UIViewController, animated: Bool) -> [UIViewController]? {
         
         if let idx = self.children.firstIndex(of: viewController), idx + 1 != self.children.endIndex {
             let viewControllersToPop = Array(self.children.dropFirst(idx + 1))
@@ -257,7 +257,7 @@ extension SDSwappageController {
     }
     
     @discardableResult
-    public func popToRootViewControllerAnimated(_ animated: Bool) -> [UIViewController]? {
+    open func popToRootViewControllerAnimated(_ animated: Bool) -> [UIViewController]? {
         
         if self.children.endIndex != 1 {
             let viewControllersToPop = Array(self.children.dropFirst(1))
@@ -308,7 +308,7 @@ extension SDSwappageController {
 
 extension UIViewController {
     
-    public var swappage: SDSwappageController? {
+    open var swappage: SDSwappageController? {
         
         return self as? SDSwappageController ?? self.parent?.swappage
     }

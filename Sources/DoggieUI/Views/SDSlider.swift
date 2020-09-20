@@ -26,52 +26,52 @@
 import UIKit
 import QuartzCore
 
-@IBDesignable public class SDSlider: UIControl {
+@IBDesignable open class SDSlider: UIControl {
     
-    @IBInspectable public var minValue: Double = 0.0 {
+    @IBInspectable open var minValue: Double = 0.0 {
         didSet {
             updateLayerFrames()
         }
     }
-    @IBInspectable public var maxValue: Double = 1.0 {
+    @IBInspectable open var maxValue: Double = 1.0 {
         didSet {
             updateLayerFrames()
         }
     }
-    @IBInspectable public var value: Double = 0.5 {
+    @IBInspectable open var value: Double = 0.5 {
         didSet {
             value = Swift.max(minValue, Swift.min(maxValue, value))
             updateThumbViewPosition()
         }
     }
     
-    @IBInspectable public var minTrackImage: UIImage? = nil {
+    @IBInspectable open var minTrackImage: UIImage? = nil {
         didSet {
             updateLayerFrames()
         }
     }
-    @IBInspectable public var maxTrackImage: UIImage? = nil {
+    @IBInspectable open var maxTrackImage: UIImage? = nil {
         didSet {
             updateLayerFrames()
         }
     }
     
-    @IBInspectable public var trackImage: UIImage? = nil {
+    @IBInspectable open var trackImage: UIImage? = nil {
         didSet {
             updateTrackView()
         }
     }
-    @IBInspectable public var trackTintColor: UIColor = UIColor.lightGray {
+    @IBInspectable open var trackTintColor: UIColor = UIColor.lightGray {
         didSet {
             updateTrackView()
         }
     }
-    @IBInspectable public var trackThickness: CGFloat = 2.0 {
+    @IBInspectable open var trackThickness: CGFloat = 2.0 {
         didSet {
             updateTrackView()
         }
     }
-    @IBInspectable public var trackCornerRadius: CGFloat = 0.0 {
+    @IBInspectable open var trackCornerRadius: CGFloat = 0.0 {
         didSet {
             if trackCornerRadius * 2.0 > trackWidth || trackCornerRadius * 2.0 > trackHeight {
                 trackCornerRadius = 0.5 * Swift.min(trackWidth, trackHeight)
@@ -79,34 +79,34 @@ import QuartzCore
             updateTrackView()
         }
     }
-    @IBInspectable public var trackTouchRespond: Bool = false
+    @IBInspectable open var trackTouchRespond: Bool = false
     
-    @IBInspectable public var thumbImage: UIImage? = nil {
+    @IBInspectable open var thumbImage: UIImage? = nil {
         didSet {
             updateThumbView()
         }
     }
-    @IBInspectable public var thumbHighlightedImage: UIImage? = nil {
+    @IBInspectable open var thumbHighlightedImage: UIImage? = nil {
         didSet {
             updateThumbView()
         }
     }
-    @IBInspectable public var thumbTintColor: UIColor = UIColor.black {
+    @IBInspectable open var thumbTintColor: UIColor = UIColor.black {
         didSet {
             updateThumbView()
         }
     }
-    @IBInspectable public var thumbLength: CGFloat = 18.0 {
+    @IBInspectable open var thumbLength: CGFloat = 18.0 {
         didSet {
             updateThumbView()
         }
     }
-    @IBInspectable public var thumbThickness: CGFloat = 2.0 {
+    @IBInspectable open var thumbThickness: CGFloat = 2.0 {
         didSet {
             updateThumbView()
         }
     }
-    @IBInspectable public var thumbCornerRadius: CGFloat = 0.0 {
+    @IBInspectable open var thumbCornerRadius: CGFloat = 0.0 {
         didSet {
             if thumbCornerRadius * 2.0 > thumbWidth || thumbCornerRadius * 2.0 > thumbHeight {
                 thumbCornerRadius = 0.5 * Swift.min(thumbWidth, thumbHeight)
@@ -120,7 +120,7 @@ import QuartzCore
     private let trackView = UIImageView()
     private let thumbView = UIImageView()
     
-    public override var frame: CGRect {
+    open override var frame: CGRect {
         didSet {
             updateLayerFrames()
         }
@@ -160,14 +160,14 @@ import QuartzCore
         updateThumbView()
     }
     
-    public override func layoutSubviews() {
+    open override func layoutSubviews() {
         self.updateLayerFrames()
     }
 }
 
 extension SDSlider {
     
-    public override func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+    open override func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
         
         if let pan = gestureRecognizer as? UIPanGestureRecognizer {
             let velocity = pan.velocity(in: self)

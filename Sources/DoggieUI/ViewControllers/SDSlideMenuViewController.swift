@@ -57,8 +57,8 @@ open class SDSlideMenuViewController: UIViewController, UIGestureRecognizerDeleg
         }
     }
     
-    public var menuRoot: UIViewController!
-    public var content: UIViewController!
+    open var menuRoot: UIViewController!
+    open var content: UIViewController!
     
     private var contentContainerView: UIView!
     private var contentMaskView: UIView!
@@ -340,7 +340,7 @@ open class SDSlideMenuViewController: UIViewController, UIGestureRecognizerDeleg
         })
     }
     
-    public func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
+    open func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
         
         if panRecongnizer === gestureRecognizer {
             return !disableMenu
@@ -356,7 +356,7 @@ open class SDSlideMenuViewController: UIViewController, UIGestureRecognizerDeleg
         return !disableMenu
     }
     
-    public func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+    open func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
         if panRecongnizer === gestureRecognizer {
             let velocity = panRecongnizer.velocity(in: view)
             return abs(velocity.x) > abs(velocity.y) && (toggleState != 0 || velocity.x > 0)
@@ -438,12 +438,12 @@ open class SDSlideMenuViewController: UIViewController, UIGestureRecognizerDeleg
 
 extension UIViewController {
     
-    @IBAction public func menuToggle(_ sender: Any) {
+    @IBAction open func menuToggle(_ sender: Any) {
         
         self.slideMenu?._menuToggle(sender)
     }
     
-    public var slideMenu: SDSlideMenuViewController? {
+    open var slideMenu: SDSlideMenuViewController? {
         
         return self as? SDSlideMenuViewController ?? self.parent?.slideMenu
     }
@@ -461,7 +461,7 @@ extension UIViewController {
     }
 }
 
-public class SDMenuRootViewControllerSegue: UIStoryboardSegue {
+open class SDMenuRootViewControllerSegue: UIStoryboardSegue {
     
     open override func perform() {
         
@@ -469,7 +469,7 @@ public class SDMenuRootViewControllerSegue: UIStoryboardSegue {
     }
 }
 
-public class SDContentViewControllerSegue: UIStoryboardSegue {
+open class SDContentViewControllerSegue: UIStoryboardSegue {
     
     open override func perform() {
         
