@@ -341,6 +341,7 @@ extension SDTreeTableView: UIDragInteractionDelegate, UIDropInteractionDelegate 
         
         dropDelegate.tableView(self, moveNodeAt: sourceTreeIndex, to: destinationTreeIndex)
         
+        self._moveNode(from: sourceTreeIndex, to: destinationTreeIndex)
         self._moveRows(from: [sourceIndexPath] + children, to: destinationIndexPath)
     }
     
@@ -358,10 +359,12 @@ extension SDTreeTableView: UIDragInteractionDelegate, UIDropInteractionDelegate 
             
             if self.isExpanded(destinationIndexPath) {
                 
+                self._moveNode(from: sourceTreeIndex, to: destinationTreeIndex + [0])
                 self._moveRows(from: [sourceIndexPath] + children, to: IndexPath(row: destinationIndexPath.row + 1, section: 0))
                 
             } else {
                 
+                self.deleteNode(at: sourceTreeIndex)
                 self.deleteRows(at: [sourceIndexPath] + children, with: .automatic)
                 
                 if sourceIndexPath.row != 0 {
@@ -376,6 +379,7 @@ extension SDTreeTableView: UIDragInteractionDelegate, UIDropInteractionDelegate 
             
             dropDelegate.tableView(self, moveNodeAt: sourceTreeIndex, to: [position + 1])
             
+            self._moveNode(from: sourceTreeIndex, to: [position + 1])
             self._moveRows(from: [sourceIndexPath] + children, to: IndexPath(row: destinationIndexPath.row + 1, section: 0))
         }
         
@@ -383,8 +387,25 @@ extension SDTreeTableView: UIDragInteractionDelegate, UIDropInteractionDelegate 
             
             dropDelegate.tableView(self, moveNodeAt: sourceTreeIndex, to: destinationTreeIndex.dropLast() + [position + 1])
             
+            self._moveNode(from: sourceTreeIndex, to: destinationTreeIndex.dropLast() + [position + 1])
             self._moveRows(from: [sourceIndexPath] + children, to: IndexPath(row: destinationIndexPath.row + 1, section: 0))
         }
+    }
+    
+    private func _moveNode(from source: IndexPath, to destination: IndexPath) {
+        
+        func check(_ lhs: IndexPath, _ rhs: IndexPath) -> Bool {
+            return lhs.count <= rhs.count && rhs.starts(with: lhs.dropLast()) && lhs <= rhs
+        }
+        func replacing(_ i: IndexPath, _ position: Int, _ index: Int) -> IndexPath {
+            return i.prefix(position) + [index] + i.dropFirst(position + 1)
+        }
+        
+        let _expanded = self.expanded.filter { $0.starts(with: source) }
+        self.expanded.subtract(_expanded)
+        self.expanded = Set(self.expanded.map { check(source, $0) ? replacing($0, source.count - 1, $0[source.count - 1] - 1) : $0 })
+        self.expanded = Set(self.expanded.map { check(destination, $0) ? replacing($0, destination.count - 1, $0[destination.count - 1] + 1) : $0 })
+        self.expanded.formUnion(_expanded.map { destination + $0.dropFirst(source.count) })
     }
     
     private func _moveRows(from indexPaths: [IndexPath], to newIndexPath: IndexPath) {
@@ -396,7 +417,7 @@ extension SDTreeTableView: UIDragInteractionDelegate, UIDropInteractionDelegate 
             if first < newIndexPath {
                 
                 for (i, child) in indexPaths.enumerated() {
-                    self.moveRow(at: child, to: IndexPath(row: newIndexPath.row - i, section: 0))
+                    self.moveRow(at: child, to: IndexPath(row: newIndexPath.row - i - 1, section: 0))
                 }
                 
             } else {
@@ -409,10 +430,7 @@ extension SDTreeTableView: UIDragInteractionDelegate, UIDropInteractionDelegate 
         }, completion: { _ in
             
             let maxIndexPath = indexPaths.first.map { Swift.max($0, newIndexPath) } ?? newIndexPath
-            
-            if maxIndexPath.row != 0 {
-                self.reloadRows(at: (0..<maxIndexPath.row).map { IndexPath(row: $0, section: 0) }, with: .none)
-            }
+            self.reloadRows(at: (0...maxIndexPath.row).map { IndexPath(row: $0, section: 0) }, with: .none)
         })
     }
     
