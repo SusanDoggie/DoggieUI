@@ -37,7 +37,6 @@ extension Decimal {
     }
 }
 
-@available(iOS 11.0, *)
 @IBDesignable open class SDNumberField: UIControl {
     
     private let button = UIButton(type: .custom)
@@ -236,7 +235,6 @@ extension Decimal {
     }
 }
 
-@available(iOS 11.0, *)
 private class SDNumberFieldKeyboard: UIViewController, UIPopoverPresentationControllerDelegate {
     
     weak var delegate: SDNumberField?

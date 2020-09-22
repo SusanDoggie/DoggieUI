@@ -28,6 +28,10 @@ import PackageDescription
 
 let package = Package(
     name: "DoggieUI",
+    platforms: [
+        .iOS(.v11),
+        .tvOS(.v11),
+    ],
     products: [
         .library(name: "DoggieUI", targets: ["DoggieUI"]),
     ],

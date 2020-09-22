@@ -27,7 +27,6 @@
 
 import UIKit
 
-@available(iOS 11.0, *)
 extension UIContextualAction {
     
     public convenience init(style: UIContextualAction.Style,

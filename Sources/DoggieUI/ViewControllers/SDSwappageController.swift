@@ -284,7 +284,6 @@ extension SDSwappageController {
         return self.children.dropFirst().contains(fromViewController)
     }
     
-    @available(iOS 9.0, *)
     open override func allowedChildrenForUnwinding(from source: UIStoryboardUnwindSegueSource) -> [UIViewController] {
         
         if self.children.count > 1 {
