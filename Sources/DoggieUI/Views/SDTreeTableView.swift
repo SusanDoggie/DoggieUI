@@ -293,6 +293,8 @@ extension SDTreeTableView: UIDragInteractionDelegate, UIDropInteractionDelegate 
         guard let sourceTreeIndex = self.treeIndex(for: sourceIndexPath) else { return false }
         guard let destinationTreeIndex = self.treeIndex(for: destinationIndexPath) else { return false }
         
+        guard !self.children(sourceIndexPath).contains(destinationIndexPath) else { return false }
+        
         let _sourceIndexPath = self.children(sourceIndexPath).last ?? sourceIndexPath
         
         guard _sourceIndexPath.row + 1 != destinationIndexPath.row || sourceTreeIndex.count != destinationTreeIndex.count else { return false }
@@ -435,7 +437,7 @@ extension SDTreeTableView: UIDragInteractionDelegate, UIDropInteractionDelegate 
             
         }, completion: { _ in
             
-            let maxIndexPath = indexPaths.first.map { Swift.max($0, newIndexPath) } ?? newIndexPath
+            let maxIndexPath = indexPaths.max().map { Swift.max($0, newIndexPath) } ?? newIndexPath
             self.reloadRows(at: (0...maxIndexPath.row).map { IndexPath(row: $0, section: 0) }, with: .none)
         })
     }
