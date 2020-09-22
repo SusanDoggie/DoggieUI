@@ -403,9 +403,15 @@ extension SDTreeTableView: UIDragInteractionDelegate, UIDropInteractionDelegate 
         
         let _expanded = self.expanded.filter { $0.starts(with: source) }
         self.expanded.subtract(_expanded)
-        self.expanded = Set(self.expanded.map { check(source, $0) ? replacing($0, source.count - 1, $0[source.count - 1] - 1) : $0 })
-        self.expanded = Set(self.expanded.map { check(destination, $0) ? replacing($0, destination.count - 1, $0[destination.count - 1] + 1) : $0 })
-        self.expanded.formUnion(_expanded.map { destination + $0.dropFirst(source.count) })
+        if source < destination {
+            self.expanded = Set(self.expanded.map { check(destination, $0) ? replacing($0, destination.count - 1, $0[destination.count - 1] + 1) : $0 })
+            self.expanded.formUnion(_expanded.map { destination + $0.dropFirst(source.count) })
+            self.expanded = Set(self.expanded.map { check(source, $0) ? replacing($0, source.count - 1, $0[source.count - 1] - 1) : $0 })
+        } else {
+            self.expanded = Set(self.expanded.map { check(source, $0) ? replacing($0, source.count - 1, $0[source.count - 1] - 1) : $0 })
+            self.expanded = Set(self.expanded.map { check(destination, $0) ? replacing($0, destination.count - 1, $0[destination.count - 1] + 1) : $0 })
+            self.expanded.formUnion(_expanded.map { destination + $0.dropFirst(source.count) })
+        }
     }
     
     private func _moveRows(from indexPaths: [IndexPath], to newIndexPath: IndexPath) {
@@ -416,7 +422,7 @@ extension SDTreeTableView: UIDragInteractionDelegate, UIDropInteractionDelegate 
             
             if first < newIndexPath {
                 
-                for (i, child) in indexPaths.enumerated() {
+                for (i, child) in indexPaths.reversed().enumerated() {
                     self.moveRow(at: child, to: IndexPath(row: newIndexPath.row - i - 1, section: 0))
                 }
                 
