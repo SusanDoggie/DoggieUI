@@ -367,16 +367,22 @@ extension SDTreeTableView: UIDragInteractionDelegate, UIDropInteractionDelegate 
             } else {
                 
                 self.deleteNode(at: sourceTreeIndex)
-                self.deleteRows(at: [sourceIndexPath] + children, with: .automatic)
                 
-                if sourceIndexPath < destinationIndexPath {
+                self.performBatchUpdates({
                     
-                    self.reloadRows(at: (0...destinationIndexPath.row - children.count - 1).map { IndexPath(row: $0, section: 0) }, with: .none)
+                    self.deleteRows(at: [sourceIndexPath] + children, with: .automatic)
                     
-                } else if sourceIndexPath.row != 0 {
+                }, completion: { _ in
                     
-                    self.reloadRows(at: (0..<sourceIndexPath.row).map { IndexPath(row: $0, section: 0) }, with: .none)
-                }
+                    if sourceIndexPath < destinationIndexPath {
+                        
+                        self.reloadRows(at: (0...destinationIndexPath.row - children.count - 1).map { IndexPath(row: $0, section: 0) }, with: .none)
+                        
+                    } else if sourceIndexPath.row != 0 {
+                        
+                        self.reloadRows(at: (0..<sourceIndexPath.row).map { IndexPath(row: $0, section: 0) }, with: .none)
+                    }
+                })
             }
             
             return
