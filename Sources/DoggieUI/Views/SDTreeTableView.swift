@@ -121,19 +121,19 @@ public protocol SDTreeTableViewDropDelegate: UITableViewDelegate {
 
 extension SDTreeTableViewDropDelegate {
     
-    func tableView(_ tableView: SDTreeTableView, insertionInset: Int) -> CGFloat {
+    public func tableView(_ tableView: SDTreeTableView, insertionInset: Int) -> CGFloat {
         return 0
     }
     
-    func tableView(_ tableView: SDTreeTableView, canMoveNodeAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) -> Bool {
+    public func tableView(_ tableView: SDTreeTableView, canMoveNodeAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) -> Bool {
         return true
     }
     
-    func tableView(_ tableView: SDTreeTableView, moveNodeAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
+    public func tableView(_ tableView: SDTreeTableView, moveNodeAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
         
     }
     
-    func tableView(_ tableView: SDTreeTableView, dropSessionDidEnd session: UIDropSession) {
+    public func tableView(_ tableView: SDTreeTableView, dropSessionDidEnd session: UIDropSession) {
         
     }
 }
@@ -357,9 +357,16 @@ extension SDTreeTableView: UIDragInteractionDelegate, UIDropInteractionDelegate 
             dropDelegate.tableView(self, moveNodeAt: sourceTreeIndex, to: destinationTreeIndex + [0])
             
             if self.isExpanded(destinationIndexPath) {
+                
                 self._moveRows(from: [sourceIndexPath] + children, to: IndexPath(row: destinationIndexPath.row + 1, section: 0))
+                
             } else {
+                
                 self.deleteRows(at: [sourceIndexPath] + children, with: .automatic)
+                
+                if sourceIndexPath.row != 0 {
+                    self.reloadRows(at: (0..<sourceIndexPath.row).map { IndexPath(row: $0, section: 0) }, with: .none)
+                }
             }
             
             return
@@ -376,7 +383,7 @@ extension SDTreeTableView: UIDragInteractionDelegate, UIDropInteractionDelegate 
             
             dropDelegate.tableView(self, moveNodeAt: sourceTreeIndex, to: destinationTreeIndex.dropLast() + [position + 1])
             
-            self._moveRows(from: [sourceIndexPath] + children, to: destinationIndexPath)
+            self._moveRows(from: [sourceIndexPath] + children, to: IndexPath(row: destinationIndexPath.row + 1, section: 0))
         }
     }
     
@@ -384,11 +391,11 @@ extension SDTreeTableView: UIDragInteractionDelegate, UIDropInteractionDelegate 
         
         guard let first = indexPaths.first else { return }
         
-        self.performBatchUpdates {
+        self.performBatchUpdates({
             
             if first < newIndexPath {
                 
-                for (i, child) in indexPaths.reversed().enumerated() {
+                for (i, child) in indexPaths.enumerated() {
                     self.moveRow(at: child, to: IndexPath(row: newIndexPath.row - i, section: 0))
                 }
                 
@@ -398,7 +405,15 @@ extension SDTreeTableView: UIDragInteractionDelegate, UIDropInteractionDelegate 
                     self.moveRow(at: child, to: IndexPath(row: newIndexPath.row + i, section: 0))
                 }
             }
-        }
+            
+        }, completion: { _ in
+            
+            let maxIndexPath = indexPaths.first.map { Swift.max($0, newIndexPath) } ?? newIndexPath
+            
+            if maxIndexPath.row != 0 {
+                self.reloadRows(at: (0..<maxIndexPath.row).map { IndexPath(row: $0, section: 0) }, with: .none)
+            }
+        })
     }
     
     public func dragInteraction(_ interaction: UIDragInteraction, itemsForBeginning session: UIDragSession) -> [UIDragItem] {
