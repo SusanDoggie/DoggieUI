@@ -369,7 +369,12 @@ extension SDTreeTableView: UIDragInteractionDelegate, UIDropInteractionDelegate 
                 self.deleteNode(at: sourceTreeIndex)
                 self.deleteRows(at: [sourceIndexPath] + children, with: .automatic)
                 
-                if sourceIndexPath.row != 0 {
+                if sourceIndexPath < destinationIndexPath {
+                    
+                    self.reloadRows(at: (0...destinationIndexPath.row - children.count - 1).map { IndexPath(row: $0, section: 0) }, with: .none)
+                    
+                } else if sourceIndexPath.row != 0 {
+                    
                     self.reloadRows(at: (0..<sourceIndexPath.row).map { IndexPath(row: $0, section: 0) }, with: .none)
                 }
             }
