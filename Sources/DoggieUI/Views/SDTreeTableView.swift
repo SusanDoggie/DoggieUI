@@ -112,9 +112,9 @@ public protocol SDTreeTableViewDropDelegate: UITableViewDelegate {
     
     func tableView(_ tableView: SDTreeTableView, insertionInset: Int) -> CGFloat
     
-    func tableView(_ tableView: SDTreeTableView, canMoveNodeAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) -> Bool
+    func tableView(_ tableView: SDTreeTableView, canMoveNodeAt source: IndexPath, to destination: IndexPath) -> Bool
     
-    func tableView(_ tableView: SDTreeTableView, moveNodeAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath)
+    func tableView(_ tableView: SDTreeTableView, moveNodeAt source: IndexPath, to destination: IndexPath)
     
     func tableView(_ tableView: SDTreeTableView, dropSessionDidEnd session: UIDropSession)
 }
@@ -125,11 +125,11 @@ extension SDTreeTableViewDropDelegate {
         return 0
     }
     
-    public func tableView(_ tableView: SDTreeTableView, canMoveNodeAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) -> Bool {
+    public func tableView(_ tableView: SDTreeTableView, canMoveNodeAt source: IndexPath, to destination: IndexPath) -> Bool {
         return true
     }
     
-    public func tableView(_ tableView: SDTreeTableView, moveNodeAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
+    public func tableView(_ tableView: SDTreeTableView, moveNodeAt source: IndexPath, to destination: IndexPath) {
         
     }
     
