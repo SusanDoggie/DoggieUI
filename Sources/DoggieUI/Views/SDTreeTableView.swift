@@ -317,7 +317,7 @@ extension SDTreeTableView: UIDragInteractionDelegate, UIDropInteractionDelegate 
         
         if outsideBound && self.numberOfRows() == destinationIndexPath.row + 1, let position = destinationTreeIndex.first, dropDelegate.tableView(self, canMoveNodeAt: sourceTreeIndex, to: [position + 1]) {
             
-            return dropDelegate.tableView(self, canMoveNodeAt: sourceTreeIndex, to: [position + 1])
+            return sourceTreeIndex.count == 1 ? sourceIndexPath.row != destinationIndexPath.row : true
         }
         
         guard sourceIndexPath.row != destinationIndexPath.row && sourceIndexPath.row != destinationIndexPath.row + 1 else { return false }
@@ -396,6 +396,8 @@ extension SDTreeTableView: UIDragInteractionDelegate, UIDropInteractionDelegate 
             
             self._moveNode(from: sourceTreeIndex, to: [position + 1])
             self._moveRows(from: [sourceIndexPath] + children, to: IndexPath(row: destinationIndexPath.row + 1, section: 0))
+            
+            return
         }
         
         if let position = destinationTreeIndex.last {
