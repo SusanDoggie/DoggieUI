@@ -320,7 +320,9 @@ extension SDTreeTableView: UIDragInteractionDelegate, UIDropInteractionDelegate 
             return sourceTreeIndex.count == 1 ? sourceIndexPath.row != destinationIndexPath.row : true
         }
         
-        guard sourceIndexPath.row != destinationIndexPath.row && sourceIndexPath.row != destinationIndexPath.row + 1 else { return false }
+        guard sourceIndexPath.row != destinationIndexPath.row else { return false }
+        guard sourceIndexPath.row != destinationIndexPath.row + 1 || sourceTreeIndex.count != destinationTreeIndex.count else { return false }
+        
         guard self.children(destinationIndexPath).isEmpty else { return false }
         
         if let position = destinationTreeIndex.last {
