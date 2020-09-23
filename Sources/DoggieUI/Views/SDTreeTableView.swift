@@ -357,9 +357,11 @@ extension SDTreeTableView: UIDragInteractionDelegate, UIDropInteractionDelegate 
         
         if dropDelegate.tableView(self, canMoveNodeAt: sourceTreeIndex, to: destinationTreeIndex + [0]) {
             
+            let expanded = self.expanded.contains(destinationTreeIndex)
+            
             dropDelegate.tableView(self, moveNodeAt: sourceTreeIndex, to: destinationTreeIndex + [0])
             
-            if self.isExpanded(destinationIndexPath) {
+            if expanded {
                 
                 self._moveNode(from: sourceTreeIndex, to: destinationTreeIndex + [0])
                 self._moveRows(from: [sourceIndexPath] + children, to: IndexPath(row: destinationIndexPath.row + 1, section: 0))
